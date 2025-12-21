@@ -6,7 +6,7 @@ export const Navbar = () => {
             <div className="navbar-container">
                 <div className="navbar-brand">
                     <span className="navbar-icon">🕌</span>
-                    <span className="navbar-title">Mosque Radio</span>
+                    <span className="navbar-title">Minaret</span>
                 </div>
 
                 <div className="navbar-status">
