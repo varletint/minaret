@@ -1,4 +1,4 @@
-import { Mosque } from '../stores/playerStore'
+import type { Mosque } from '../stores/playerStore'
 
 // Mock data - In production, this would come from your API/backend
 export const mosques: Mosque[] = [

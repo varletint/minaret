@@ -1,5 +1,4 @@
-import { Mosque, usePlayerStore } from '../stores/playerStore'
-import { ICECAST_URL } from '../data/mosques'
+import { type Mosque, usePlayerStore } from '../stores/playerStore'
 import './MosqueCard.css'
 
 interface MosqueCardProps {

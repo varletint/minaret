@@ -12,7 +12,7 @@ interface StreamStatus {
 
 export const Home = () => {
     const [streamStatus, setStreamStatus] = useState<StreamStatus>({})
-    const [isLoading, setIsLoading] = useState(true)
+
 
     // Fetch Icecast status
     const fetchStreamStatus = async () => {
@@ -45,8 +45,6 @@ export const Home = () => {
                 '/mosque-taqwa': { isLive: true, listeners: 15 },
                 '/mosque-furqan': { isLive: false, listeners: 0 },
             })
-        } finally {
-            setIsLoading(false)
         }
     }
 
