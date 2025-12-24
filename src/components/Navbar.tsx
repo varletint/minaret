@@ -6,73 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ModeToggle } from "@/components/mode-toggle"
 
 // Custom Mosque/Minaret SVG Icon
-function MosqueIcon({ className }: { className?: string }) {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={className}
-        >
-            {/* Dome */}
-            <path d="M12 3C12 3 7 7 7 11H17C17 7 12 3 12 3Z" />
-            {/* Main building */}
-            <rect x="7" y="11" width="10" height="9" />
-            {/* Door arch */}
-            <path d="M10 20V17C10 15.9 10.9 15 12 15C13.1 15 14 15.9 14 17V20" />
-            {/* Left minaret */}
-            <rect x="3" y="9" width="2" height="11" />
-            <path d="M4 9L4 7" />
-            <circle cx="4" cy="6.5" r="0.5" fill="currentColor" />
-            {/* Right minaret */}
-            <rect x="19" y="9" width="2" height="11" />
-            <path d="M20 9L20 7" />
-            <circle cx="20" cy="6.5" r="0.5" fill="currentColor" />
-            {/* Crescent on dome */}
-            <path d="M12 5.5C11.2 5.5 10.5 5 10.5 4.3C10.5 3.6 11 3 11.8 3C11.3 3.3 11 3.8 11 4.3C11 4.9 11.4 5.5 12 5.5Z" fill="currentColor" stroke="none" />
-        </svg>
-    )
-}
 
-// Custom Handheld Radio/Walkie-Talkie SVG Icon
-function HandRadioIcon({ className }: { className?: string }) {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={className}
-        >
-            {/* Antenna */}
-            <path d="M12 2V5" />
-            <circle cx="12" cy="2" r="0.5" fill="currentColor" />
-
-            {/* Radio body */}
-            <rect x="7" y="5" width="10" height="17" rx="1.5" />
-
-            {/* Screen/Display */}
-            <rect x="9" y="7" width="6" height="4" rx="0.5" fill="currentColor" fillOpacity="0.2" />
-
-            {/* Speaker grille */}
-            <line x1="9" y1="13" x2="15" y2="13" />
-            <line x1="9" y1="14.5" x2="15" y2="14.5" />
-            <line x1="9" y1="16" x2="15" y2="16" />
-
-            {/* Control buttons */}
-            <circle cx="10" cy="19" r="1" />
-            <circle cx="14" cy="19" r="1" />
-
-            {/* Side button (PTT) */}
-            <rect x="5" y="8" width="2" height="4" rx="0.5" />
-        </svg>
-    )
-}
 
 const navLinks = [
     { name: "Home", href: "#" },
@@ -96,11 +30,6 @@ export function Navbar() {
                         <span className="text-2xl align-text-bottom font-bold font-heading text-foreground ">
                             Minaret Live
                         </span>
-                        {/* <span className="absolute -top-2 -right-7 h-6 w-6 rounded-full
-                         bg-primary flex items-center justify-center animate-pulse">
-
-                            <HandRadioIcon className="h-5 w-5 text-primary-foreground" />
-                        </span> */}
 
                     </div>
                 </a>
