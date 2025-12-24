@@ -11,40 +11,29 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      includeAssets: ['minaret.svg', 'minaret.png'],
+      includeAssets: ['minaret.png'],
       manifest: {
         name: 'Minaret Live',
         short_name: 'Minaret',
         description: 'Listen to live mosque radio broadcasts from around the world',
-        start_url: '/',
-        display: 'standalone',
-        background_color: '#0a0a0a',
         theme_color: '#059669',
-        orientation: 'portrait-primary',
-        id: '/',
+        background_color: '#0a0a0a',
+        display: 'standalone',
+        start_url: '/',
         icons: [
           {
             src: '/minaret.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
           },
           {
             src: '/minaret.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
           },
-          {
-            src: '/minaret.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
-          }
-        ]
-      }
-    })
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
