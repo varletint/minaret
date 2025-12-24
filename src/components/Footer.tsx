@@ -35,7 +35,7 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-4">
                             <Radio className="h-6 w-6 text-primary" />
-                            <span className="text-xl font-heading font-bold">Minaret</span>
+                            <span className="text-xl font-heading font-bold">Minaret Live</span>
                         </div>
                         <p className="text-sm text-muted-foreground max-w-xs mb-6">
                             Your mosque community hub. Listen to live lectures, prayers, find mosques, and connect with your community.
