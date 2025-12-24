@@ -36,6 +36,43 @@ function MosqueIcon({ className }: { className?: string }) {
     )
 }
 
+// Custom Handheld Radio/Walkie-Talkie SVG Icon
+function HandRadioIcon({ className }: { className?: string }) {
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={className}
+        >
+            {/* Antenna */}
+            <path d="M12 2V5" />
+            <circle cx="12" cy="2" r="0.5" fill="currentColor" />
+
+            {/* Radio body */}
+            <rect x="7" y="5" width="10" height="17" rx="1.5" />
+
+            {/* Screen/Display */}
+            <rect x="9" y="7" width="6" height="4" rx="0.5" fill="currentColor" fillOpacity="0.2" />
+
+            {/* Speaker grille */}
+            <line x1="9" y1="13" x2="15" y2="13" />
+            <line x1="9" y1="14.5" x2="15" y2="14.5" />
+            <line x1="9" y1="16" x2="15" y2="16" />
+
+            {/* Control buttons */}
+            <circle cx="10" cy="19" r="1" />
+            <circle cx="14" cy="19" r="1" />
+
+            {/* Side button (PTT) */}
+            <rect x="5" y="8" width="2" height="4" rx="0.5" />
+        </svg>
+    )
+}
+
 const navLinks = [
     { name: "Home", href: "#" },
     { name: "Prayer Times", href: "#prayer-times" },
@@ -56,9 +93,17 @@ export function Navbar() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                         <MosqueIcon className="h-5 w-5 text-primary-foreground" />
                     </div>
-                    <span className="text-xl font-bold font-heading text-foreground">
-                        Minaret
-                    </span>
+                    <div className="relative fex items-center gap-1">
+                        <span className="text-xl font-bold font-heading text-foreground">
+                            Minaret Live
+                        </span>
+                        <span className="absolute -top-2 -right-7 h-6 w-6 rounded-full
+                         bg-primary flex items-center justify-center">
+
+                            <HandRadioIcon className="h-5 w-5 text-primary-foreground" />
+                        </span>
+
+                    </div>
                 </a>
 
                 {/* Desktop Navigation */}

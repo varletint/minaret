@@ -61,7 +61,7 @@ export function MosqueCard({
                         size="icon"
                         onClick={onPlay}
                         className={cn(
-                            "h-12 w-12 rounded-full opacity-0 transition-all duration-300 group-hover:opacity-100",
+                            "h-12 w-12 rounded-full opacity-100 transition-all duration-300 group-hover:opacity-100",
                             isPlaying
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground"
