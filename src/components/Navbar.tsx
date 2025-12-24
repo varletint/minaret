@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Menu } from "lucide-react"
+import appIcon from "@/assets/appIcon.svg"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -89,19 +90,17 @@ export function Navbar() {
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 {/* Logo */}
-                <a href="/" className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                        <MosqueIcon className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div className="relative fex items-center gap-1">
-                        <span className="text-xl font-bold font-heading text-foreground">
+                <a href="/" className="flex place-items-baseline gap-1">
+                    <img src={appIcon} alt="Minaret Live" className="h-9 w-9" />
+                    <div className=" fex items-center gap-1">
+                        <span className="text-2xl align-text-bottom font-bold font-heading text-foreground ">
                             Minaret Live
                         </span>
-                        <span className="absolute -top-2 -right-7 h-6 w-6 rounded-full
+                        {/* <span className="absolute -top-2 -right-7 h-6 w-6 rounded-full
                          bg-primary flex items-center justify-center animate-pulse">
 
                             <HandRadioIcon className="h-5 w-5 text-primary-foreground" />
-                        </span>
+                        </span> */}
 
                     </div>
                 </a>
