@@ -17,7 +17,7 @@ import { Radio, MapPin, Clock, Heart } from "lucide-react"
 const features: FeatureCardProps[] = [
   {
     title: "Live Broadcasts",
-    description: "Listen to live prayers and sermons from mosques around the world",
+    description: "Listen to live lectures, prayers and sermons from mosques around the world",
     icon: Radio,
     gradient: "from-emerald-500 to-teal-600",
   },
@@ -74,10 +74,10 @@ function App() {
 
   const handlePlay = (mosque: Omit<MosqueCardProps, 'onPlay'>) => {
     if (nowPlaying?.name === mosque.name) {
-      // Toggle play/pause for same mosque
+
       setIsPlaying(!isPlaying)
     } else {
-      // Switch to new mosque
+
       setNowPlaying({
         name: mosque.name,
         location: mosque.location,
@@ -101,10 +101,10 @@ function App() {
       <div className="min-h-screen bg-background text-foreground">
         <Navbar />
         <main className="container mx-auto px-4 py-8 pb-24">
-          <h1 className="text-4xl font-bold font-heading">Welcome to Minaret</h1>
+          <h1 className="text-4xl font-bold font-heading">Welcome to Minaret Live</h1>
           <p className="mt-4 text-muted-foreground">Your mosque community hub</p>
 
-          {/* Hero Carousel */}
+
           <div className="mt-8 px-0">
             <Carousel
               opts={{
@@ -125,7 +125,7 @@ function App() {
             </Carousel>
           </div>
 
-          {/* Popular Mosques Section */}
+
           <section className="mt-12">
             <h2 className="text-2xl font-bold font-heading mb-6">Popular Mosques</h2>
             <Carousel className="w-full md:hidden">

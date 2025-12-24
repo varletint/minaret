@@ -32,7 +32,7 @@ export function AudioPlayer({
         >
             <div className="container mx-auto px-4 py-3">
                 <div className="flex items-center gap-4">
-                    {/* Play/Pause Button */}
+
                     <Button
                         size="icon"
                         onClick={onPlayPause}

@@ -98,7 +98,7 @@ export function Navbar() {
                             Minaret Live
                         </span>
                         <span className="absolute -top-2 -right-7 h-6 w-6 rounded-full
-                         bg-primary flex items-center justify-center">
+                         bg-primary flex items-center justify-center animate-pulse">
 
                             <HandRadioIcon className="h-5 w-5 text-primary-foreground" />
                         </span>
@@ -169,7 +169,7 @@ export function Navbar() {
 
                                 {/* Mobile Donate Button */}
                                 <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold">
-                                    Donate Now
+                                    Want to sponsor a program?
                                 </Button>
                             </div>
                         </SheetContent>

@@ -7,6 +7,7 @@ export function Footer() {
         product: [
             { name: "Features", href: "#features" },
             { name: "Mosques", href: "#mosques" },
+            { name: "Live Lectures", href: "#live-lectures" },
             { name: "Prayer Times", href: "#prayer-times" },
             { name: "Live Radio", href: "#live" },
         ],
@@ -16,16 +17,12 @@ export function Footer() {
             { name: "Careers", href: "#careers" },
             { name: "Contact", href: "#contact" },
         ],
-        legal: [
-            { name: "Privacy", href: "#privacy" },
-            { name: "Terms", href: "#terms" },
-            { name: "Cookies", href: "#cookies" },
-        ],
+
     }
 
     const socialLinks = [
         { name: "Twitter", href: "#", icon: Twitter },
-        { name: "GitHub", href: "#", icon: Github },
+
         { name: "Email", href: "mailto:hello@minaret.app", icon: Mail },
     ]
 
@@ -41,7 +38,7 @@ export function Footer() {
                             <span className="text-xl font-heading font-bold">Minaret</span>
                         </div>
                         <p className="text-sm text-muted-foreground max-w-xs mb-6">
-                            Your mosque community hub. Listen to live prayers, find mosques, and connect with your community.
+                            Your mosque community hub. Listen to live lectures, prayers, find mosques, and connect with your community.
                         </p>
                         {/* Social Links */}
                         <div className="flex items-center gap-4">
@@ -92,22 +89,7 @@ export function Footer() {
                         </ul>
                     </div>
 
-                    {/* Legal Links */}
-                    <div>
-                        <h3 className="font-heading font-semibold mb-4">Legal</h3>
-                        <ul className="space-y-3">
-                            {footerLinks.legal.map((link) => (
-                                <li key={link.name}>
-                                    <a
-                                        href={link.href}
-                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                        {link.name}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+
                 </div>
 
                 {/* Bottom Bar */}
