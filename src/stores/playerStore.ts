@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
+// 
 export interface Mosque {
   id: string
   name: string
