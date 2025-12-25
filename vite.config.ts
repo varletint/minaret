@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: 'Minaret',
         description: 'Listen to live mosque radio broadcasts from around the world',
         theme_color: '#059669',
-        background_color: '#0a0a0a',
+        background_color: '#059669',
         display: 'standalone',
         start_url: '/',
         icons: [
