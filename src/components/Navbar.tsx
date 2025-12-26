@@ -23,7 +23,7 @@ export function Navbar() {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                {/* Logo */}
+
                 <a href="/" className="flex place-items-baseline gap-1">
                     <img src={appIcon} alt="Minaret Live" className="h-9 w-9" />
                     <div className=" fex items-center gap-1">
@@ -34,7 +34,6 @@ export function Navbar() {
                     </div>
                 </a>
 
-                {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-6">
                     {navLinks.map((link) => (
                         <a
@@ -47,7 +46,6 @@ export function Navbar() {
                     ))}
                 </nav>
 
-                {/* Right Section */}
                 <div className="flex items-center gap-2">
                     {/* Live Badge */}
                     <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
@@ -58,10 +56,8 @@ export function Navbar() {
                         <span className="text-xs font-semibold text-primary">LIVE</span>
                     </div>
 
-                    {/* Theme Toggle */}
                     <ModeToggle />
 
-                    {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild className="md:hidden">
                             <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -80,7 +76,6 @@ export function Navbar() {
                                     <span className="text-sm font-semibold text-primary">LIVE NOW</span>
                                 </div>
 
-                                {/* Mobile Nav Links */}
                                 <nav className="flex flex-col gap-1">
                                     {navLinks.map((link) => (
                                         <a
@@ -95,7 +90,6 @@ export function Navbar() {
                                     ))}
                                 </nav>
 
-                                {/* Mobile Donate Button */}
                                 <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold">
                                     Want to sponsor a program?
                                 </Button>
