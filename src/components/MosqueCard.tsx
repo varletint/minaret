@@ -28,7 +28,7 @@ export function MosqueCard({
         <Card
             className={cn(
                 "group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/30",
-                isPlaying && "ring-2 ring-primary border-primary",
+                isPlaying && "",
                 className
             )}
         >

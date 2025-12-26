@@ -11,12 +11,12 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['minaret.png'],
+      includeAssets: ['appicon3.png'],
       manifest: {
         name: 'Minaret Live',
-        short_name: 'Minaret',
+        short_name: 'Minaret Live',
         description: 'Listen to live mosque radio broadcasts from around the world',
-        theme_color: '#059669',
+        theme_color: '#ffffff',
         background_color: '#059669',
         display: 'standalone',
         start_url: '/',
