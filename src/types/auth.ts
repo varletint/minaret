@@ -1,12 +1,13 @@
-// User type
-export interface User {
+// Mosque type (the logged-in entity for station owners)
+export interface Mosque {
   id: string;
-  username: string;
+  name: string;
   email: string;
-  role: "user" | "admin" | "station_owner";
-  createdAt: string;
-  updatedAt: string;
+  slug: string;
 }
+
+// User type (alias for Mosque in auth context)
+export type User = Mosque;
 
 // Auth request/response types
 export interface LoginCredentials {
@@ -15,29 +16,29 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
 
 export interface AuthResponse {
-  success: boolean;
+  status: string;
   data: {
-    user: User;
+    mosque: Mosque;
     accessToken: string;
   };
   message?: string;
 }
 
 export interface UserResponse {
-  success: boolean;
+  status: string;
   data: {
-    user: User;
+    mosque: Mosque;
   };
 }
 
 export interface RefreshResponse {
-  success: boolean;
+  status: string;
   data: {
     accessToken: string;
   };
@@ -45,7 +46,7 @@ export interface RefreshResponse {
 
 // API Error type
 export interface ApiError {
-  success: false;
+  status: "error" | "fail";
   message: string;
   errors?: Record<string, string[]>;
 }

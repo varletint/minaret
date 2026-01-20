@@ -12,7 +12,7 @@ import { useAuth, getAuthErrorMessage } from "@/hooks/useAuth";
 // Validation schema
 const registerSchema = z
   .object({
-    username: z
+    name: z
       .string()
       .min(2, "Mosque name must be at least 2 characters")
       .max(50, "Mosque name must be less than 50 characters"),
@@ -48,7 +48,7 @@ export function RegisterPage() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await registerAsync({
-        username: data.username,
+        name: data.name,
         email: data.email,
         password: data.password,
       });
@@ -84,23 +84,21 @@ export function RegisterPage() {
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
           {/* Mosque Name */}
           <div className='space-y-2'>
-            <label htmlFor='username' className='text-sm font-medium'>
+            <label htmlFor='name' className='text-sm font-medium'>
               Mosque Name
             </label>
             <div className='relative'>
               <User className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
               <input
-                id='username'
+                id='name'
                 type='text'
                 placeholder='Central Mosque'
                 className='w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all'
-                {...register("username")}
+                {...register("name")}
               />
             </div>
-            {errors.username && (
-              <p className='text-sm text-destructive'>
-                {errors.username.message}
-              </p>
+            {errors.name && (
+              <p className='text-sm text-destructive'>{errors.name.message}</p>
             )}
           </div>
 

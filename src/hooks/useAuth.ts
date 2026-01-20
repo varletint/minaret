@@ -18,34 +18,25 @@ export const authKeys = {
   profile: () => [...authKeys.all, "profile"] as const,
 };
 
-/**
- * Hook to get current authenticated user
- * - Catches errors and returns null (prevents error state loops)
- * - staleTime prevents unnecessary refetches
- */
 export const useUser = () => {
   return useQuery({
     queryKey: authKeys.user(),
     queryFn: async (): Promise<User | null> => {
       try {
         const response = await authService.getMe();
-        return response.data.user;
+        return response.data.mosque;
       } catch {
-        // Return null on error - don't throw
-        // This prevents React Query from seeing it as an error state
         return null;
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: false, // Don't retry on failure
-    refetchOnWindowFocus: false, // Prevent refetch loops on tab focus
-    refetchOnReconnect: false, // Prevent refetch loops on network reconnect
+    staleTime: 5 * 60 * 1000,
+    // gcTime: 0,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 
-/**
- * Hook for user login
- */
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -53,27 +44,23 @@ export const useLogin = () => {
     mutationFn: (credentials: LoginCredentials) =>
       authService.login(credentials),
     onSuccess: (data) => {
-      // 1. Explicitly set access token
       setAccessToken(data.data.accessToken);
 
-      // 2. Update user in cache
-      queryClient.setQueryData(authKeys.user(), data.data.user);
+      // queryClient.setQueryData(authKeys.user(), data.data.mosque);
 
-      // 3. Invalidate related auth queries
-      queryClient.invalidateQueries({ queryKey: authKeys.session() });
-      queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
-      queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+      // queryClient.invalidateQueries({ queryKey: authKeys.session() });
+      // queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
+      // queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+      // queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+      // 2. Update user in cache IMMEDIATELY
+      queryClient.setQueryData(authKeys.user(), data.data.mosque);
     },
     onError: (_error: AxiosError<ApiError>) => {
       setAccessToken(null);
-      // Error message available via: error.response?.data?.message
     },
   });
 };
 
-/**
- * Hook for user registration
- */
 export const useRegister = () => {
   const queryClient = useQueryClient();
 
@@ -81,16 +68,12 @@ export const useRegister = () => {
     mutationFn: (credentials: RegisterCredentials) =>
       authService.register(credentials),
     onSuccess: (data) => {
-      // 1. Explicitly set access token
       setAccessToken(data.data.accessToken);
 
-      // 2. Update user in cache
-      queryClient.setQueryData(authKeys.user(), data.data.user);
-
-      // 3. Invalidate related auth queries
       queryClient.invalidateQueries({ queryKey: authKeys.session() });
       queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+      queryClient.setQueryData(authKeys.user(), data.data.mosque);
     },
     onError: (_error: AxiosError<ApiError>) => {
       setAccessToken(null);
@@ -98,24 +81,17 @@ export const useRegister = () => {
   });
 };
 
-/**
- * Hook for user logout
- */
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: () => authService.logout(),
     onSuccess: () => {
-      // Clear access token
       setAccessToken(null);
-      // Clear user from cache
       queryClient.setQueryData(authKeys.user(), null);
-      // Remove all auth-related queries
       queryClient.removeQueries({ queryKey: authKeys.all });
     },
     onError: (_error: AxiosError<ApiError>) => {
-      // Even if logout fails, clear local state
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
       queryClient.removeQueries({ queryKey: authKeys.all });
@@ -123,17 +99,11 @@ export const useLogout = () => {
   });
 };
 
-/**
- * Helper hook to check if user is authenticated
- */
 export const useIsAuthenticated = (): boolean => {
   const { data: user, isLoading } = useUser();
   return !isLoading && !!user;
 };
 
-/**
- * Helper hook to get user with loading state
- */
 export const useAuth = () => {
   const userQuery = useUser();
   const loginMutation = useLogin();
@@ -165,9 +135,6 @@ export const useAuth = () => {
   };
 };
 
-/**
- * Helper to extract error message from API error
- */
 export const getAuthErrorMessage = (
   error: AxiosError<ApiError> | null
 ): string | null => {
