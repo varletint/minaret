@@ -20,19 +20,24 @@ export const authKeys = {
 
 /**
  * Hook to get current authenticated user
- * - Runs on app load to check auth status
+ * - Catches errors and returns null (prevents error state loops)
  * - staleTime prevents unnecessary refetches
  */
 export const useUser = () => {
   return useQuery({
     queryKey: authKeys.user(),
-    queryFn: async () => {
-      const response = await authService.getMe();
-      return response.data.user;
+    queryFn: async (): Promise<User | null> => {
+      try {
+        const response = await authService.getMe();
+        return response.data.user;
+      } catch {
+        // Return null on error - don't throw
+        // This prevents React Query from seeing it as an error state
+        return null;
+      }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 0, // Don't cache failed auth queries - prevents stale 401s from retriggering
-    retry: false, // Don't retry on 401
+    retry: false, // Don't retry on failure
     refetchOnWindowFocus: false, // Prevent refetch loops on tab focus
     refetchOnReconnect: false, // Prevent refetch loops on network reconnect
   });
@@ -106,16 +111,14 @@ export const useLogout = () => {
       setAccessToken(null);
       // Clear user from cache
       queryClient.setQueryData(authKeys.user(), null);
-      // Invalidate all auth-related queries
-      queryClient.invalidateQueries({ queryKey: authKeys.all });
-      // Clear all cached data
-      queryClient.clear();
+      // Remove all auth-related queries
+      queryClient.removeQueries({ queryKey: authKeys.all });
     },
     onError: (_error: AxiosError<ApiError>) => {
       // Even if logout fails, clear local state
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
-      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      queryClient.removeQueries({ queryKey: authKeys.all });
     },
   });
 };
