@@ -31,7 +31,10 @@ export const useUser = () => {
       return response.data.user;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 0, // Don't cache failed auth queries - prevents stale 401s from retriggering
     retry: false, // Don't retry on 401
+    refetchOnWindowFocus: false, // Prevent refetch loops on tab focus
+    refetchOnReconnect: false, // Prevent refetch loops on network reconnect
   });
 };
 

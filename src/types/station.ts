@@ -14,6 +14,12 @@ export interface Station {
   updatedAt: string;
 }
 
+export interface DisplayStation extends Station {
+  location: string;
+  listeners?: number;
+  schedule?: import("./show").Show[];
+}
+
 // Request types
 export interface CreateStationInput {
   name: string;

@@ -4,7 +4,12 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PublicLayout, AuthLayout } from "@/layouts";
 import { HomePage } from "@/pages/Home";
-import { LoginPage, RegisterPage } from "@/pages";
+import {
+  LoginPage,
+  RegisterPage,
+  MosquesPage,
+  MosqueDetailPage,
+} from "@/pages";
 import { useAuth } from "@/hooks/useAuth";
 
 // Create a client
@@ -68,9 +73,8 @@ function AppRouter() {
       {/* Public routes with footer */}
       <Route element={<PublicLayout />}>
         <Route path='/' element={<HomePage />} />
-        {/* Phase 2: Mosques pages will go here */}
-        {/* <Route path="/mosques" element={<MosquesPage />} /> */}
-        {/* <Route path="/mosques/:id" element={<MosqueDetailPage />} /> */}
+        <Route path='/mosques' element={<MosquesPage />} />
+        <Route path='/mosques/:id' element={<MosqueDetailPage />} />
       </Route>
 
       {/* Auth routes - centered, no footer */}
