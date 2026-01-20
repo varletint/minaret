@@ -60,21 +60,16 @@ api.interceptors.response.use(
       originalRequest.url?.includes("/auth/register");
     const isMeRequest = originalRequest.url?.includes("/auth/me");
 
-    // If /auth/me fails and we had no token to begin with, don't try to refresh
-    const hadNoToken = !originalRequest.headers?.Authorization;
-
     // Handle 401 - attempt token refresh
+    // Skip retry for /auth/me entirely - it's a session check, not a protected resource
+    // If user has no valid session, trying to refresh will cause loops
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       !isRefreshRequest &&
-      !isAuthRequest
+      !isAuthRequest &&
+      !isMeRequest // Never retry /auth/me - fail cleanly instead
     ) {
-      // Don't retry /auth/me if we never had a token
-      if (isMeRequest && hadNoToken) {
-        return Promise.reject(error);
-      }
-
       // Prevent infinite refresh loops
       if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
         console.warn("[API] Max refresh attempts reached, clearing auth");
