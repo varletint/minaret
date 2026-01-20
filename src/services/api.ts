@@ -1,4 +1,5 @@
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+import type { InternalAxiosRequestConfig } from "axios";
 
 // In-memory token storage (more secure than localStorage)
 let accessToken: string | null = null;

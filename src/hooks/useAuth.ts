@@ -1,12 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { authService } from "@/services/authService";
 import { setAccessToken } from "@/services/api";
-import type { LoginCredentials, RegisterCredentials, User } from "@/types/auth";
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  User,
+  ApiError,
+} from "@/types/auth";
 
-// Query keys
+// Query keys - more granular for targeted invalidation
 export const authKeys = {
   all: ["auth"] as const,
   user: () => [...authKeys.all, "user"] as const,
+  session: () => [...authKeys.all, "session"] as const,
+  permissions: () => [...authKeys.all, "permissions"] as const,
+  profile: () => [...authKeys.all, "profile"] as const,
 };
 
 /**
@@ -36,11 +45,20 @@ export const useLogin = () => {
     mutationFn: (credentials: LoginCredentials) =>
       authService.login(credentials),
     onSuccess: (data) => {
-      // Update user in cache
+      // 1. Explicitly set access token
+      setAccessToken(data.data.accessToken);
+
+      // 2. Update user in cache
       queryClient.setQueryData(authKeys.user(), data.data.user);
+
+      // 3. Invalidate related auth queries
+      queryClient.invalidateQueries({ queryKey: authKeys.session() });
+      queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
+      queryClient.invalidateQueries({ queryKey: authKeys.profile() });
     },
-    onError: () => {
+    onError: (error: AxiosError<ApiError>) => {
       setAccessToken(null);
+      // Error message available via: error.response?.data?.message
     },
   });
 };
@@ -55,10 +73,18 @@ export const useRegister = () => {
     mutationFn: (credentials: RegisterCredentials) =>
       authService.register(credentials),
     onSuccess: (data) => {
-      // Update user in cache
+      // 1. Explicitly set access token
+      setAccessToken(data.data.accessToken);
+
+      // 2. Update user in cache
       queryClient.setQueryData(authKeys.user(), data.data.user);
+
+      // 3. Invalidate related auth queries
+      queryClient.invalidateQueries({ queryKey: authKeys.session() });
+      queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
+      queryClient.invalidateQueries({ queryKey: authKeys.profile() });
     },
-    onError: () => {
+    onError: (error: AxiosError<ApiError>) => {
       setAccessToken(null);
     },
   });
@@ -77,13 +103,16 @@ export const useLogout = () => {
       setAccessToken(null);
       // Clear user from cache
       queryClient.setQueryData(authKeys.user(), null);
-      // Invalidate all queries
+      // Invalidate all auth-related queries
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
+      // Clear all cached data
       queryClient.clear();
     },
-    onError: () => {
+    onError: (error: AxiosError<ApiError>) => {
       // Even if logout fails, clear local state
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
+      queryClient.invalidateQueries({ queryKey: authKeys.all });
     },
   });
 };
@@ -106,22 +135,36 @@ export const useAuth = () => {
   const logoutMutation = useLogout();
 
   return {
+    // User state
     user: userQuery.data as User | null | undefined,
     isLoading: userQuery.isLoading,
     isAuthenticated: !!userQuery.data,
     error: userQuery.error,
 
+    // Login
     login: loginMutation.mutate,
     loginAsync: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
-    loginError: loginMutation.error,
+    loginError: loginMutation.error as AxiosError<ApiError> | null,
 
+    // Register
     register: registerMutation.mutate,
     registerAsync: registerMutation.mutateAsync,
     isRegistering: registerMutation.isPending,
-    registerError: registerMutation.error,
+    registerError: registerMutation.error as AxiosError<ApiError> | null,
 
+    // Logout
     logout: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
   };
+};
+
+/**
+ * Helper to extract error message from API error
+ */
+export const getAuthErrorMessage = (
+  error: AxiosError<ApiError> | null
+): string | null => {
+  if (!error) return null;
+  return error.response?.data?.message || error.message || "An error occurred";
 };
