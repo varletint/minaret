@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { showService } from "@/services/showService";
 import type { CreateShowInput, UpdateShowInput } from "@/types/show";
-import { stationKeys } from "./useStations";
 
 // Query keys
 export const showKeys = {

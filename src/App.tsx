@@ -1,178 +1,131 @@
-import { useState } from "react"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Navbar } from "@/components/Navbar"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import { FeatureCard, type FeatureCardProps } from "@/components/FeatureCard"
-import { MosqueCard, type MosqueCardProps } from "@/components/MosqueCard"
-import { AudioPlayer } from "@/components/AudioPlayer"
-import { Footer } from "@/components/Footer"
-import { Radio, MapPin, Clock, Heart } from "lucide-react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
+import { PublicLayout, AuthLayout } from "@/layouts";
+import { HomePage } from "@/pages/Home";
+import { LoginPage, RegisterPage } from "@/pages";
+import { useAuth } from "@/hooks/useAuth";
 
-const features: FeatureCardProps[] = [
-  {
-    title: "Live Broadcasts",
-    description: "Listen to live lectures, prayers and sermons from mosques around the world",
-    icon: Radio,
-    gradient: "from-emerald-500 to-teal-600",
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
   },
-  {
-    title: "Find Mosques",
-    description: "Discover mosques in your area with prayer times and directions",
-    icon: MapPin,
-    gradient: "from-blue-500 to-indigo-600",
-  },
-  {
-    title: "Prayer Times",
-    description: "Accurate prayer times based on your location",
-    icon: Clock,
-    gradient: "from-purple-500 to-pink-600",
-  },
-  {
-    title: "Community",
-    description: "Connect with your local mosque community",
-    icon: Heart,
-    gradient: "from-orange-500 to-red-600",
-  },
-]
+});
 
-const mosques: Omit<MosqueCardProps, 'onPlay'>[] = [
-  {
-    name: "Massalacin Zawiyya",
-    location: "Kontagora, Niger State",
-    listeners: 500,
-    isLive: true,
-  },
-  {
-    name: "Massalacin Nasarawa",
-    location: "Kontagora, Niger State",
-    listeners: 500,
-    isLive: true,
-  },
-  {
-    name: "Central Mosque",
-    location: "Kontagora, Niger State",
-    listeners: 3200,
-    isLive: false,
-  },
-]
+/**
+ * Protected route wrapper - redirects to login if not authenticated
+ */
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuth();
 
-interface NowPlaying {
-  name: string
-  location: string
-  isLive: boolean
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500' />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to='/login' replace />;
+  }
+
+  return <>{children}</>;
+}
+
+/**
+ * Guest route wrapper - redirects to dashboard if already authenticated
+ */
+function GuestRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500' />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to='/dashboard' replace />;
+  }
+
+  return <>{children}</>;
+}
+
+/**
+ * App Router
+ */
+function AppRouter() {
+  return (
+    <Routes>
+      {/* Public routes with footer */}
+      <Route element={<PublicLayout />}>
+        <Route path='/' element={<HomePage />} />
+        {/* Phase 2: Mosques pages will go here */}
+        {/* <Route path="/mosques" element={<MosquesPage />} /> */}
+        {/* <Route path="/mosques/:id" element={<MosqueDetailPage />} /> */}
+      </Route>
+
+      {/* Auth routes - centered, no footer */}
+      <Route element={<AuthLayout />}>
+        <Route
+          path='/login'
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          }
+        />
+      </Route>
+
+      {/* Dashboard routes - protected */}
+      {/* Phase 3: Dashboard will go here */}
+      <Route
+        path='/dashboard'
+        element={
+          <ProtectedRoute>
+            <div className='min-h-screen flex items-center justify-center'>
+              <div className='text-center'>
+                <h1 className='text-2xl font-bold'>Dashboard</h1>
+                <p className='text-muted-foreground mt-2'>Coming in Phase 3</p>
+              </div>
+            </div>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Catch all - redirect to home */}
+      <Route path='*' element={<Navigate to='/' replace />} />
+    </Routes>
+  );
 }
 
 function App() {
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-
-  const handlePlay = (mosque: Omit<MosqueCardProps, 'onPlay'>) => {
-    if (nowPlaying?.name === mosque.name) {
-
-      setIsPlaying(!isPlaying)
-    } else {
-
-      setNowPlaying({
-        name: mosque.name,
-        location: mosque.location,
-        isLive: mosque.isLive ?? false,
-      })
-      setIsPlaying(true)
-    }
-  }
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying)
-  }
-
-  const handleClose = () => {
-    setNowPlaying(null)
-    setIsPlaying(false)
-  }
-
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="minaret-theme">
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
-        <main className="container mx-auto px-4 py-8 pb-24">
-          <h1 className="text-4xl font-bold font-heading">Welcome to Minaret Live</h1>
-          <p className="mt-4 text-muted-foreground">Your mosque community hub</p>
-
-
-          <div className="mt-8 px-0">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {features.map((feature, index) => (
-                  <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                    <FeatureCard {...feature} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background" />
-              <CarouselNext className="right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background" />
-            </Carousel>
-          </div>
-
-
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold font-heading mb-6">Popular Mosques</h2>
-            <Carousel className="w-full md:hidden">
-              <CarouselContent>
-                {mosques.map((mosque, index) => (
-                  <CarouselItem key={index}>
-                    <MosqueCard
-                      {...mosque}
-                      isPlaying={nowPlaying?.name === mosque.name && isPlaying}
-                      onPlay={() => handlePlay(mosque)}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background" />
-              <CarouselNext className="right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background" />
-            </Carousel>
-            <div className="md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-              {mosques.map((mosque, index) => (
-                <MosqueCard
-                  key={index}
-                  {...mosque}
-                  isPlaying={nowPlaying?.name === mosque.name && isPlaying}
-                  onPlay={() => handlePlay(mosque)}
-                />
-              ))}
-            </div>
-          </section>
-        </main>
-
-        {/* Footer */}
-        <Footer />
-
-        {/* Fixed Audio Player */}
-        {nowPlaying && (
-          <AudioPlayer
-            mosqueName={nowPlaying.name}
-            location={nowPlaying.location}
-            isLive={nowPlaying.isLive}
-            isPlaying={isPlaying}
-            onPlayPause={handlePlayPause}
-            onClose={handleClose}
-          />
-        )}
-      </div>
-    </ThemeProvider>
-  )
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme='dark' storageKey='minaret-theme'>
+        <BrowserRouter>
+          <AppRouter />
+        </BrowserRouter>
+        <Toaster position='top-right' richColors closeButton theme='system' />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;

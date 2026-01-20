@@ -56,7 +56,7 @@ export const useLogin = () => {
       queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
     },
-    onError: (error: AxiosError<ApiError>) => {
+    onError: (_error: AxiosError<ApiError>) => {
       setAccessToken(null);
       // Error message available via: error.response?.data?.message
     },
@@ -84,7 +84,7 @@ export const useRegister = () => {
       queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
     },
-    onError: (error: AxiosError<ApiError>) => {
+    onError: (_error: AxiosError<ApiError>) => {
       setAccessToken(null);
     },
   });
@@ -108,7 +108,7 @@ export const useLogout = () => {
       // Clear all cached data
       queryClient.clear();
     },
-    onError: (error: AxiosError<ApiError>) => {
+    onError: (_error: AxiosError<ApiError>) => {
       // Even if logout fails, clear local state
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);

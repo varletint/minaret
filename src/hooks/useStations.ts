@@ -1,10 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { stationService } from "@/services/stationService";
-import type {
-  CreateStationInput,
-  UpdateStationInput,
-  Station,
-} from "@/types/station";
+import type { CreateStationInput, UpdateStationInput } from "@/types/station";
 
 // Query keys
 export const stationKeys = {
