@@ -15,7 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import type { DisplayStation } from "@/types/station";
-import type { Show } from "@/types/show";
 
 // Mock data - will be replaced with API call
 const mockMosqueDetails: Record<string, DisplayStation> = {
