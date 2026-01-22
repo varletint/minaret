@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -10,6 +9,7 @@ import { FeatureCard, type FeatureCardProps } from "@/components/FeatureCard";
 import { MosqueCard, type MosqueCardProps } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { Radio, MapPin, Clock, Heart } from "lucide-react";
+import { usePlayerStore } from "@/stores/playerStore";
 
 const features: FeatureCardProps[] = [
   {
@@ -61,24 +61,19 @@ const mosques: Omit<MosqueCardProps, "onPlay">[] = [
   },
 ];
 
-interface NowPlaying {
-  name: string;
-  location: string;
-  isLive: boolean;
-}
-
 export function HomePage() {
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
+    usePlayerStore();
 
   const handlePlay = (mosque: Omit<MosqueCardProps, "onPlay">) => {
-    if (nowPlaying?.name === mosque.name) {
+    if (currentMosque?.name === mosque.name) {
       setIsPlaying(!isPlaying);
     } else {
-      setNowPlaying({
+      setCurrentMosque({
+        id: mosque.name, // Using name as fallback ID for mock data
         name: mosque.name,
         location: mosque.location,
-        isLive: mosque.isLive ?? false,
+        mountPoint: mosque.name,
       });
       setIsPlaying(true);
     }
@@ -89,7 +84,7 @@ export function HomePage() {
   };
 
   const handleClose = () => {
-    setNowPlaying(null);
+    setCurrentMosque(null);
     setIsPlaying(false);
   };
 
@@ -134,7 +129,7 @@ export function HomePage() {
                 <CarouselItem key={index}>
                   <MosqueCard
                     {...mosque}
-                    isPlaying={nowPlaying?.name === mosque.name && isPlaying}
+                    isPlaying={currentMosque?.name === mosque.name && isPlaying}
                     onPlay={() => handlePlay(mosque)}
                   />
                 </CarouselItem>
@@ -148,7 +143,7 @@ export function HomePage() {
               <MosqueCard
                 key={index}
                 {...mosque}
-                isPlaying={nowPlaying?.name === mosque.name && isPlaying}
+                isPlaying={currentMosque?.name === mosque.name && isPlaying}
                 onPlay={() => handlePlay(mosque)}
               />
             ))}
@@ -157,11 +152,11 @@ export function HomePage() {
       </main>
 
       {/* Fixed Audio Player */}
-      {nowPlaying && (
+      {currentMosque && (
         <AudioPlayer
-          mosqueName={nowPlaying.name}
-          location={nowPlaying.location}
-          isLive={nowPlaying.isLive}
+          mosqueName={currentMosque.name}
+          location={currentMosque.location}
+          isLive={true}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           onClose={handleClose}

@@ -69,8 +69,8 @@ export function RegisterPage() {
       <div className='bg-card border border-border rounded-2xl p-8 shadow-xl backdrop-blur-sm'>
         {/* Header */}
         <div className='text-center mb-8'>
-          <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-emerald-500 to-teal-600 mb-4'>
-            <span className='text-2xl'>🕌</span>
+          <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary mb-4'>
+            <span className='text-2xl'></span>
           </div>
           <h1 className='text-2xl font-bold font-heading'>
             Register Your Mosque
@@ -190,7 +190,7 @@ export function RegisterPage() {
           <Button
             type='submit'
             disabled={isRegistering}
-            className='w-full h-11 bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium'>
+            className='w-full h-11 bg-primary hover:from-emerald-600 hover:to-teal-700 text-white font-medium'>
             {isRegistering ? (
               <>
                 <Loader2 className='h-4 w-4 animate-spin' />

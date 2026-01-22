@@ -2,7 +2,7 @@ import { Radio, MapPin, Users, Play, Pause } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import type { CurrentTrack } from "@/types/station";
 
 export interface MosqueCardProps {
   name: string;
@@ -13,6 +13,7 @@ export interface MosqueCardProps {
   imageUrl?: string;
   onPlay?: () => void;
   className?: string;
+  currentTrack?: CurrentTrack;
 }
 
 export function MosqueCard({
@@ -24,6 +25,7 @@ export function MosqueCard({
   imageUrl,
   onPlay,
   className,
+  currentTrack,
 }: MosqueCardProps) {
   return (
     <Card
@@ -78,17 +80,24 @@ export function MosqueCard({
       </div>
 
       <CardContent className='p-4'>
-        {/* Mosque Name */}
-
-        <h3 className='font-heading font-semibold text-foreground truncate'>
-          {name}
-        </h3>
-
-        {/* Location & Listeners */}
         <div className='mt-2 flex items-center justify-between text-sm text-muted-foreground'>
           <div className='flex items-center gap-1.5'>
+            <h3 className=' font-semibold'>Title:</h3>
+            <span className='truncate capitalize'>
+              {currentTrack?.title}
+            </span>{" "}
+            <span className='capitalize'>by {currentTrack?.artist}</span>
+            <br />
+          </div>
+        </div>
+        <h3 className=' mt-1 font-heading font-semibold text-foreground truncate'>
+          {name}
+        </h3>
+        {/* Location & Listeners */}
+        <div className=' flex items-center justify-between text-sm text-muted-foreground'>
+          <div className='flex items-center gap-1.5'>
             <MapPin className='h-3.5 w-3.5' />
-            <span className='truncate capitalize'>{location}</span>
+            <span className='truncate capitalize'>{location}</span> <br />
           </div>
 
           {listeners > 0 && (

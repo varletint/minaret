@@ -7,7 +7,6 @@ export interface Mosque {
   location?: string;
 }
 
-// User type (alias for Mosque in auth context)
 export type User = Mosque;
 
 // Profile update input

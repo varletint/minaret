@@ -35,10 +35,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s1",
         title: "Fajr Prayer",
-        startTime: "5:30 AM",
-        endTime: "6:00 AM",
+        scheduledStart: "5:30 AM",
+        scheduledEnd: "6:00 AM",
         isRecurring: true,
-        recurringDays: [0, 1, 2, 3, 4, 5, 6],
+        recurrence: [0, 1, 2, 3, 4, 5, 6],
         stationId: "1",
         description: "",
         createdAt: "",
@@ -47,10 +47,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s2",
         title: "Dhuhr Prayer",
-        startTime: "1:00 PM",
-        endTime: "1:30 PM",
+        scheduledStart: "1:00 PM",
+        scheduledEnd: "1:30 PM",
         isRecurring: true,
-        recurringDays: [0, 1, 2, 3, 4, 5, 6],
+        recurrence: [0, 1, 2, 3, 4, 5, 6],
         stationId: "1",
         description: "",
         createdAt: "",
@@ -59,8 +59,8 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s3",
         title: "Jumu'ah Prayer",
-        startTime: "1:30 PM",
-        endTime: "2:30 PM",
+        scheduledStart: "1:30 PM",
+        scheduledEnd: "2:30 PM",
         isRecurring: false,
         stationId: "1",
         description: "",
@@ -70,10 +70,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s4",
         title: "Asr Prayer",
-        startTime: "4:30 PM",
-        endTime: "5:00 PM",
+        scheduledStart: "4:30 PM",
+        scheduledEnd: "5:00 PM",
         isRecurring: true,
-        recurringDays: [0, 1, 2, 3, 4, 5, 6],
+        recurrence: [0, 1, 2, 3, 4, 5, 6],
         stationId: "1",
         description: "",
         createdAt: "",
@@ -82,10 +82,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s5",
         title: "Maghrib Prayer",
-        startTime: "6:30 PM",
-        endTime: "7:00 PM",
+        scheduledStart: "6:30 PM",
+        scheduledEnd: "7:00 PM",
         isRecurring: true,
-        recurringDays: [0, 1, 2, 3, 4, 5, 6],
+        recurrence: [0, 1, 2, 3, 4, 5, 6],
         stationId: "1",
         description: "",
         createdAt: "",
@@ -94,10 +94,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s6",
         title: "Isha Prayer",
-        startTime: "8:00 PM",
-        endTime: "8:30 PM",
+        scheduledStart: "8:00 PM",
+        scheduledEnd: "8:30 PM",
         isRecurring: true,
-        recurringDays: [0, 1, 2, 3, 4, 5, 6],
+        recurrence: [0, 1, 2, 3, 4, 5, 6],
         stationId: "1",
         description: "",
         createdAt: "",
@@ -106,10 +106,10 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s7",
         title: "Weekly Tafsir",
-        startTime: "After Maghrib",
-        endTime: "8:00 PM",
+        scheduledStart: "After Maghrib",
+        scheduledEnd: "8:00 PM",
         isRecurring: true,
-        recurringDays: [0], // Sunday
+        recurrence: [0], // Sunday
         stationId: "1",
         description: "",
         createdAt: "",
@@ -134,8 +134,8 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s8",
         title: "Jumu'ah Prayer",
-        startTime: "1:30 PM",
-        endTime: "2:30 PM",
+        scheduledStart: "1:30 PM",
+        scheduledEnd: "2:30 PM",
         isRecurring: false,
         stationId: "3",
         description: "",
@@ -145,8 +145,8 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
       {
         id: "s9",
         title: "Eid Prayers",
-        startTime: "10:00 AM",
-        endTime: "12:00 PM",
+        scheduledStart: "10:00 AM",
+        scheduledEnd: "12:00 PM",
         isRecurring: false,
         stationId: "3",
         description: "",
@@ -218,8 +218,8 @@ export function MosqueDetailPage() {
           <div className='flex flex-col md:flex-row gap-6'>
             {/* Mosque Logo/Icon */}
             <div className='shrink-0'>
-              <div className='w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 flex items-center justify-center'>
-                <span className='text-4xl md:text-5xl'>🕌</span>
+              <div className='w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary flex items-center justify-center'>
+                {/* <span className='text-4xl md:text-5xl'></span> */}
               </div>
             </div>
 
@@ -267,7 +267,7 @@ export function MosqueDetailPage() {
                   <Button
                     onClick={handlePlayPause}
                     disabled={!mosque.isLive}
-                    className='bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'>
+                    className='bg-primary hover:from-emerald-600 hover:to-teal-700'>
                     {isPlaying ? (
                       <>
                         <Pause className='h-4 w-4 mr-2' />
@@ -313,7 +313,7 @@ export function MosqueDetailPage() {
                       <p className='font-medium'>{item.title}</p>
                       <p className='text-sm text-muted-foreground'>
                         {/* {item.day ? `${item.day} • ` : "Daily • "} */}
-                        {item.startTime}
+                        {item.scheduledEnd}
                       </p>
                     </div>
                   </div>
@@ -339,6 +339,7 @@ export function MosqueDetailPage() {
         <AudioPlayer
           mosqueName={mosque.name}
           location={mosque.location}
+          streamUrl={mosque.streamUrl}
           isLive={mosque.isLive}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}

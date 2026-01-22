@@ -1,3 +1,4 @@
+import type { CurrentTrack } from "@/types/station";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 export interface Mosque {
@@ -6,7 +7,8 @@ export interface Mosque {
   location: string;
   mountPoint: string;
   description?: string;
-  streamUrl: string;
+  streamUrl?: string;
+  currentTrack: CurrentTrack;
 }
 
 interface PlayerState {
