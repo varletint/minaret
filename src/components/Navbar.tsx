@@ -37,9 +37,9 @@ export function Navbar() {
     <header className='sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <div className='container mx-auto flex h-16 items-center justify-between px-4'>
         <Link to='/' className='flex place-items-baseline gap-1'>
-          <img src={appIcon} alt='Minaret Live' className='h-9 w-9' />
+          {/* <img src={appIcon} alt='Minaret Live' className='h-9 w-9' /> */}
           <div className='flex items-center gap-1'>
-            <span className='text-2xl align-text-bottom font-bold font-heading text-foreground '>
+            <span className='text-2xl sm:text-xl align-text-bottom font-bold font-heading text-foreground text-nowrap'>
               Minaret Live
             </span>
           </div>
@@ -51,7 +51,7 @@ export function Navbar() {
             <Link
               key={link.name}
               to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-colors hover:text-primary text-nowrap ${
                 pathname === link.href
                   ? "text-foreground"
                   : "text-muted-foreground"
@@ -63,13 +63,13 @@ export function Navbar() {
 
         <div className='flex items-center gap-2'>
           {/* Live Badge */}
-          <div className='hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20'>
-            <span className='relative flex h-2 w-2'>
-              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
-              <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
-            </span>
-            <span className='text-xs font-semibold text-primary'>LIVE</span>
-          </div>
+          {/* <div className='hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20'> */}
+          <span className='relative flex h-2 w-2'>
+            <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
+            <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
+          </span>
+          {/* <span className='text-xs font-semibold text-primary'>LIVE</span> */}
+          {/* </div> */}
 
           <ModeToggle />
 
@@ -83,7 +83,7 @@ export function Navbar() {
                     className='relative h-8 w-8 rounded-full'>
                     <Avatar className='h-8 w-8'>
                       <AvatarFallback>
-                        {user.username?.charAt(0).toUpperCase() || "U"}
+                        {user.name?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -92,7 +92,7 @@ export function Navbar() {
                   <DropdownMenuLabel className='font-normal'>
                     <div className='flex flex-col space-y-1'>
                       <p className='text-sm font-medium leading-none'>
-                        {user.username}
+                        {user.name}
                       </p>
                       <p className='text-xs leading-none text-muted-foreground'>
                         {user.email}
@@ -236,12 +236,12 @@ export function Navbar() {
                           <div className='flex items-center gap-3 px-3 py-2 mb-2'>
                             <Avatar className='h-8 w-8'>
                               <AvatarFallback>
-                                {user.username?.charAt(0).toUpperCase() || "U"}
+                                {user.name?.charAt(0).toUpperCase() || "U"}
                               </AvatarFallback>
                             </Avatar>
                             <div className='flex flex-col'>
                               <span className='text-sm font-medium'>
-                                {user.username}
+                                {user.name}
                               </span>
                               <span className='text-xs text-muted-foreground'>
                                 {user.email}
