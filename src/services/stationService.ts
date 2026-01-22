@@ -2,97 +2,137 @@ import api from "./api";
 import type {
   CreateStationInput,
   UpdateStationInput,
-  StationResponse,
-  StationsResponse,
-  PaginatedStationsResponse,
+  UpdateNowPlayingInput,
+  ListStationsResponse,
+  ListLiveStationsResponse,
+  GetStationResponse,
+  StationMutationResponse,
+  GetNowPlayingResponse,
+  UpdateNowPlayingResponse,
+  GoLiveResponse,
+  GoOfflineResponse,
 } from "@/types/station";
 
 /**
- * Get all stations (paginated)
+ * Get all stations (sorted by listeners)
+ * GET /stations
  */
-export const getStations = async (
-  page = 1,
-  limit = 10
-): Promise<PaginatedStationsResponse> => {
-  const response = await api.get<PaginatedStationsResponse>("/stations", {
-    params: { page, limit },
-  });
+export const getStations = async (): Promise<ListStationsResponse> => {
+  const response = await api.get<ListStationsResponse>("/stations");
   return response.data;
 };
 
 /**
- * Get a single station by ID
+ * Get only live stations
+ * GET /stations/live
  */
-export const getStation = async (id: string): Promise<StationResponse> => {
-  const response = await api.get<StationResponse>(`/stations/${id}`);
+export const getLiveStations = async (): Promise<ListLiveStationsResponse> => {
+  const response = await api.get<ListLiveStationsResponse>("/stations/live");
   return response.data;
 };
 
 /**
- * Get stations owned by current user
+ * Get a single station by slug
+ * GET /stations/:slug
  */
-export const getMyStations = async (): Promise<StationsResponse> => {
-  const response = await api.get<StationsResponse>("/stations/my");
+export const getStationBySlug = async (
+  slug: string
+): Promise<GetStationResponse> => {
+  const response = await api.get<GetStationResponse>(`/stations/${slug}`);
   return response.data;
 };
 
 /**
- * Create a new station
+ * Get now playing for a station
+ * GET /stations/:slug/now-playing
+ */
+export const getNowPlaying = async (
+  slug: string
+): Promise<GetNowPlayingResponse> => {
+  const response = await api.get<GetNowPlayingResponse>(
+    `/stations/${slug}/now-playing`
+  );
+  return response.data;
+};
+
+/**
+ * Get my station (current logged-in mosque)
+ * GET /stations/me
+ */
+export const getMyStation = async (): Promise<GetStationResponse> => {
+  const response = await api.get<GetStationResponse>("/stations/me");
+  return response.data;
+};
+
+/**
+ * Create a new station (first-time setup)
+ * POST /stations
  */
 export const createStation = async (
   data: CreateStationInput
-): Promise<StationResponse> => {
-  const response = await api.post<StationResponse>("/stations", data);
+): Promise<StationMutationResponse> => {
+  const response = await api.post<StationMutationResponse>("/stations", data);
   return response.data;
 };
 
 /**
- * Update a station
+ * Update my station
+ * PATCH /stations/me
  */
-export const updateStation = async (
-  id: string,
+export const updateMyStation = async (
   data: UpdateStationInput
-): Promise<StationResponse> => {
-  const response = await api.patch<StationResponse>(`/stations/${id}`, data);
-  return response.data;
-};
-
-/**
- * Delete a station
- */
-export const deleteStation = async (id: string): Promise<void> => {
-  await api.delete(`/stations/${id}`);
-};
-
-/**
- * Start broadcasting (set station live)
- */
-export const startBroadcast = async (id: string): Promise<StationResponse> => {
-  const response = await api.post<StationResponse>(
-    `/stations/${id}/broadcast/start`
+): Promise<StationMutationResponse> => {
+  const response = await api.patch<StationMutationResponse>(
+    "/stations/me",
+    data
   );
   return response.data;
 };
 
 /**
- * Stop broadcasting
+ * Update now playing track
+ * PATCH /stations/me/now-playing
  */
-export const stopBroadcast = async (id: string): Promise<StationResponse> => {
-  const response = await api.post<StationResponse>(
-    `/stations/${id}/broadcast/stop`
+export const updateNowPlaying = async (
+  data: UpdateNowPlayingInput
+): Promise<UpdateNowPlayingResponse> => {
+  const response = await api.patch<UpdateNowPlayingResponse>(
+    "/stations/me/now-playing",
+    data
   );
+  return response.data;
+};
+
+/**
+ * Go live (start broadcasting)
+ * POST /stations/me/go-live
+ */
+export const goLive = async (): Promise<GoLiveResponse> => {
+  const response = await api.post<GoLiveResponse>("/stations/me/go-live");
+  return response.data;
+};
+
+/**
+ * Go offline (stop broadcasting)
+ * POST /stations/me/go-offline
+ */
+export const goOffline = async (): Promise<GoOfflineResponse> => {
+  const response = await api.post<GoOfflineResponse>("/stations/me/go-offline");
   return response.data;
 };
 
 export const stationService = {
   getStations,
-  getStation,
-  getMyStations,
+  getLiveStations,
+  getStationBySlug,
+  getNowPlaying,
+
+  getMyStation,
   createStation,
-  updateStation,
-  deleteStation,
-  startBroadcast,
-  stopBroadcast,
+  updateMyStation,
+  updateNowPlaying,
+  goLive,
+  goOffline,
 };
 
 export default stationService;

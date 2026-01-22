@@ -5,6 +5,7 @@ import type {
   AuthResponse,
   UserResponse,
   RefreshResponse,
+  UpdateProfileInput,
 } from "@/types/auth";
 
 /**
@@ -50,12 +51,34 @@ export const getMe = async (): Promise<UserResponse> => {
   return response.data;
 };
 
+/**
+ * Change password
+ */
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string
+): Promise<void> => {
+  await api.patch("/auth/password", { currentPassword, newPassword });
+};
+
+/**
+ * Update mosque profile
+ */
+export const updateProfile = async (
+  data: UpdateProfileInput
+): Promise<UserResponse> => {
+  const response = await api.patch<UserResponse>("/auth/profile", data);
+  return response.data;
+};
+
 export const authService = {
   register,
   login,
   refreshToken,
   logout,
   getMe,
+  changePassword,
+  updateProfile,
 };
 
 export default authService;

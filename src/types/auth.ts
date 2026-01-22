@@ -4,10 +4,17 @@ export interface Mosque {
   name: string;
   email: string;
   slug: string;
+  location?: string;
 }
 
 // User type (alias for Mosque in auth context)
 export type User = Mosque;
+
+// Profile update input
+export interface UpdateProfileInput {
+  name?: string;
+  location?: string;
+}
 
 // Auth request/response types
 export interface LoginCredentials {
