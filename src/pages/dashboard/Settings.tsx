@@ -54,15 +54,21 @@ export function SettingsPage() {
   // Populate form when station data loads
   useEffect(() => {
     if (station) {
-      setStationForm({
+      setStationForm((prev) => ({
+        ...prev,
         name: station.name || "",
         description: station.description || "",
         bitrate:
-          (station.settings?.bitrate?.toString() as typeof stationForm.bitrate) ||
-          "128",
+          (station.settings?.bitrate?.toString() as
+            | "64"
+            | "96"
+            | "128"
+            | "192"
+            | "256"
+            | "320") || "128",
         format: station.settings?.format || "mp3",
         isPublic: station.settings?.isPublic ?? true,
-      });
+      }));
     }
   }, [station]);
 

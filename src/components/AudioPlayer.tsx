@@ -105,7 +105,7 @@ export function AudioPlayer({
     if (!audioRef.current || !streamUrl) return;
 
     if (isPlaying) {
-      audioRef.current.play().catch((err) => {
+      audioRef.current.play().catch(() => {
         setError("Failed to play stream");
       });
     } else {
@@ -122,10 +122,11 @@ export function AudioPlayer({
 
   // Cleanup on unmount
   useEffect(() => {
+    const audio = audioRef.current;
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
+      if (audio) {
+        audio.pause();
+        audio.src = "";
       }
     };
   }, []);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, ArrowLeft, Loader2, Save } from "lucide-react";
@@ -55,11 +55,11 @@ export function ShowFormPage() {
   }
 
   // Track if form has been populated with edit data
-  const [isPopulated, setIsPopulated] = useState(false);
+  const isPopulatedRef = useRef(false);
 
   // Populate form when editing
   useEffect(() => {
-    if (isEditing && showData?.data?.show && !isPopulated) {
+    if (isEditing && showData?.data?.show && !isPopulatedRef.current) {
       const show = showData.data.show;
       setFormData({
         title: show.title || "",
@@ -71,9 +71,9 @@ export function ShowFormPage() {
           ? show.recurrence.daysOfWeek
           : [],
       });
-      setIsPopulated(true);
+      isPopulatedRef.current = true;
     }
-  }, [isEditing, showData, isPopulated]);
+  }, [isEditing, showData]);
 
   // Convert time to ISO string (using today's date)
   function timeToISO(timeStr: string): string {

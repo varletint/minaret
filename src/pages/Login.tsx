@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth, getAuthErrorMessage } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 // Validation schema
 const loginSchema = z.object({
@@ -19,7 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { loginAsync, isLoggingIn, loginError } = useAuth();
+  const { loginAsync, isLoggingIn } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const {

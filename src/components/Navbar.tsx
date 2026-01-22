@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, User, LogOut, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import appIcon from "@/assets/appIcon.svg";
+// appIcon import removed - currently using text logo
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useAuth } from "@/hooks/useAuth";
