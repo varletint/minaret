@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, ArrowLeft, Loader2, Save } from "lucide-react";
@@ -33,17 +33,6 @@ export function ShowFormPage() {
   const createShow = useCreateShow();
   const updateShow = useUpdateShow();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    scheduledStart: "13:00",
-    scheduledEnd: "14:00",
-    isRecurring: false,
-    daysOfWeek: [] as number[],
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   // Format ISO time to HH:mm for input
   function formatTimeForInput(isoString: string): string {
     try {
@@ -54,14 +43,11 @@ export function ShowFormPage() {
     }
   }
 
-  // Track if form has been populated with edit data
-  const isPopulatedRef = useRef(false);
-
-  // Populate form when editing
-  useEffect(() => {
-    if (isEditing && showData?.data?.show && !isPopulatedRef.current) {
+  // Compute initial form data from show data when editing
+  const initialFormData = useMemo(() => {
+    if (isEditing && showData?.data?.show) {
       const show = showData.data.show;
-      setFormData({
+      return {
         title: show.title || "",
         description: show.description || "",
         scheduledStart: formatTimeForInput(show.scheduledStart),
@@ -70,10 +56,29 @@ export function ShowFormPage() {
         daysOfWeek: Array.isArray(show.recurrence?.daysOfWeek)
           ? show.recurrence.daysOfWeek
           : [],
-      });
-      isPopulatedRef.current = true;
+      };
     }
+    return {
+      title: "",
+      description: "",
+      scheduledStart: "13:00",
+      scheduledEnd: "14:00",
+      isRecurring: false,
+      daysOfWeek: [] as number[],
+    };
   }, [isEditing, showData]);
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Reset form when initial data changes (e.g., when show data loads)
+  const prevInitialDataRef = useRef(initialFormData);
+  useEffect(() => {
+    if (prevInitialDataRef.current !== initialFormData) {
+      setFormData(initialFormData);
+      prevInitialDataRef.current = initialFormData;
+    }
+  }, [initialFormData]);
 
   // Convert time to ISO string (using today's date)
   function timeToISO(timeStr: string): string {
