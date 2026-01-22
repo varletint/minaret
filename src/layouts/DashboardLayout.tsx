@@ -117,7 +117,7 @@ function SidebarContent({
   onLogout,
   onClose,
 }: {
-  user: { name: string; email: string } | null;
+  user: { name?: string; email?: string } | null | undefined;
   onLogout: () => void;
   onClose?: () => void;
 }) {

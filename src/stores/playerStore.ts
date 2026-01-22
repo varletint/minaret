@@ -8,7 +8,7 @@ export interface Mosque {
   mountPoint: string;
   description?: string;
   streamUrl?: string;
-  currentTrack: CurrentTrack;
+  currentTrack?: CurrentTrack;
 }
 
 interface PlayerState {

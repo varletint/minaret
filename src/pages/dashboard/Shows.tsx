@@ -200,7 +200,7 @@ export function ShowsPage() {
               </div>
 
               <div className='flex items-center gap-2 sm:shrink-0'>
-                <Link to={`/dashboard/shows/${show._id}/edit`}>
+                <Link to={`/dashboard/shows/${show.id}/edit`}>
                   <Button variant='outline' size='sm'>
                     <Edit className='h-4 w-4 mr-1' />
                     Edit
