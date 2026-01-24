@@ -39,6 +39,7 @@ export function AudioPlayer({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState(75);
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
   const [bufferedSeconds, setBufferedSeconds] = useState(0);
 
@@ -58,6 +59,7 @@ export function AudioPlayer({
       setIsLoading(false);
       // Get more specific error message from the audio element
       const mediaError = audio.error;
+      console.error("Audio playback error:", mediaError);
       let errorMessage = "Stream unavailable";
 
       if (mediaError) {
@@ -126,7 +128,6 @@ export function AudioPlayer({
     return () => {
       if (audio) {
         audio.pause();
-        audio.src = "";
       }
     };
   }, []);
