@@ -1,5 +1,11 @@
 import type { Station } from "./station";
 
+// Recurrence pattern type
+export interface Recurrence {
+  pattern: "weekly";
+  daysOfWeek: number[]; // 0-6 (Sunday-Saturday)
+}
+
 // Show type
 export interface Show {
   id: string;
@@ -8,10 +14,10 @@ export interface Show {
   thumbnail?: string;
   stationId: string;
   station?: Station;
-  startTime: string;
-  endTime: string;
+  scheduledStart: string;
+  scheduledEnd: string;
   isRecurring: boolean;
-  recurringDays?: number[]; // 0-6 (Sunday-Saturday)
+  recurrence?: Recurrence;
   createdAt: string;
   updatedAt: string;
 }
@@ -22,20 +28,20 @@ export interface CreateShowInput {
   description: string;
   thumbnail?: string;
   stationId: string;
-  startTime: string;
-  endTime: string;
+  scheduledStart: string;
+  scheduledEnd: string;
   isRecurring?: boolean;
-  recurringDays?: number[];
+  recurrence?: Recurrence;
 }
 
 export interface UpdateShowInput {
   title?: string;
   description?: string;
   thumbnail?: string;
-  startTime?: string;
-  endTime?: string;
+  scheduledStart?: string;
+  scheduledEnd?: string;
   isRecurring?: boolean;
-  recurringDays?: number[];
+  recurrence?: Recurrence;
 }
 
 // Response types

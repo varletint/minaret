@@ -1,51 +1,80 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { stationService } from "@/services/stationService";
-import type { CreateStationInput, UpdateStationInput } from "@/types/station";
+import type {
+  CreateStationInput,
+  UpdateStationInput,
+  UpdateNowPlayingInput,
+} from "@/types/station";
 
-// Query keys
 export const stationKeys = {
   all: ["stations"] as const,
   lists: () => [...stationKeys.all, "list"] as const,
-  list: (page: number, limit: number) =>
-    [...stationKeys.lists(), { page, limit }] as const,
+  live: () => [...stationKeys.all, "live"] as const,
   my: () => [...stationKeys.all, "my"] as const,
   details: () => [...stationKeys.all, "detail"] as const,
-  detail: (id: string) => [...stationKeys.details(), id] as const,
+  detail: (slug: string) => [...stationKeys.details(), slug] as const,
+  nowPlaying: (slug: string) =>
+    [...stationKeys.all, "now-playing", slug] as const,
 };
 
 /**
- * Hook to get paginated stations
+ * Hook to get all stations
  */
-export const useStations = (page = 1, limit = 10) => {
+export const useStations = () => {
   return useQuery({
-    queryKey: stationKeys.list(page, limit),
-    queryFn: () => stationService.getStations(page, limit),
+    queryKey: stationKeys.lists(),
+    queryFn: () => stationService.getStations(),
   });
 };
 
 /**
- * Hook to get a single station
+ * Hook to get live stations only
  */
-export const useStation = (id: string) => {
+export const useLiveStations = () => {
   return useQuery({
-    queryKey: stationKeys.detail(id),
-    queryFn: () => stationService.getStation(id),
-    enabled: !!id,
+    queryKey: stationKeys.live(),
+    queryFn: () => stationService.getLiveStations(),
   });
 };
 
 /**
- * Hook to get current user's stations
+ * Hook to get a single station by slug
  */
-export const useMyStations = () => {
+export const useStation = (slug: string) => {
+  return useQuery({
+    queryKey: stationKeys.detail(slug),
+    queryFn: () => stationService.getStationBySlug(slug),
+    enabled: !!slug,
+  });
+};
+
+/**
+ * Hook to get now playing for a station
+ */
+export const useNowPlaying = (
+  slug: string,
+  options?: { enabled?: boolean }
+) => {
+  return useQuery({
+    queryKey: stationKeys.nowPlaying(slug),
+    queryFn: () => stationService.getNowPlaying(slug),
+    enabled: options?.enabled !== false && !!slug,
+    refetchInterval: 30000,
+  });
+};
+
+/**
+ * Hook to get current mosque's station
+ */
+export const useMyStation = () => {
   return useQuery({
     queryKey: stationKeys.my(),
-    queryFn: () => stationService.getMyStations(),
+    queryFn: () => stationService.getMyStation(),
   });
 };
 
 /**
- * Hook to create a station
+ * Hook to create a station (first-time setup)
  */
 export const useCreateStation = () => {
   const queryClient = useQueryClient();
@@ -54,7 +83,6 @@ export const useCreateStation = () => {
     mutationFn: (data: CreateStationInput) =>
       stationService.createStation(data),
     onSuccess: () => {
-      // Invalidate station lists to refetch
       queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
       queryClient.invalidateQueries({ queryKey: stationKeys.my() });
     },
@@ -62,71 +90,69 @@ export const useCreateStation = () => {
 };
 
 /**
- * Hook to update a station
+ * Hook to update my station
  */
-export const useUpdateStation = () => {
+export const useUpdateMyStation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateStationInput }) =>
-      stationService.updateStation(id, data),
+    mutationFn: (data: UpdateStationInput) =>
+      stationService.updateMyStation(data),
     onSuccess: (response) => {
       const station = response.data.station;
-      // Update cache for this specific station
-      queryClient.setQueryData(stationKeys.detail(station.id), response);
-      // Invalidate lists
+
+      queryClient.setQueryData(stationKeys.my(), response);
+      if (station.slug) {
+        queryClient.setQueryData(stationKeys.detail(station.slug), response);
+      }
       queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
+    },
+  });
+};
+
+/**
+ * Hook to update now playing track
+ */
+export const useUpdateNowPlaying = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: UpdateNowPlayingInput) =>
+      stationService.updateNowPlaying(data),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: stationKeys.my() });
     },
   });
 };
 
 /**
- * Hook to delete a station
+ * Hook to go live (start broadcasting)
  */
-export const useDeleteStation = () => {
+export const useGoLive = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => stationService.deleteStation(id),
-    onSuccess: (_, id) => {
-      // Remove from cache
-      queryClient.removeQueries({ queryKey: stationKeys.detail(id) });
-      // Invalidate lists
-      queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
+    mutationFn: () => stationService.goLive(),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: stationKeys.my() });
+      queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: stationKeys.live() });
     },
   });
 };
 
 /**
- * Hook to start broadcasting
+ * Hook to go offline (stop broadcasting)
  */
-export const useStartBroadcast = () => {
+export const useGoOffline = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => stationService.startBroadcast(id),
-    onSuccess: (response) => {
-      const station = response.data.station;
-      queryClient.setQueryData(stationKeys.detail(station.id), response);
+    mutationFn: () => stationService.goOffline(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: stationKeys.my() });
       queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
-    },
-  });
-};
-
-/**
- * Hook to stop broadcasting
- */
-export const useStopBroadcast = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => stationService.stopBroadcast(id),
-    onSuccess: (response) => {
-      const station = response.data.station;
-      queryClient.setQueryData(stationKeys.detail(station.id), response);
-      queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: stationKeys.live() });
     },
   });
 };

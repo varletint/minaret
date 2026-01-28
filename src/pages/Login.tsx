@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth, getAuthErrorMessage } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 // Validation schema
 const loginSchema = z.object({
@@ -19,7 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { loginAsync, isLoggingIn, loginError } = useAuth();
+  const { loginAsync, isLoggingIn } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -35,8 +35,15 @@ export function LoginPage() {
       await loginAsync(data);
       toast.success("Welcome back!");
       navigate("/dashboard");
-    } catch {
-      toast.error(getAuthErrorMessage(loginError) || "Login failed");
+    } catch (error) {
+      const axiosError = error as import("axios").AxiosError<{
+        message?: string;
+      }>;
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        "Login failed";
+      toast.error(errorMessage);
     }
   };
 
@@ -50,9 +57,7 @@ export function LoginPage() {
       <div className='bg-card border border-border rounded-2xl p-8 shadow-xl backdrop-blur-sm'>
         {/* Header */}
         <div className='text-center mb-8'>
-          <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary mb-4'>
-            {/* <span className='text-2xl'>🕌</span> */}
-          </div>
+          <div className='inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary mb-4'></div>
           <h1 className='text-2xl font-bold font-heading'>Welcome Back</h1>
           <p className='text-muted-foreground mt-2'>
             Sign in to manage your mosque broadcasts

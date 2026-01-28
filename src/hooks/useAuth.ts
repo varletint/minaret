@@ -55,7 +55,7 @@ export const useLogin = () => {
       // 2. Update user in cache IMMEDIATELY
       queryClient.setQueryData(authKeys.user(), data.data.mosque);
     },
-    onError: (_error: AxiosError<ApiError>) => {
+    onError: () => {
       setAccessToken(null);
     },
   });
@@ -75,7 +75,7 @@ export const useRegister = () => {
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
       queryClient.setQueryData(authKeys.user(), data.data.mosque);
     },
-    onError: (_error: AxiosError<ApiError>) => {
+    onError: () => {
       setAccessToken(null);
     },
   });
@@ -91,7 +91,7 @@ export const useLogout = () => {
       queryClient.setQueryData(authKeys.user(), null);
       queryClient.removeQueries({ queryKey: authKeys.all });
     },
-    onError: (_error: AxiosError<ApiError>) => {
+    onError: () => {
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
       queryClient.removeQueries({ queryKey: authKeys.all });
