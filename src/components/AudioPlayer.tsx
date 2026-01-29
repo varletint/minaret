@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import {
   Play,
   Pause,
@@ -6,12 +6,15 @@ import {
   Radio,
   Volume2,
   Loader2,
-  AlertCircle,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import type { CurrentTrack } from "@/types/station";
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_BASE = 1000; // Base delay in ms
 
 export interface AudioPlayerProps {
   mosqueName: string;
@@ -37,10 +40,57 @@ export function AudioPlayer({
   className,
 }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [volume, setVolume] = useState(75);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
   const [error, setError] = useState<string | null>(null);
   const [bufferedSeconds, setBufferedSeconds] = useState(0);
+
+  // Retry function to attempt playback again
+  const handleRetry = useCallback(() => {
+    if (!audioRef.current || !streamUrl) return;
+
+    setError(null);
+    setIsRetrying(true);
+    setIsLoading(true);
+
+    const audio = audioRef.current;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.load();
+
+    audio
+      .play()
+      .then(() => {
+        setRetryCount(0);
+        setIsRetrying(false);
+      })
+      .catch((err) => {
+        console.error("Retry failed:", err);
+        setIsRetrying(false);
+        setError("Retry failed - tap to try again");
+      });
+  }, [streamUrl]);
+
+  // Auto-retry with exponential backoff
+  const attemptAutoRetry = useCallback(() => {
+    if (retryCount >= MAX_RETRIES) {
+      setError(`Stream unavailable after ${MAX_RETRIES} attempts`);
+      return;
+    }
+
+    const delay = RETRY_DELAY_BASE * Math.pow(2, retryCount);
+    setError(`Reconnecting... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+    setIsRetrying(true);
+
+    retryTimeoutRef.current = setTimeout(() => {
+      setRetryCount((prev) => prev + 1);
+      handleRetry();
+    }, delay);
+  }, [retryCount, handleRetry]);
 
   // Handle audio events for loading, error, and buffer progress
   useEffect(() => {
@@ -56,9 +106,11 @@ export function AudioPlayer({
     const handleCanPlay = () => setIsLoading(false);
     const handleError = () => {
       setIsLoading(false);
-      // Get more specific error message from the audio element
+      setIsRetrying(false);
       const mediaError = audio.error;
+      console.error("Audio playback error:", mediaError);
       let errorMessage = "Stream unavailable";
+      let shouldAutoRetry = false;
 
       if (mediaError) {
         switch (mediaError.code) {
@@ -67,6 +119,7 @@ export function AudioPlayer({
             break;
           case MediaError.MEDIA_ERR_NETWORK:
             errorMessage = "Network error - check your connection";
+            shouldAutoRetry = true;
             break;
           case MediaError.MEDIA_ERR_DECODE:
             errorMessage = "Stream decode error";
@@ -78,7 +131,12 @@ export function AudioPlayer({
             errorMessage = mediaError.message || "Stream unavailable";
         }
       }
-      setError(errorMessage);
+
+      if (shouldAutoRetry && retryCount < MAX_RETRIES) {
+        attemptAutoRetry();
+      } else {
+        setError(errorMessage);
+      }
     };
     const handleProgress = () => {
       if (audio.buffered.length > 0) {
@@ -99,7 +157,7 @@ export function AudioPlayer({
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("progress", handleProgress);
     };
-  }, [streamUrl]);
+  }, [streamUrl, attemptAutoRetry, retryCount]);
 
   useEffect(() => {
     if (!audioRef.current || !streamUrl) return;
@@ -123,10 +181,13 @@ export function AudioPlayer({
   // Cleanup on unmount
   useEffect(() => {
     const audio = audioRef.current;
+    const retryTimeout = retryTimeoutRef.current;
     return () => {
       if (audio) {
         audio.pause();
-        audio.src = "";
+      }
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
       }
     };
   }, []);
@@ -139,6 +200,12 @@ export function AudioPlayer({
     if (audioRef.current) {
       audioRef.current.pause();
     }
+    // Clear any pending retry timeout
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
+    }
+    setRetryCount(0);
+    setError(null);
     onClose();
   };
 
@@ -156,18 +223,20 @@ export function AudioPlayer({
         <div className='flex items-center gap-4'>
           <Button
             size='icon'
-            onClick={onPlayPause}
-            disabled={!streamUrl || isLoading}
+            onClick={error && !isRetrying ? handleRetry : onPlayPause}
+            disabled={!streamUrl || isLoading || isRetrying}
             className={cn(
               "h-12 w-12 rounded-full shrink-0 disabled:opacity-50",
-              error
+              error && !isRetrying
+                ? "bg-amber-500 hover:bg-amber-600 text-white"
+                : error
                 ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                 : "bg-primary hover:bg-primary/90 text-primary-foreground"
             )}>
-            {isLoading ? (
+            {isLoading || isRetrying ? (
               <Loader2 className='h-5 w-5 animate-spin' />
             ) : error ? (
-              <AlertCircle className='h-5 w-5' />
+              <RotateCcw className='h-5 w-5' />
             ) : isPlaying ? (
               <Pause className='h-5 w-5' fill='currentColor' />
             ) : (
@@ -191,8 +260,19 @@ export function AudioPlayer({
                 </span>
               )}
             </div>
-            {error ? (
-              <p className='text-sm text-destructive truncate'>{error}</p>
+            {isRetrying ? (
+              <p className='text-sm text-amber-500 truncate'>
+                {error || "Reconnecting..."}
+              </p>
+            ) : error ? (
+              <p className='text-sm text-destructive truncate'>
+                {error} •{" "}
+                <span
+                  className='underline cursor-pointer'
+                  onClick={handleRetry}>
+                  Tap to retry
+                </span>
+              </p>
             ) : isLoading ? (
               <p className='text-sm text-muted-foreground truncate'>
                 Connecting to stream...

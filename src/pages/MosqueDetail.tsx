@@ -27,7 +27,7 @@ const mockMosqueDetails: Record<string, DisplayStation> = {
     listeners: 500,
     isLive: true,
     logo: undefined,
-    streamUrl: "https://example.com/stream",
+    streamUrl: "http://localhost:8000/massala",
     ownerId: "1",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

@@ -135,20 +135,20 @@ function App() {
         </BrowserRouter>
         <Toaster
           position='top-right'
-          // richColors
-          // closeButton
           theme='system'
           toastOptions={{
             classNames: {
+              toast:
+                "bg-card/95 backdrop-blur-md border border-border shadow-lg",
               error:
-                "!bg-red-200/50 !text-red-600 bg-background80 backdrop-blur-md border !border-red-600  border-border",
+                "!bg-destructive/10 !text-destructive backdrop-blur-md border !border-destructive/50",
               success:
-                "!bg-green-200/50 !text-green-600 bg-background80 backdrop-blur-md border !border-green-600  border-border",
+                "!bg-primary/10 !text-primary backdrop-blur-md border !border-primary/50",
               warning:
-                "!bg-yellow-200/50 !text-yellow-600 bg-background80 backdrop-blur-md border !border-yellow-600  border-border",
-              info: "!bg-blue-200/50!text-blue-600 bg-background80 backdrop-blur-md border !border-blue-600  border-border",
+                "!bg-accent/10 !text-accent backdrop-blur-md border !border-accent/50",
+              info: "!bg-[#3B82F6]/10 !text-[#3B82F6] backdrop-blur-md border !border-[#3B82F6]/50",
+              description: "!text-muted-foreground",
             },
-            // "!bg-red-400/50 text-600 bg-background80 backdrop-blur-md border  border-border",
           }}
         />
       </ThemeProvider>

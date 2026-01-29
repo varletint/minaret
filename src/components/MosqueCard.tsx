@@ -11,6 +11,7 @@ export interface MosqueCardProps {
   isLive?: boolean;
   isPlaying?: boolean;
   imageUrl?: string;
+  streamUrl?: string;
   onPlay?: () => void;
   className?: string;
   currentTrack?: CurrentTrack;
