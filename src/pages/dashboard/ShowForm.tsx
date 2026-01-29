@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, ArrowLeft, Loader2, Save } from "lucide-react";
@@ -71,13 +71,10 @@ export function ShowFormPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Reset form when initial data changes (e.g., when show data loads)
-  const prevInitialDataRef = useRef(initialFormData);
+  // Sync form data when initial data changes (e.g., when show data loads)
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
-    if (prevInitialDataRef.current !== initialFormData) {
-      setFormData(initialFormData);
-      prevInitialDataRef.current = initialFormData;
-    }
+    setFormData(initialFormData);
   }, [initialFormData]);
 
   // Convert time to ISO string (using today's date)
