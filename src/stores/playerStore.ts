@@ -9,6 +9,7 @@ export interface Mosque {
   description?: string;
   streamUrl?: string;
   currentTrack?: CurrentTrack;
+  isLive?: boolean;
 }
 
 interface PlayerState {
