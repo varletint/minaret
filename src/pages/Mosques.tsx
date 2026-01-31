@@ -101,6 +101,7 @@ export function StationsPage() {
           typeof station.mosqueId === "object"
             ? station.mosqueId.location
             : station.description || "Location unknown",
+        streamUrl: station.streamUrl,
         listeners: station.stats?.totalListeners || 0,
       }))
     : mockStations;
