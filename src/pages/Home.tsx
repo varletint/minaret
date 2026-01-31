@@ -6,10 +6,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { FeatureCard, type FeatureCardProps } from "@/components/FeatureCard";
-import { MosqueCard, type MosqueCardProps } from "@/components/MosqueCard";
+import { MosqueCard } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { Radio, MapPin, Clock, Heart } from "lucide-react";
 import { usePlayerStore } from "@/stores/playerStore";
+import { useStations } from "@/hooks/useStations";
+import type { StationListItem } from "@/types/station";
 
 const features: FeatureCardProps[] = [
   {
@@ -40,40 +42,25 @@ const features: FeatureCardProps[] = [
   },
 ];
 
-const mosques: Omit<MosqueCardProps, "onPlay">[] = [
-  {
-    name: "Massalacin Zawiyya",
-    location: "Kontagora, Niger State",
-    listeners: 500,
-    isLive: true,
-  },
-  {
-    name: "Massalacin Nasarawa",
-    location: "Kontagora, Niger State",
-    listeners: 500,
-    isLive: true,
-  },
-  {
-    name: "Central Mosque",
-    location: "Kontagora, Niger State",
-    listeners: 3200,
-    isLive: false,
-  },
-];
-
 export function HomePage() {
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
+  const { data: stationsData } = useStations();
 
-  const handlePlay = (mosque: Omit<MosqueCardProps, "onPlay">) => {
-    if (currentMosque?.name === mosque.name) {
+  const stations = stationsData?.data?.stations || [];
+
+  const handlePlay = (station: StationListItem) => {
+    if (currentMosque?.id === station._id) {
       setIsPlaying(!isPlaying);
     } else {
       setCurrentMosque({
-        id: mosque.name, // Using name as fallback ID for mock data
-        name: mosque.name,
-        location: mosque.location,
-        mountPoint: mosque.name,
+        id: station._id,
+        name: station.name,
+        location: station.mosqueId.location,
+        mountPoint: station.name,
+        streamUrl: station.streamUrl,
+        currentTrack: station.currentTrack,
+        isLive: station.isLive,
       });
       setIsPlaying(true);
     }
@@ -96,7 +83,6 @@ export function HomePage() {
         </h1>
         <p className='mt-4 text-muted-foreground'>Your mosque community hub</p>
 
-        {/* Features Carousel */}
         <div className='mt-8 px-0'>
           <Carousel
             opts={{
@@ -118,19 +104,22 @@ export function HomePage() {
           </Carousel>
         </div>
 
-        {/* Popular Mosques */}
         <section className='mt-12'>
           <h2 className='text-2xl font-bold font-heading mb-6'>
             Popular Mosques
           </h2>
           <Carousel className='w-full md:hidden'>
             <CarouselContent>
-              {mosques.map((mosque, index) => (
-                <CarouselItem key={index}>
+              {stations.map((station) => (
+                <CarouselItem key={station._id}>
                   <MosqueCard
-                    {...mosque}
-                    isPlaying={currentMosque?.name === mosque.name && isPlaying}
-                    onPlay={() => handlePlay(mosque)}
+                    name={station.name}
+                    location={station.mosqueId.location}
+                    listeners={station.stats.totalListeners}
+                    isLive={station.isLive}
+                    currentTrack={station.currentTrack}
+                    isPlaying={currentMosque?.id === station._id && isPlaying}
+                    onPlay={() => handlePlay(station)}
                   />
                 </CarouselItem>
               ))}
@@ -139,25 +128,30 @@ export function HomePage() {
             <CarouselNext className='right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
           </Carousel>
           <div className='md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden'>
-            {mosques.map((mosque, index) => (
+            {stations.map((station) => (
               <MosqueCard
-                key={index}
-                {...mosque}
-                isPlaying={currentMosque?.name === mosque.name && isPlaying}
-                onPlay={() => handlePlay(mosque)}
+                key={station._id}
+                name={station.name}
+                location={station.mosqueId.location}
+                listeners={station.stats.totalListeners}
+                isLive={station.isLive}
+                currentTrack={station.currentTrack}
+                isPlaying={currentMosque?.id === station._id && isPlaying}
+                onPlay={() => handlePlay(station)}
               />
             ))}
           </div>
         </section>
       </main>
 
-      {/* Fixed Audio Player */}
       {currentMosque && (
         <AudioPlayer
           mosqueName={currentMosque.name}
           location={currentMosque.location}
-          isLive={true}
+          isLive={currentMosque.isLive} // Pass isLive status
           isPlaying={isPlaying}
+          streamUrl={currentMosque.streamUrl} // Pass streamUrl
+          currentTrack={currentMosque.currentTrack} // Pass currentTrack
           onPlayPause={handlePlayPause}
           onClose={handleClose}
         />
