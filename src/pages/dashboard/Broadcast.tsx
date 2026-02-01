@@ -9,6 +9,10 @@ import {
   Clock,
   AlertCircle,
   ArrowLeft,
+  Copy,
+  Check,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +23,6 @@ import {
 } from "@/hooks/useStations";
 import { toast } from "sonner";
 
-/**
- * Broadcast Control page - go live/offline and update now playing
- */
 export function BroadcastPage() {
   const { data: stationData, isLoading, isError, error } = useMyStation();
   const goLive = useGoLive();
@@ -31,7 +32,21 @@ export function BroadcastPage() {
   const station = stationData?.data?.station;
   const isLive = station?.isLive ?? false;
 
-  // Now playing form
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleCopy = async (value: string, fieldName: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedField(fieldName);
+      toast.success(`${fieldName} copied to clipboard`);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch {
+      toast.error("Failed to copy to clipboard");
+    }
+  };
+
   const [nowPlayingForm, setNowPlayingForm] = useState({
     title: "",
     artist: "",
@@ -219,6 +234,178 @@ export function BroadcastPage() {
             )}
           </div>
         </div>
+
+        {isLive && (
+          <div className='mt-6 pt-6 border-t border-border'>
+            <h3 className='text-lg font-bold font-heading mb-2'>
+              Broadcasting Credentials
+            </h3>
+            <p className='text-muted-foreground text-sm mb-4'>
+              Use these credentials to connect your broadcasting app (e.g.,
+              BUTT, Mixxx, VLC)
+            </p>
+
+            <div className='space-y-3 bg-muted/30 rounded-lg p-4'>
+              {/* Server */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>Server:</span>
+                  <p className='font-mono text-sm truncate'>
+                    icecast.minaret.live
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => handleCopy("icecast.minaret.live", "Server")}
+                  className='p-2 rounded-md hover:bg-muted transition-colors'
+                  title='Copy server'>
+                  {copiedField === "Server" ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
+                </button>
+              </div>
+
+              {/* Port */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>Port:</span>
+                  <p className='font-mono text-sm'>8000</p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => handleCopy("8000", "Port")}
+                  className='p-2 rounded-md hover:bg-muted transition-colors'
+                  title='Copy port'>
+                  {copiedField === "Port" ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
+                </button>
+              </div>
+
+              {/* Mountpoint */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>
+                    Mountpoint:
+                  </span>
+                  <p className='font-mono text-sm truncate'>
+                    {station.mountPoint || "/live"}
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() =>
+                    handleCopy(station.mountPoint || "/live", "Mountpoint")
+                  }
+                  className='p-2 rounded-md hover:bg-muted transition-colors'
+                  title='Copy mountpoint'>
+                  {copiedField === "Mountpoint" ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
+                </button>
+              </div>
+
+              {/* Username */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>
+                    Username:
+                  </span>
+                  <p className='font-mono text-sm truncate'>
+                    {station.icecastCredentials.username}
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() =>
+                    handleCopy(station.icecastCredentials.username, "Username")
+                  }
+                  className='p-2 rounded-md hover:bg-muted transition-colors'
+                  title='Copy username'>
+                  {copiedField === "Username" ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
+                </button>
+              </div>
+
+              {/* Password */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>
+                    Password:
+                  </span>
+                  <p className='font-mono text-sm truncate'>
+                    {showPassword
+                      ? station.icecastCredentials.password || "hackme"
+                      : "••••••••"}
+                  </p>
+                </div>
+                <div className='flex items-center gap-1'>
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='p-2 rounded-md hover:bg-muted transition-colors'
+                    title={showPassword ? "Hide password" : "Show password"}>
+                    {showPassword ? (
+                      <EyeOff className='h-4 w-4 text-muted-foreground' />
+                    ) : (
+                      <Eye className='h-4 w-4 text-muted-foreground' />
+                    )}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      handleCopy(
+                        station.icecastCredentials.password || "hackme",
+                        "Password"
+                      )
+                    }
+                    className='p-2 rounded-md hover:bg-muted transition-colors'
+                    title='Copy password'>
+                    {copiedField === "Password" ? (
+                      <Check className='h-4 w-4 text-green-500' />
+                    ) : (
+                      <Copy className='h-4 w-4 text-muted-foreground' />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Stream URL */}
+              <div className='flex items-center justify-between gap-2'>
+                <div className='flex-1 min-w-0'>
+                  <span className='text-sm text-muted-foreground'>
+                    Stream URL:
+                  </span>
+                  <p className='font-mono text-sm truncate'>
+                    {station.streamUrl}
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() =>
+                    handleCopy(station.streamUrl || "", "Stream URL")
+                  }
+                  className='p-2 rounded-md hover:bg-muted transition-colors'
+                  title='Copy stream URL'>
+                  {copiedField === "Stream URL" ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Live Stats */}
         {isLive && (
