@@ -251,12 +251,14 @@ export function BroadcastPage() {
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>Server:</span>
                   <p className='font-mono text-sm truncate'>
-                    icecast.minaret.live
+                    https://stream.saaminaret.shop
                   </p>
                 </div>
                 <button
                   type='button'
-                  onClick={() => handleCopy("icecast.minaret.live", "Server")}
+                  onClick={() =>
+                    handleCopy("https://stream.saaminaret.shop", "Server")
+                  }
                   className='p-2 rounded-md hover:bg-muted transition-colors'
                   title='Copy server'>
                   {copiedField === "Server" ? (
