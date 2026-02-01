@@ -23,9 +23,6 @@ import {
 } from "@/hooks/useStations";
 import { toast } from "sonner";
 
-/**
- * Broadcast Control page - go live/offline and update now playing
- */
 export function BroadcastPage() {
   const { data: stationData, isLoading, isError, error } = useMyStation();
   const goLive = useGoLive();
@@ -35,10 +32,8 @@ export function BroadcastPage() {
   const station = stationData?.data?.station;
   const isLive = station?.isLive ?? false;
 
-  // Copied state for tracking which field was copied
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // Password visibility state
   const [showPassword, setShowPassword] = useState(false);
 
   const handleCopy = async (value: string, fieldName: string) => {
@@ -52,7 +47,6 @@ export function BroadcastPage() {
     }
   };
 
-  // Now playing form
   const [nowPlayingForm, setNowPlayingForm] = useState({
     title: "",
     artist: "",
