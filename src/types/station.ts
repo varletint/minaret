@@ -28,6 +28,11 @@ export interface StationSettings {
   isPublic: boolean;
 }
 
+export interface IcecastCredentials {
+  username: string;
+  password: string;
+}
+
 // Station statistics
 export interface StationStats {
   totalListeners: number;
@@ -47,6 +52,7 @@ export interface Station {
   isLive: boolean;
   currentTrack?: CurrentTrack;
   settings: StationSettings;
+  icecastCredentials: IcecastCredentials;
   stats: StationStats;
   createdAt: string;
   updatedAt: string;
