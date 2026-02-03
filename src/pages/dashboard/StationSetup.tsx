@@ -6,9 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useCreateStation } from "@/hooks/useStations";
 import { toast } from "sonner";
 
-/**
- * Station setup page - first-time station creation
- */
 export function StationSetupPage() {
   const navigate = useNavigate();
   const createStation = useCreateStation();
@@ -36,7 +33,6 @@ export function StationSetupPage() {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    // Clear error when field is edited
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -87,7 +83,6 @@ export function StationSetupPage() {
 
   return (
     <div className='max-w-2xl mx-auto'>
-      {/* Back Link */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}>
