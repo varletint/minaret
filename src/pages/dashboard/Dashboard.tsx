@@ -7,14 +7,12 @@ import {
   Settings,
   Loader2,
   AlertCircle,
+  Mic,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMyStation } from "@/hooks/useStations";
 
-/**
- * Dashboard home page - overview of station status
- */
 export function DashboardPage() {
   const { user } = useAuth();
   const { data: stationData, isLoading, isError, error } = useMyStation();
@@ -24,7 +22,6 @@ export function DashboardPage() {
 
   return (
     <div className='max-w-5xl mx-auto'>
-      {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -37,14 +34,12 @@ export function DashboardPage() {
         </p>
       </motion.div>
 
-      {/* Loading State */}
       {isLoading && (
         <div className='flex items-center justify-center py-12'>
           <Loader2 className='h-8 w-8 animate-spin text-primary' />
         </div>
       )}
 
-      {/* Error State */}
       {isError && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,7 +54,6 @@ export function DashboardPage() {
         </motion.div>
       )}
 
-      {/* No Station State */}
       {!isLoading && !isError && !hasStation && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -83,7 +77,6 @@ export function DashboardPage() {
         </motion.div>
       )}
 
-      {/* Station Dashboard */}
       {!isLoading && !isError && hasStation && (
         <>
           {/* Status Card */}
@@ -226,7 +219,9 @@ export function DashboardPage() {
               <h3 className='font-bold font-heading mb-3'>Now Playing</h3>
               <div className='flex items-center gap-4'>
                 <div className='w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center'>
-                  <span className='text-xl'>🎙️</span>
+                  <span className='text-xl'>
+                    <Mic className='h-4 w-4' />
+                  </span>
                 </div>
                 <div>
                   <p className='font-medium'>
