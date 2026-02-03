@@ -7,9 +7,6 @@ import { useMyStation, useUpdateMyStation } from "@/hooks/useStations";
 import { toast } from "sonner";
 import { authService } from "@/services/authService";
 
-/**
- * Settings page - edit station info and account settings
- */
 export function SettingsPage() {
   const { user } = useAuth();
   const { data: stationData, isLoading: stationLoading } = useMyStation();
@@ -17,7 +14,6 @@ export function SettingsPage() {
 
   const station = stationData?.data?.station;
 
-  // Station form state
   const [stationForm, setStationForm] = useState({
     name: "",
     description: "",
@@ -26,14 +22,12 @@ export function SettingsPage() {
     isPublic: true,
   });
 
-  // Password form state
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
-  // Mosque profile form state
   const [profileForm, setProfileForm] = useState({
     name: "",
     location: "",
@@ -51,7 +45,6 @@ export function SettingsPage() {
     {}
   );
 
-  // Populate form when station data loads
   useEffect(() => {
     if (station) {
       setStationForm((prev) => ({
@@ -72,7 +65,6 @@ export function SettingsPage() {
     }
   }, [station]);
 
-  // Populate profile form when user data loads
   useEffect(() => {
     if (user) {
       setProfileForm({
@@ -82,7 +74,6 @@ export function SettingsPage() {
     }
   }, [user]);
 
-  // Handle station form changes
   const handleStationChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -101,7 +92,6 @@ export function SettingsPage() {
     }
   };
 
-  // Handle password form changes
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
@@ -111,7 +101,6 @@ export function SettingsPage() {
     }
   };
 
-  // Validate station form
   const validateStation = () => {
     const errors: Record<string, string> = {};
 
@@ -129,7 +118,6 @@ export function SettingsPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // Validate password form
   const validatePassword = () => {
     const errors: Record<string, string> = {};
 
@@ -151,7 +139,6 @@ export function SettingsPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle profile form changes
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfileForm((prev) => ({ ...prev, [name]: value }));
@@ -161,7 +148,6 @@ export function SettingsPage() {
     }
   };
 
-  // Validate profile form
   const validateProfile = () => {
     const errors: Record<string, string> = {};
 
@@ -175,7 +161,6 @@ export function SettingsPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // Submit profile update
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateProfile()) return;
@@ -194,7 +179,6 @@ export function SettingsPage() {
     }
   };
 
-  // Submit station update
   const handleStationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateStation()) return;
@@ -215,7 +199,6 @@ export function SettingsPage() {
     }
   };
 
-  // Submit password change
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validatePassword()) return;
@@ -249,7 +232,6 @@ export function SettingsPage() {
 
   return (
     <div className='max-w-3xl mx-auto space-y-8'>
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}>
@@ -262,7 +244,6 @@ export function SettingsPage() {
         </p>
       </motion.div>
 
-      {/* Station Settings */}
       {station && (
         <motion.form
           initial={{ opacity: 0, y: 20 }}
@@ -275,7 +256,6 @@ export function SettingsPage() {
             <h2 className='text-lg font-bold font-heading'>Station Settings</h2>
           </div>
 
-          {/* Station Name */}
           <div>
             <label htmlFor='name' className='block text-sm font-medium mb-2'>
               Station Name <span className='text-destructive'>*</span>
@@ -297,7 +277,6 @@ export function SettingsPage() {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label
               htmlFor='description'
@@ -321,7 +300,6 @@ export function SettingsPage() {
             </p>
           </div>
 
-          {/* Audio Settings */}
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div>
               <label
@@ -363,7 +341,6 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* Public Toggle */}
           <div className='flex items-center gap-3'>
             <input
               type='checkbox'
@@ -378,7 +355,6 @@ export function SettingsPage() {
             </label>
           </div>
 
-          {/* Submit */}
           <Button
             type='submit'
             disabled={updateStation.isPending}
@@ -393,7 +369,6 @@ export function SettingsPage() {
         </motion.form>
       )}
 
-      {/* Mosque Profile */}
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -405,7 +380,6 @@ export function SettingsPage() {
           <h2 className='text-lg font-bold font-heading'>Mosque Profile</h2>
         </div>
 
-        {/* Mosque Name */}
         <div>
           <label
             htmlFor='profileName'
@@ -429,7 +403,6 @@ export function SettingsPage() {
           )}
         </div>
 
-        {/* Location */}
         <div>
           <label htmlFor='location' className='block text-sm font-medium mb-2'>
             Location
@@ -445,7 +418,6 @@ export function SettingsPage() {
           />
         </div>
 
-        {/* Submit */}
         <Button
           type='submit'
           disabled={profileLoading}
@@ -459,7 +431,6 @@ export function SettingsPage() {
         </Button>
       </motion.form>
 
-      {/* Password Change */}
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -471,7 +442,6 @@ export function SettingsPage() {
           <h2 className='text-lg font-bold font-heading'>Change Password</h2>
         </div>
 
-        {/* Current Password */}
         <div>
           <label
             htmlFor='currentPassword'
@@ -497,7 +467,6 @@ export function SettingsPage() {
           )}
         </div>
 
-        {/* New Password */}
         <div>
           <label
             htmlFor='newPassword'
@@ -521,7 +490,6 @@ export function SettingsPage() {
           )}
         </div>
 
-        {/* Confirm Password */}
         <div>
           <label
             htmlFor='confirmPassword'
@@ -547,7 +515,6 @@ export function SettingsPage() {
           )}
         </div>
 
-        {/* Submit */}
         <Button
           type='submit'
           disabled={passwordLoading}
@@ -561,7 +528,6 @@ export function SettingsPage() {
         </Button>
       </motion.form>
 
-      {/* Account Info */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
