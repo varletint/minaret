@@ -21,7 +21,7 @@ const navLinks = [
   { name: "Mosques", href: "/mosques" },
   { name: "Prayer Times", href: "#prayer-times" },
   { name: "Live Radio", href: "#live" },
-  { name: "Donate", href: "#donate" },
+  { name: "Donate", href: "/donate" },
 ];
 
 export function Navbar() {

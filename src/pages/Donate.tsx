@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Heart,
   CreditCard,
@@ -32,7 +32,6 @@ export function DonatePage() {
 
   const handleDonate = () => {
     setIsLoading(true);
-    // Simulation of API call
     setTimeout(() => {
       setIsLoading(false);
       alert(
@@ -45,7 +44,6 @@ export function DonatePage() {
 
   return (
     <div className='min-h-screen bg-background relative overflow-hidden'>
-      {/* Background Gradients */}
       <div className='absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none' />
       <div className='absolute top-20 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none' />
 
@@ -114,7 +112,6 @@ export function DonatePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}>
             <Card className='p-6 md:p-8 backdrop-blur-md bg-card/80 border-primary/20 shadow-2xl relative overflow-hidden'>
-              {/* Decorative shine */}
               <div className='absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl pointer-events-none' />
 
               <div className='space-y-8 relative z-10'>
@@ -177,7 +174,7 @@ export function DonatePage() {
                         setCustomAmount("");
                       }}
                       className={cn(
-                        "py-4 px-4 rounded-xl border-2 transition-all duration-200 font-semibold text-lg relative overflow-hidden group",
+                        "py-2 px-4 rounded-xl border-2 transition-all duration-200 font-semibold text-lg relative overflow-hidden group",
                         selectedAmount === amount && !customAmount
                           ? "border-primary bg-primary/5 text-primary shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
                           : "border-border hover:border-primary/50 hover:bg-muted/50"
@@ -205,7 +202,7 @@ export function DonatePage() {
                     value={customAmount}
                     onChange={handleCustomAmountChange}
                     className={cn(
-                      "w-full pl-10 pr-4 py-4 rounded-xl border-2 bg-background focus:outline-none focus:ring-0 transition-all font-semibold",
+                      "w-full pl-10 pr-4 py-2 rounded-xl border-2 bg-background focus:outline-none focus:ring-0 transition-all font-semibold",
                       customAmount
                         ? "border-primary shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
                         : "border-border focus:border-primary/50"
@@ -215,7 +212,7 @@ export function DonatePage() {
 
                 {/* Submit Action */}
                 <Button
-                  size='lg'
+                  size='sm'
                   className='w-full h-14 text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all'
                   onClick={handleDonate}
                   disabled={isLoading || (!selectedAmount && !customAmount)}>
