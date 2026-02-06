@@ -9,18 +9,34 @@ import {
   Users,
   CheckCircle2,
   ArrowRight,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const DONATION_AMOUNTS = [1000, 5000, 10000, 50000];
+
+const BANK_DETAILS = {
+  accountName: "Minaret Foundation",
+  accountNumber: "1234567890",
+  bankName: "Guaranty Trust Bank",
+};
 
 export function DonatePage() {
   const [frequency, setFrequency] = useState<"monthly" | "once">("monthly");
   const [selectedAmount, setSelectedAmount] = useState<number>(5000);
   const [customAmount, setCustomAmount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showBankDetails, setShowBankDetails] = useState(false);
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -34,10 +50,13 @@ export function DonatePage() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      alert(
-        `Thank you for your donation of ₦${customAmount || selectedAmount}`
-      );
-    }, 1500);
+      setShowBankDetails(true);
+    }, 1000);
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied to clipboard`);
   };
 
   const currentAmount = customAmount ? parseInt(customAmount) : selectedAmount;
@@ -242,6 +261,71 @@ export function DonatePage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Manual Transfer Modal */}
+      <Dialog open={showBankDetails} onOpenChange={setShowBankDetails}>
+        <DialogContent className='sm:max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Bank Transfer Details</DialogTitle>
+            <DialogDescription>
+              Please make a transfer of{" "}
+              <span className='font-bold text-primary'>
+                ₦{(currentAmount || 0).toLocaleString()}
+              </span>{" "}
+              to the account below.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className='space-y-4 py-4'>
+            <div className='p-4 rounded-lg border bg-muted/50 space-y-3'>
+              <div className='flex justify-between items-center pb-2 border-b border-border/50'>
+                <span className='text-sm text-muted-foreground'>Bank Name</span>
+                <span className='font-semibold'>{BANK_DETAILS.bankName}</span>
+              </div>
+
+              <div className='flex justify-between items-center pb-2 border-b border-border/50'>
+                <span className='text-sm text-muted-foreground'>
+                  Account Name
+                </span>
+                <span className='font-semibold text-right'>
+                  {BANK_DETAILS.accountName}
+                </span>
+              </div>
+
+              <div className='flex flex-col gap-1.5 pt-1'>
+                <span className='text-sm text-muted-foreground text-center'>
+                  Account Number
+                </span>
+                <div className='flex items-center gap-2'>
+                  <code className='flex-1 bg-background p-3 rounded-md border text-lg font-mono font-bold tracking-wider text-center'>
+                    {BANK_DETAILS.accountNumber}
+                  </code>
+                  <Button
+                    size='icon'
+                    variant='outline'
+                    onClick={() =>
+                      copyToClipboard(
+                        BANK_DETAILS.accountNumber,
+                        "Account number"
+                      )
+                    }
+                    className='h-[50px] w-[50px] shrink-0'>
+                    <Copy className='h-5 w-5' />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className='text-sm bg-blue-500/10 text-blue-500 p-3 rounded-lg border border-blue-500/20 flex gap-2'>
+              <CreditCard className='w-5 h-5 shrink-0' />
+              <p>
+                After finding the transfer, please send the receipt to
+                support@minaret.com for confirmation (optional).
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
