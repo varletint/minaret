@@ -19,6 +19,7 @@ import {
   ShowFormPage,
 } from "@/pages/dashboard";
 import { useAuth } from "@/hooks/useAuth";
+import { usePageTracking } from "@/hooks/usePageTracking";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -76,6 +77,8 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
  * App Router
  */
 function AppRouter() {
+  usePageTracking();
+
   return (
     <Routes>
       {/* Public routes with footer */}
