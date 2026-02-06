@@ -96,7 +96,6 @@ export function BroadcastPage() {
     }
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-12'>
@@ -105,7 +104,6 @@ export function BroadcastPage() {
     );
   }
 
-  // Error state
   if (isError) {
     return (
       <div className='max-w-2xl mx-auto'>
@@ -121,7 +119,6 @@ export function BroadcastPage() {
     );
   }
 
-  // No station state
   if (!station) {
     return (
       <div className='max-w-2xl mx-auto text-center'>
@@ -145,7 +142,6 @@ export function BroadcastPage() {
 
   return (
     <div className='max-w-3xl mx-auto space-y-6'>
-      {/* Back Link */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}>
@@ -157,7 +153,6 @@ export function BroadcastPage() {
         </Link>
       </motion.div>
 
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}>
@@ -170,7 +165,6 @@ export function BroadcastPage() {
         </p>
       </motion.div>
 
-      {/* Live Status Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -246,7 +240,6 @@ export function BroadcastPage() {
             </p>
 
             <div className='space-y-3 bg-muted/30 rounded-lg p-4'>
-              {/* Server */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>Server:</span>
@@ -269,7 +262,6 @@ export function BroadcastPage() {
                 </button>
               </div>
 
-              {/* Port */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>Port:</span>
@@ -288,7 +280,6 @@ export function BroadcastPage() {
                 </button>
               </div>
 
-              {/* Mountpoint */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>
@@ -313,7 +304,6 @@ export function BroadcastPage() {
                 </button>
               </div>
 
-              {/* Username */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>
@@ -338,7 +328,6 @@ export function BroadcastPage() {
                 </button>
               </div>
 
-              {/* Password */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>
@@ -381,7 +370,6 @@ export function BroadcastPage() {
                 </div>
               </div>
 
-              {/* Stream URL */}
               <div className='flex items-center justify-between gap-2'>
                 <div className='flex-1 min-w-0'>
                   <span className='text-sm text-muted-foreground'>
@@ -409,7 +397,6 @@ export function BroadcastPage() {
           </div>
         )}
 
-        {/* Live Stats */}
         {isLive && (
           <div className='grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-border'>
             <div className='flex items-center gap-3'>
@@ -436,7 +423,6 @@ export function BroadcastPage() {
         )}
       </motion.div>
 
-      {/* Now Playing (only when live) */}
       {isLive && (
         <motion.form
           initial={{ opacity: 0, y: 20 }}
@@ -449,7 +435,6 @@ export function BroadcastPage() {
             <h2 className='text-lg font-bold font-heading'>Now Playing</h2>
           </div>
 
-          {/* Current Track Display */}
           {station.currentTrack?.title && (
             <div className='bg-muted/50 rounded-lg p-4 mb-4'>
               <p className='text-sm text-muted-foreground mb-1'>
@@ -464,7 +449,6 @@ export function BroadcastPage() {
             </div>
           )}
 
-          {/* Form Fields */}
           <div>
             <label htmlFor='title' className='block text-sm font-medium mb-2'>
               Title <span className='text-destructive'>*</span>
@@ -527,7 +511,6 @@ export function BroadcastPage() {
         </motion.form>
       )}
 
-      {/* Offline Message */}
       {!isLive && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
