@@ -24,7 +24,7 @@ const sendWithBeacon = (
   payload: TrackEventPayload
 ): boolean => {
   const baseUrl = import.meta.env.VITE_API_URL || "";
-  const url = `${baseUrl}/api/analytics/events`;
+  const url = `${baseUrl}/analytics/events`;
   const data = JSON.stringify({
     type,
     payload: { ...payload, sessionId: getSessionId() },
@@ -44,7 +44,7 @@ export const trackEvent = (
   const eventPayload = { ...payload, sessionId: getSessionId() };
 
   api
-    .post("/api/analytics/events", { type, payload: eventPayload })
+    .post("/analytics/events", { type, payload: eventPayload })
     .catch(() => {});
 };
 
