@@ -9,6 +9,7 @@ import {
   RegisterPage,
   StationsPage,
   MosqueDetailPage,
+  DonatePage,
 } from "@/pages";
 import {
   DashboardPage,
@@ -86,6 +87,7 @@ function AppRouter() {
         <Route path='/' element={<HomePage />} />
         <Route path='/mosques' element={<StationsPage />} />
         <Route path='/mosques/:id' element={<MosqueDetailPage />} />
+        <Route path='/donate' element={<DonatePage />} />
       </Route>
 
       {/* Auth routes - centered, no footer */}

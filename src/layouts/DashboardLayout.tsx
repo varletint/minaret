@@ -37,9 +37,6 @@ const navItems = [
   },
 ];
 
-/**
- * Dashboard layout with sidebar navigation
- */
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
@@ -109,9 +106,6 @@ export function DashboardLayout() {
   );
 }
 
-/**
- * Sidebar content component
- */
 function SidebarContent({
   user,
   onLogout,
@@ -123,7 +117,6 @@ function SidebarContent({
 }) {
   return (
     <div className='flex flex-col h-full'>
-      {/* Header */}
       <div className='flex items-center justify-between p-4 border-b border-border'>
         <div className='flex items-center gap-3'>
           <span className='text-2xl'></span>
@@ -141,7 +134,6 @@ function SidebarContent({
         )}
       </div>
 
-      {/* User Info */}
       <div className='p-4 border-b border-border'>
         <div className='flex items-center gap-3'>
           <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
@@ -158,7 +150,6 @@ function SidebarContent({
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className='flex-1 p-4 space-y-1'>
         {navItems.map((item) => (
           <NavLink
@@ -180,7 +171,6 @@ function SidebarContent({
         ))}
       </nav>
 
-      {/* Logout */}
       <div className='p-4 border-t border-border'>
         <Button
           variant='ghost'

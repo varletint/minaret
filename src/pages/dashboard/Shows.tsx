@@ -16,12 +16,8 @@ import { useShowsByStation, useDeleteShow } from "@/hooks/useShows";
 import type { Show } from "@/types/show";
 import { toast } from "sonner";
 
-// Day name mapping
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-/**
- * Format time for display
- */
 function formatTime(isoString: string): string {
   const date = new Date(isoString);
   return date.toLocaleTimeString("en-US", {
@@ -31,9 +27,6 @@ function formatTime(isoString: string): string {
   });
 }
 
-/**
- * Shows management page
- */
 export function ShowsPage() {
   const { data: stationData, isLoading: stationLoading } = useMyStation();
   const station = stationData?.data?.station;
@@ -61,7 +54,6 @@ export function ShowsPage() {
     }
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-12'>
@@ -70,7 +62,6 @@ export function ShowsPage() {
     );
   }
 
-  // No station state
   if (!station) {
     return (
       <div className='max-w-2xl mx-auto text-center'>
@@ -94,7 +85,6 @@ export function ShowsPage() {
 
   return (
     <div className='max-w-4xl mx-auto space-y-6'>
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -116,7 +106,6 @@ export function ShowsPage() {
         </Link>
       </motion.div>
 
-      {/* Error State */}
       {isError && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,7 +120,6 @@ export function ShowsPage() {
         </motion.div>
       )}
 
-      {/* Empty State */}
       {!isError && shows.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -152,7 +140,6 @@ export function ShowsPage() {
         </motion.div>
       )}
 
-      {/* Shows List */}
       {shows.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

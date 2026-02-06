@@ -7,7 +7,6 @@ import { useMyStation } from "@/hooks/useStations";
 import { useShow, useCreateShow, useUpdateShow } from "@/hooks/useShows";
 import { toast } from "sonner";
 
-// Day names for recurring selector
 const daysOfWeek = [
   { value: 0, label: "Sun" },
   { value: 1, label: "Mon" },
@@ -18,9 +17,6 @@ const daysOfWeek = [
   { value: 6, label: "Sat" },
 ];
 
-/**
- * Show form page - create or edit a show
- */
 export function ShowFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -33,7 +29,6 @@ export function ShowFormPage() {
   const createShow = useCreateShow();
   const updateShow = useUpdateShow();
 
-  // Format ISO time to HH:mm for input
   function formatTimeForInput(isoString: string): string {
     try {
       const date = new Date(isoString);
@@ -43,7 +38,6 @@ export function ShowFormPage() {
     }
   }
 
-  // Compute initial form data from show data when editing
   const initialFormData = useMemo(() => {
     if (isEditing && showData?.data?.show) {
       const show = showData.data.show;
@@ -71,13 +65,11 @@ export function ShowFormPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Sync form data when initial data changes (e.g., when show data loads)
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     setFormData(initialFormData);
   }, [initialFormData]);
 
-  // Convert time to ISO string (using today's date)
   function timeToISO(timeStr: string): string {
     const today = new Date();
     const [hours, minutes] = timeStr.split(":").map(Number);
@@ -213,7 +205,6 @@ export function ShowFormPage() {
 
   return (
     <div className='max-w-2xl mx-auto'>
-      {/* Back Link */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}>
@@ -225,7 +216,6 @@ export function ShowFormPage() {
         </Link>
       </motion.div>
 
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -241,14 +231,12 @@ export function ShowFormPage() {
         </p>
       </motion.div>
 
-      {/* Form */}
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         onSubmit={handleSubmit}
         className='bg-card border border-border rounded-xl p-6 space-y-6'>
-        {/* Title */}
         <div>
           <label htmlFor='title' className='block text-sm font-medium mb-2'>
             Title <span className='text-destructive'>*</span>
@@ -269,7 +257,6 @@ export function ShowFormPage() {
           )}
         </div>
 
-        {/* Description */}
         <div>
           <label
             htmlFor='description'
@@ -287,7 +274,6 @@ export function ShowFormPage() {
           />
         </div>
 
-        {/* Time Pickers */}
         <div className='grid grid-cols-2 gap-4'>
           <div>
             <label
@@ -336,7 +322,6 @@ export function ShowFormPage() {
           </div>
         </div>
 
-        {/* Recurring Toggle */}
         <div className='flex items-center gap-3'>
           <input
             type='checkbox'
@@ -351,7 +336,6 @@ export function ShowFormPage() {
           </label>
         </div>
 
-        {/* Day Selector (visible when recurring) */}
         {formData.isRecurring && (
           <div>
             <label className='block text-sm font-medium mb-3'>
@@ -380,7 +364,6 @@ export function ShowFormPage() {
           </div>
         )}
 
-        {/* Submit */}
         <div className='flex gap-3 pt-4'>
           <Button
             type='submit'
