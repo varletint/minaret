@@ -202,7 +202,7 @@ export function DonatePage() {
                     value={customAmount}
                     onChange={handleCustomAmountChange}
                     className={cn(
-                      "w-full pl-10 pr-4 py-2 rounded-xl border-2 bg-background focus:outline-none focus:ring-0 transition-all font-semibold",
+                      "w-full pl-10 pr-4 py-3 rounded-xl border-2 bg-background focus:outline-none focus:ring-0 transition-all font-semibold",
                       customAmount
                         ? "border-primary shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
                         : "border-border focus:border-primary/50"
