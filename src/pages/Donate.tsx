@@ -26,9 +26,9 @@ import { toast } from "sonner";
 const DONATION_AMOUNTS = [1000, 5000, 10000, 50000];
 
 const BANK_DETAILS = {
-  accountName: "Minaret Foundation",
-  accountNumber: "1234567890",
-  bankName: "Guaranty Trust Bank",
+  accountName: "Adam",
+  accountNumber: "9026645775",
+  bankName: "PalmPay",
 };
 
 export function DonatePage() {
@@ -40,6 +40,7 @@ export function DonatePage() {
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value === customAmount) return;
     setCustomAmount(value);
     if (value) {
       setSelectedAmount(0);
@@ -320,7 +321,8 @@ export function DonatePage() {
               <CreditCard className='w-5 h-5 shrink-0' />
               <p>
                 After finding the transfer, please send the receipt to
-                support@minaret.com for confirmation (optional).
+                <span className='font-semibold'> 7063255405</span> for
+                confirmation (optional).
               </p>
             </div>
           </div>
