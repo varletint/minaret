@@ -76,6 +76,6 @@ export interface PaginatedShowsResponse {
 export interface ScheduleResponse {
   success: boolean;
   data: {
-    schedule: Show[];
+    shows: Show[];
   };
 }
