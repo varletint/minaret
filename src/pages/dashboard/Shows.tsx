@@ -15,17 +15,9 @@ import { useMyStation } from "@/hooks/useStations";
 import { useShowsByStation, useDeleteShow } from "@/hooks/useShows";
 import type { Show } from "@/types/show";
 import { toast } from "sonner";
+import { formatTime } from "@/lib/time-utils";
 
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function formatTime(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
 
 export function ShowsPage() {
   const { data: stationData, isLoading: stationLoading } = useMyStation();
@@ -36,7 +28,7 @@ export function ShowsPage() {
     isLoading: showsLoading,
     isError,
     error,
-  } = useShowsByStation(station?._id || "");
+  } = useShowsByStation(station?.slug || "");
 
   const deleteShow = useDeleteShow(station?._id);
 
