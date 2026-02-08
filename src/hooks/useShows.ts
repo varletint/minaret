@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { showService } from "@/services/showService";
 import type { CreateShowInput, UpdateShowInput } from "@/types/show";
 
-// Query keys
 export const showKeys = {
   all: ["shows"] as const,
   lists: () => [...showKeys.all, "list"] as const,
@@ -16,9 +15,6 @@ export const showKeys = {
   detail: (id: string) => [...showKeys.details(), id] as const,
 };
 
-/**
- * Hook to get paginated shows
- */
 export const useShows = (page = 1, limit = 10) => {
   return useQuery({
     queryKey: showKeys.list(page, limit),
@@ -26,9 +22,6 @@ export const useShows = (page = 1, limit = 10) => {
   });
 };
 
-/**
- * Hook to get a single show
- */
 export const useShow = (id: string) => {
   return useQuery({
     queryKey: showKeys.detail(id),
@@ -37,9 +30,6 @@ export const useShow = (id: string) => {
   });
 };
 
-/**
- * Hook to get shows for a specific station
- */
 export const useShowsByStation = (stationId: string) => {
   return useQuery({
     queryKey: showKeys.byStation(stationId),
@@ -48,9 +38,6 @@ export const useShowsByStation = (stationId: string) => {
   });
 };
 
-/**
- * Hook to get station schedule
- */
 export const useStationSchedule = (stationId: string) => {
   return useQuery({
     queryKey: showKeys.schedule(stationId),
@@ -59,9 +46,6 @@ export const useStationSchedule = (stationId: string) => {
   });
 };
 
-/**
- * Hook to create a show
- */
 export const useCreateShow = () => {
   const queryClient = useQueryClient();
 
@@ -69,9 +53,7 @@ export const useCreateShow = () => {
     mutationFn: (data: CreateShowInput) => showService.createShow(data),
     onSuccess: (response) => {
       const show = response.data.show;
-      // Invalidate show lists
       queryClient.invalidateQueries({ queryKey: showKeys.lists() });
-      // Invalidate station-specific shows
       queryClient.invalidateQueries({
         queryKey: showKeys.byStation(show.stationId),
       });
@@ -82,9 +64,6 @@ export const useCreateShow = () => {
   });
 };
 
-/**
- * Hook to update a show
- */
 export const useUpdateShow = () => {
   const queryClient = useQueryClient();
 
@@ -93,9 +72,7 @@ export const useUpdateShow = () => {
       showService.updateShow(id, data),
     onSuccess: (response) => {
       const show = response.data.show;
-      // Update cache for this specific show
       queryClient.setQueryData(showKeys.detail(show.id), response);
-      // Invalidate lists
       queryClient.invalidateQueries({ queryKey: showKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: showKeys.byStation(show.stationId),
@@ -107,20 +84,14 @@ export const useUpdateShow = () => {
   });
 };
 
-/**
- * Hook to delete a show
- */
 export const useDeleteShow = (stationId?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => showService.deleteShow(id),
     onSuccess: (_, id) => {
-      // Remove from cache
       queryClient.removeQueries({ queryKey: showKeys.detail(id) });
-      // Invalidate lists
       queryClient.invalidateQueries({ queryKey: showKeys.lists() });
-      // Invalidate station-specific if provided
       if (stationId) {
         queryClient.invalidateQueries({
           queryKey: showKeys.byStation(stationId),

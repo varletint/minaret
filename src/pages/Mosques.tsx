@@ -8,7 +8,6 @@ import { useStations } from "@/hooks/useStations";
 import { usePlayerStore } from "@/stores/playerStore";
 import type { DisplayStation } from "@/types/station";
 
-// Mock data for when backend is not available
 const mockStations: DisplayStation[] = [
   {
     id: "1",
@@ -92,11 +91,9 @@ export function StationsPage() {
         id: station._id,
         slug: station.slug,
         name: station.name,
-        // location: station.location,
         description: station.description,
         isLive: station.isLive,
         currentTrack: station.currentTrack,
-        // Get location from populated mosque or use description fallback
         location:
           typeof station.mosqueId === "object"
             ? station.mosqueId.location
@@ -127,7 +124,8 @@ export function StationsPage() {
 
   return (
     <>
-      <div className='container mx-auto px-4 py-8'>
+      {/* <DonationBanner /> */}
+      <div className='container mx-auto px-4 py-8 pt-16'>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -250,6 +248,7 @@ export function StationsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index }}>
               <MosqueCard
+                stationId={station.slug || station._id || ""}
                 {...station}
                 isPlaying={
                   isPlaying && currentMosque?.id === (station.id || station._id)
