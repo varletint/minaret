@@ -65,7 +65,6 @@ export function ShowFormPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     setFormData(initialFormData);
   }, [initialFormData]);

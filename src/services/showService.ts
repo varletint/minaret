@@ -46,7 +46,7 @@ export const getStationSchedule = async (
   stationId: string
 ): Promise<ScheduleResponse> => {
   const response = await api.get<ScheduleResponse>(
-    `/stations/${stationId}/schedule`
+    `/stations/${stationId}/shows`
   );
   return response.data;
 };
