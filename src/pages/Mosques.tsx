@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Search, Radio, MapPin, Users, Loader2 } from "lucide-react";
 import { MosqueCard } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
-import { DonationBanner } from "@/components/DonationBanner";
 import { Button } from "@/components/ui/button";
 import { useStations } from "@/hooks/useStations";
 import { usePlayerStore } from "@/stores/playerStore";

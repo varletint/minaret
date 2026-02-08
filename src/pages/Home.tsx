@@ -8,7 +8,6 @@ import {
 import { FeatureCard, type FeatureCardProps } from "@/components/FeatureCard";
 import { MosqueCard } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
-import { DonationBanner } from "@/components/DonationBanner";
 import { Radio, MapPin, Clock, Heart } from "lucide-react";
 import { usePlayerStore } from "@/stores/playerStore";
 import { useStations } from "@/hooks/useStations";
@@ -78,7 +77,6 @@ export function HomePage() {
 
   return (
     <>
-      {/* <DonationBanner /> */}
       <main className='container mx-auto px-4 py-8 pb-24 pt-16'>
         <h1 className='text-4xl font-bold font-heading'>
           Welcome to Minaret Live
