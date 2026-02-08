@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Search, Radio, MapPin, Users, Loader2 } from "lucide-react";
 import { MosqueCard } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { DonationBanner } from "@/components/DonationBanner";
 import { Button } from "@/components/ui/button";
 import { useStations } from "@/hooks/useStations";
 import { usePlayerStore } from "@/stores/playerStore";
@@ -124,7 +125,8 @@ export function StationsPage() {
 
   return (
     <>
-      <div className='container mx-auto px-4 py-8'>
+      {/* <DonationBanner /> */}
+      <div className='container mx-auto px-4 py-8 pt-16'>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

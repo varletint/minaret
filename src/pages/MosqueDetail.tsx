@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { DonationBanner } from "@/components/DonationBanner";
 import { useStation } from "@/hooks/useStations";
 import { useStationSchedule } from "@/hooks/useShows";
 import { formatTime } from "@/lib/time-utils";
@@ -108,7 +109,8 @@ export function MosqueDetailPage() {
 
   return (
     <>
-      <div className='container mx-auto px-4 py-8 pb-32'>
+      {/* <DonationBanner /> */}
+      <div className='container mx-auto px-4 py-8 pb-32 pt-16'>
         {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
