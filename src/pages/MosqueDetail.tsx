@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
+  Loader2,
   MapPin,
   Users,
   Clock,
@@ -14,174 +15,50 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
-import type { DisplayStation } from "@/types/station";
+import { useStation } from "@/hooks/useStations";
+import { useStationSchedule } from "@/hooks/useShows";
+import { formatTime } from "@/lib/time-utils";
 
-// Mock data - will be replaced with API call
-const mockMosqueDetails: Record<string, DisplayStation> = {
-  "Massalacin Zawiyya": {
-    id: "1",
-    name: "Massalacin Zawiyya",
-    description:
-      "A historic mosque serving the community of Kontagora for over 50 years. Known for its Friday prayers and regular Quranic lectures.",
-    location: "Kontagora, Niger State",
-    listeners: 500,
-    isLive: true,
-    logo: undefined,
-    streamUrl: "http://localhost:8000/massala",
-    ownerId: "1",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    schedule: [
-      {
-        id: "s1",
-        title: "Fajr Prayer",
-        scheduledStart: "5:30 AM",
-        scheduledEnd: "6:00 AM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s2",
-        title: "Dhuhr Prayer",
-        scheduledStart: "1:00 PM",
-        scheduledEnd: "1:30 PM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s3",
-        title: "Jumu'ah Prayer",
-        scheduledStart: "1:30 PM",
-        scheduledEnd: "2:30 PM",
-        isRecurring: false,
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s4",
-        title: "Asr Prayer",
-        scheduledStart: "4:30 PM",
-        scheduledEnd: "5:00 PM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s5",
-        title: "Maghrib Prayer",
-        scheduledStart: "6:30 PM",
-        scheduledEnd: "7:00 PM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s6",
-        title: "Isha Prayer",
-        scheduledStart: "8:00 PM",
-        scheduledEnd: "8:30 PM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s7",
-        title: "Weekly Tafsir",
-        scheduledStart: "After Maghrib",
-        scheduledEnd: "8:00 PM",
-        isRecurring: true,
-        recurrence: { pattern: "weekly", daysOfWeek: [0] }, // Sunday
-        stationId: "1",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-    ],
-  },
-  "Central Mosque": {
-    id: "3",
-    name: "Central Mosque",
-    description:
-      "The main mosque of Kontagora, serving as the central gathering place for the Muslim community.",
-    location: "Kontagora, Niger State",
-    listeners: 1200,
-    isLive: false,
-    logo: undefined,
-    streamUrl: undefined,
-    ownerId: "3",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    schedule: [
-      {
-        id: "s8",
-        title: "Jumu'ah Prayer",
-        scheduledStart: "1:30 PM",
-        scheduledEnd: "2:30 PM",
-        isRecurring: false,
-        stationId: "3",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-      {
-        id: "s9",
-        title: "Eid Prayers",
-        scheduledStart: "10:00 AM",
-        scheduledEnd: "12:00 PM",
-        isRecurring: false,
-        stationId: "3",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-      },
-    ],
-  },
+const formatRecurrenceDays = (daysOfWeek?: number[]): string => {
+  if (!daysOfWeek || daysOfWeek.length === 0) return "";
+
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  if (daysOfWeek.length === 7) return "Daily";
+
+  if (daysOfWeek.length === 5 && daysOfWeek.every((d) => d >= 1 && d <= 5)) {
+    return "Weekdays";
+  }
+
+  if (
+    daysOfWeek.length === 2 &&
+    daysOfWeek.includes(0) &&
+    daysOfWeek.includes(6)
+  ) {
+    return "Weekends";
+  }
+
+  return daysOfWeek
+    .sort((a, b) => a - b)
+    .map((d) => dayNames[d])
+    .join(", ");
 };
 
 export function MosqueDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id: stationId } = useParams<{ id: string }>();
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
 
-  // Decode the mosque name from URL
-  const mosqueName = decodeURIComponent(id || "");
+  const {
+    data: stationData,
+    isLoading: isLoadingStation,
+    isError: isStationError,
+  } = useStation(stationId || "");
+  const { data: scheduleData, isLoading: isLoadingSchedule } =
+    useStationSchedule(stationId || "");
 
-  // Get mosque details (mock for now)
-  const mosque = mockMosqueDetails[
-    mosqueName as keyof typeof mockMosqueDetails
-  ] || {
-    id: "0",
-    name: mosqueName || "Unknown Mosque",
-    description: "Mosque information not available.",
-    location: "Location unknown",
-    listeners: 0,
-    isLive: false,
-    logo: undefined,
-    streamUrl: undefined,
-    ownerId: "",
-    createdAt: "",
-    updatedAt: "",
-    schedule: [],
-  };
+  const station = stationData?.data?.station;
+  const schedule = scheduleData?.data?.shows || [];
 
   const handlePlayPause = () => {
     if (!showPlayer) {
@@ -194,6 +71,40 @@ export function MosqueDetailPage() {
     setShowPlayer(false);
     setIsPlaying(false);
   };
+
+  if (isLoadingStation) {
+    return (
+      <div className='container mx-auto px-4 py-8'>
+        <div className='flex items-center justify-center h-64'>
+          <Loader2 className='h-8 w-8 animate-spin text-primary' />
+        </div>
+      </div>
+    );
+  }
+
+  if (isStationError || !station) {
+    return (
+      <div className='container mx-auto px-4 py-8'>
+        <Link
+          to='/mosques'
+          className='inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6'>
+          <ArrowLeft className='h-4 w-4' />
+          Back to Mosques
+        </Link>
+        <div className='text-center py-12'>
+          <h2 className='text-2xl font-bold mb-2'>Station Not Found</h2>
+          <p className='text-muted-foreground'>
+            The station you're looking for doesn't exist.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const location =
+    typeof station.mosqueId === "object" && station.mosqueId?.location
+      ? station.mosqueId.location
+      : station.description || "Location unknown";
 
   return (
     <>
@@ -229,9 +140,9 @@ export function MosqueDetailPage() {
                 <div>
                   <div className='flex items-center gap-3 mb-2'>
                     <h1 className='text-2xl md:text-3xl font-bold font-heading'>
-                      {mosque.name}
+                      {station.name}
                     </h1>
-                    {mosque.isLive && (
+                    {station.isLive && (
                       <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 text-red-500 text-sm font-medium'>
                         <span className='w-2 h-2 rounded-full bg-red-500 animate-pulse' />
                         LIVE
@@ -240,10 +151,10 @@ export function MosqueDetailPage() {
                   </div>
                   <div className='flex items-center gap-2 text-muted-foreground mb-4'>
                     <MapPin className='h-4 w-4' />
-                    <span>{mosque.location}</span>
+                    <span>{location}</span>
                   </div>
                   <p className='text-muted-foreground max-w-2xl'>
-                    {mosque.description}
+                    {station.description}
                   </p>
                 </div>
               </div>
@@ -253,7 +164,8 @@ export function MosqueDetailPage() {
                 <div className='flex items-center gap-2 text-sm'>
                   <Users className='h-4 w-4 text-emerald-500' />
                   <span>
-                    {mosque.listeners?.toLocaleString() ?? 0} listeners
+                    {station.stats?.totalListeners?.toLocaleString() ?? 0}{" "}
+                    listeners
                   </span>
                 </div>
 
@@ -266,7 +178,7 @@ export function MosqueDetailPage() {
                   </Button>
                   <Button
                     onClick={handlePlayPause}
-                    disabled={!mosque.isLive}
+                    disabled={!station.isLive}
                     className='bg-primary hover:from-emerald-600 hover:to-teal-700'>
                     {isPlaying ? (
                       <>
@@ -276,7 +188,7 @@ export function MosqueDetailPage() {
                     ) : (
                       <>
                         <Play className='h-4 w-4 mr-2' />
-                        {mosque.isLive ? "Listen Live" : "Offline"}
+                        {station.isLive ? "Listen Live" : "Offline"}
                       </>
                     )}
                   </Button>
@@ -296,29 +208,38 @@ export function MosqueDetailPage() {
             Broadcast Schedule
           </h2>
 
-          {mosque.schedule && mosque.schedule.length > 0 ? (
+          {isLoadingSchedule ? (
+            <div className='flex items-center justify-center py-8'>
+              <Loader2 className='h-6 w-6 animate-spin text-emerald-500' />
+            </div>
+          ) : schedule && schedule.length > 0 ? (
             <div className='grid gap-3'>
-              {mosque.schedule.map((item, index) => (
+              {schedule.map((item, index) => (
                 <motion.div
-                  key={index}
+                  key={item.id || index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * index }}
                   className='bg-card border border-border rounded-xl p-4 flex items-center justify-between'>
-                  <div className='flex items-center gap-4'>
+                  <div className='flex items-center gap-4 flex-1'>
                     <div className='p-2 rounded-lg bg-emerald-500/10'>
                       <Clock className='h-4 w-4 text-emerald-500' />
                     </div>
-                    <div>
+                    <div className='flex-1'>
                       <p className='font-medium'>{item.title}</p>
                       <p className='text-sm text-muted-foreground'>
-                        {/* {item.day ? `${item.day} • ` : "Daily • "} */}
-                        {item.scheduledEnd}
+                        {formatTime(item.scheduledStart)} -{" "}
+                        {formatTime(item.scheduledEnd)}
                       </p>
+                      {item.isRecurring && item.recurrence?.daysOfWeek && (
+                        <p className='text-xs text-muted-foreground mt-0.5'>
+                          {formatRecurrenceDays(item.recurrence.daysOfWeek)}
+                        </p>
+                      )}
                     </div>
                   </div>
                   {item.isRecurring && (
-                    <span className='text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-500'>
+                    <span className='text-xs px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 font-medium'>
                       Recurring
                     </span>
                   )}
@@ -337,10 +258,11 @@ export function MosqueDetailPage() {
       {/* Audio Player */}
       {showPlayer && (
         <AudioPlayer
-          mosqueName={mosque.name}
-          location={mosque.location}
-          streamUrl={mosque.streamUrl}
-          isLive={mosque.isLive}
+          mosqueName={station.name}
+          location={location}
+          streamUrl={station.streamUrl}
+          currentTrack={station.currentTrack}
+          isLive={station.isLive}
           isPlaying={isPlaying}
           onPlayPause={handlePlayPause}
           onClose={handleClosePlayer}
