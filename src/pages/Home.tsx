@@ -113,6 +113,7 @@ export function HomePage() {
               {stations.map((station) => (
                 <CarouselItem key={station._id}>
                   <MosqueCard
+                    stationId={station.slug}
                     name={station.name}
                     location={station.mosqueId.location}
                     listeners={station.stats.totalListeners}
@@ -131,6 +132,7 @@ export function HomePage() {
             {stations.map((station) => (
               <MosqueCard
                 key={station._id}
+                stationId={station.slug}
                 name={station.name}
                 location={station.mosqueId.location}
                 listeners={station.stats.totalListeners}
@@ -148,10 +150,10 @@ export function HomePage() {
         <AudioPlayer
           mosqueName={currentMosque.name}
           location={currentMosque.location}
-          isLive={currentMosque.isLive} // Pass isLive status
+          isLive={currentMosque.isLive}
           isPlaying={isPlaying}
-          streamUrl={currentMosque.streamUrl} // Pass streamUrl
-          currentTrack={currentMosque.currentTrack} // Pass currentTrack
+          streamUrl={currentMosque.streamUrl}
+          currentTrack={currentMosque.currentTrack}
           onPlayPause={handlePlayPause}
           onClose={handleClose}
         />
