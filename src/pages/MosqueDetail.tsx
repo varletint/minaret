@@ -58,7 +58,9 @@ export function MosqueDetailPage() {
     useStationSchedule(stationId || "");
 
   const station = stationData?.data?.station;
-  const schedule = scheduleData?.data?.shows || [];
+  const schedule = (scheduleData?.data?.shows || []).filter(
+    (show) => show.title !== "Live Stream"
+  );
 
   const handlePlayPause = () => {
     if (!showPlayer) {
@@ -216,7 +218,7 @@ export function MosqueDetailPage() {
             <div className='grid gap-3'>
               {schedule.map((item, index) => (
                 <motion.div
-                  key={item.id || index}
+                  key={item._id || index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * index }}

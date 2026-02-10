@@ -8,7 +8,7 @@ export interface Recurrence {
 
 // Show type
 export interface Show {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   thumbnail?: string;

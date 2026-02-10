@@ -140,7 +140,7 @@ export function ShowsPage() {
           className='space-y-3'>
           {shows.map((show: Show, index: number) => (
             <motion.div
-              key={show.id}
+              key={show._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * index }}
@@ -179,7 +179,7 @@ export function ShowsPage() {
               </div>
 
               <div className='flex items-center gap-2 sm:shrink-0'>
-                <Link to={`/dashboard/shows/${show.id}/edit`}>
+                <Link to={`/dashboard/shows/${show._id}/edit`}>
                   <Button variant='outline' size='sm'>
                     <Edit className='h-4 w-4 mr-1' />
                     Edit
@@ -188,7 +188,7 @@ export function ShowsPage() {
                 <Button
                   variant='outline'
                   size='sm'
-                  onClick={() => handleDelete(show.id, show.title)}
+                  onClick={() => handleDelete(show._id, show.title)}
                   disabled={deleteShow.isPending}
                   className='text-destructive hover:text-destructive hover:bg-destructive/10'>
                   {deleteShow.isPending ? (
