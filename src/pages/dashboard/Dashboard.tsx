@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMyStation } from "@/hooks/useStations";
+import { AxiosError } from "axios";
 
 export function DashboardPage() {
   const { user } = useAuth();
@@ -19,6 +20,12 @@ export function DashboardPage() {
 
   const station = stationData?.data?.station;
   const hasStation = !!station;
+  const is404 = (error as AxiosError)?.response?.status === 404;
+
+  // Show generic error only if it's NOT a 404
+  const showError = isError && !is404;
+  // Show setup UI if we have no station (and not loading) OR if we got a 404
+  const showSetup = !isLoading && (!hasStation || is404) && !showError;
 
   return (
     <div className='max-w-5xl mx-auto'>
@@ -40,7 +47,7 @@ export function DashboardPage() {
         </div>
       )}
 
-      {isError && (
+      {showError && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,7 +61,7 @@ export function DashboardPage() {
         </motion.div>
       )}
 
-      {!isLoading && !isError && !hasStation && (
+      {showSetup && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

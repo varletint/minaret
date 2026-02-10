@@ -90,11 +90,15 @@ export const useLogout = () => {
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
       queryClient.removeQueries({ queryKey: authKeys.all });
+      queryClient.cancelQueries();
+      queryClient.clear();
     },
     onError: () => {
       setAccessToken(null);
       queryClient.setQueryData(authKeys.user(), null);
       queryClient.removeQueries({ queryKey: authKeys.all });
+      queryClient.cancelQueries();
+      queryClient.clear();
     },
   });
 };
