@@ -81,7 +81,9 @@ export function HomePage() {
         location: recording.stationId?.name,
         mountPoint: "recording",
         streamUrl:
-          recording.url || `/api/v1/recordings/${recording._id}/stream`,
+          recording.chunks?.[0]?.publicUrl ||
+          recording.url ||
+          `/api/v1/recordings/${recording._id}/stream`,
         currentTrack: {
           title: recording.showId?.title || "Untitled",
           artist: recording.stationId?.name || "Unknown Station",
