@@ -19,13 +19,13 @@ const daysOfWeek = [
 
 export function ShowFormPage() {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const isEditing = !!id;
+  const { _id } = useParams<{ _id: string }>();
+  const isEditing = !!_id;
 
   const { data: stationData, isLoading: stationLoading } = useMyStation();
   const station = stationData?.data?.station;
 
-  const { data: showData, isLoading: showLoading } = useShow(id || "");
+  const { data: showData, isLoading: showLoading } = useShow(_id || "");
   const createShow = useCreateShow();
   const updateShow = useUpdateShow();
 
@@ -133,12 +133,12 @@ export function ShowFormPage() {
     }
 
     try {
-      if (isEditing && id) {
+      if (isEditing && _id) {
         const recurrence = formData.isRecurring
           ? { pattern: "weekly" as const, daysOfWeek: formData.daysOfWeek }
           : undefined;
         await updateShow.mutateAsync({
-          id,
+          _id,
           data: {
             title: formData.title.trim(),
             description: formData.description.trim() || undefined,
