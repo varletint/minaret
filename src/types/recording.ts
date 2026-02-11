@@ -24,9 +24,9 @@ export interface RecordingChunk {
 
 export interface Recording {
   _id: string;
-  status: "ready" | "processing" | "failed"; // inferred status types
+  status: "ready" | "processing" | "failed"; 
   stationId: RecordingStation;
-  showId?: RecordingShow; // explicit optionality based on common patterns, though sample shows it populated
+  showId?: RecordingShow; 
   mosqueId: string;
   startTime: string;
   initialDurationSecs: number;

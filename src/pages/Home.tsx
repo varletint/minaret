@@ -183,10 +183,12 @@ export function HomePage() {
               {/* Optional: Add View All link here */}
             </div>
 
-            {/* <Carousel className='w-full md:hidden'>
-              <CarouselContent>
+            <Carousel className='w-full md:hidden'>
+              <CarouselContent className='-ml-2'>
                 {recordings.map((recording) => (
-                  <CarouselItem key={recording._id}>
+                  <CarouselItem
+                    key={recording._id}
+                    className='pl-2 basis-1/2 sm:basis-1/3 lg:basis-1/5'>
                     <RecordingCard
                       recording={recording}
                       isPlaying={
@@ -201,10 +203,10 @@ export function HomePage() {
               </CarouselContent>
               <CarouselPrevious className='left-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
               <CarouselNext className='right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
-            </Carousel> */}
+            </Carousel>
 
             {/* <div className='md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden'> */}
-            <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4'>
+            <div className='md:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 hidden'>
               {recordings.map((recording) => (
                 <RecordingCard
                   key={recording._id}
