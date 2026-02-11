@@ -22,6 +22,7 @@ import {
   useUpdateNowPlaying,
 } from "@/hooks/useStations";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export function BroadcastPage() {
   const { data: stationData, isLoading, isError, error } = useMyStation();
@@ -30,6 +31,7 @@ export function BroadcastPage() {
   const updateNowPlaying = useUpdateNowPlaying();
 
   const station = stationData?.data?.station;
+  const is404 = (error as AxiosError)?.response?.status === 404;
   const isLive = station?.isLive ?? false;
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -104,7 +106,8 @@ export function BroadcastPage() {
     );
   }
 
-  if (isError) {
+  // Show generic error only if it's NOT a 404
+  if (isError && !is404) {
     return (
       <div className='max-w-2xl mx-auto'>
         <div className='bg-destructive/10 border border-destructive/20 rounded-xl p-6'>
@@ -119,7 +122,8 @@ export function BroadcastPage() {
     );
   }
 
-  if (!station) {
+  // Show setup UI if we have no station (and not loading) OR if we got a 404
+  if (!station || is404) {
     return (
       <div className='max-w-2xl mx-auto text-center'>
         <div className='bg-card border border-border rounded-xl p-8'>

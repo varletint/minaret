@@ -123,7 +123,7 @@ function AppRouter() {
         <Route path='/dashboard/broadcast' element={<BroadcastPage />} />
         <Route path='/dashboard/shows' element={<ShowsPage />} />
         <Route path='/dashboard/shows/new' element={<ShowFormPage />} />
-        <Route path='/dashboard/shows/:id/edit' element={<ShowFormPage />} />
+        <Route path='/dashboard/shows/:_id/edit' element={<ShowFormPage />} />
       </Route>
 
       <Route path='*' element={<Navigate to='/' replace />} />

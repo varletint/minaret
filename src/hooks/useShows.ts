@@ -68,11 +68,11 @@ export const useUpdateShow = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateShowInput }) =>
-      showService.updateShow(id, data),
+    mutationFn: ({ _id, data }: { _id: string; data: UpdateShowInput }) =>
+      showService.updateShow(_id, data),
     onSuccess: (response) => {
       const show = response.data.show;
-      queryClient.setQueryData(showKeys.detail(show.id), response);
+      queryClient.setQueryData(showKeys.detail(show._id), response);
       queryClient.invalidateQueries({ queryKey: showKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: showKeys.byStation(show.stationId),
