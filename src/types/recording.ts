@@ -11,6 +11,17 @@ export interface RecordingShow {
   scheduledStart: string;
 }
 
+export interface RecordingChunk {
+  index: number;
+  filename: string;
+  storagePath: string;
+  publicUrl: string;
+  codec: "mp3" | "aac";
+  durationSecs?: number;
+  sizeBytes?: number;
+  uploadedAt: string;
+}
+
 export interface Recording {
   _id: string;
   status: "ready" | "processing" | "failed"; // inferred status types
@@ -22,8 +33,8 @@ export interface Recording {
   totalDurationSecs: number;
   createdAt: string;
   updatedAt: string;
-  url?: string;
-  // potentially other fields not in the snippet
+  chunks?: RecordingChunk[];
+  url?: string; // Keeping for backward compatibility or convenience if backend adds it
 }
 
 export interface PublicRecordingsQuery {
@@ -32,10 +43,6 @@ export interface PublicRecordingsQuery {
   stationId?: string;
   mosqueId?: string;
 }
-
-// export interface InternalRecordingsQuery extends PublicRecordingsQuery {
-//   // Add any internal-only query params if needed later
-// }
 
 export interface PublicRecordingsResponse {
   status: string;
