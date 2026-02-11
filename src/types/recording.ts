@@ -33,9 +33,9 @@ export interface PublicRecordingsQuery {
   mosqueId?: string;
 }
 
-export interface InternalRecordingsQuery extends PublicRecordingsQuery {
-  // Add any internal-only query params if needed later
-}
+// export interface InternalRecordingsQuery extends PublicRecordingsQuery {
+//   // Add any internal-only query params if needed later
+// }
 
 export interface PublicRecordingsResponse {
   status: string;
