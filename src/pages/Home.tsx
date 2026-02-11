@@ -12,6 +12,9 @@ import { Radio, MapPin, Clock, Heart } from "lucide-react";
 import { usePlayerStore } from "@/stores/playerStore";
 import { useStations } from "@/hooks/useStations";
 import type { StationListItem } from "@/types/station";
+import { RecordingCard } from "@/components/RecordingCard";
+import { useRecordings } from "@/hooks/useRecordings";
+import type { Recording } from "@/types/recording";
 
 const features: FeatureCardProps[] = [
   {
@@ -46,8 +49,10 @@ export function HomePage() {
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
   const { data: stationsData } = useStations();
+  const { data: recordingsData } = useRecordings({ limit: 6 });
 
   const stations = stationsData?.data?.stations || [];
+  const recordings = recordingsData?.data?.recordings || [];
 
   const handlePlay = (station: StationListItem) => {
     if (currentMosque?.id === station._id) {
@@ -61,6 +66,27 @@ export function HomePage() {
         streamUrl: station.streamUrl,
         currentTrack: station.currentTrack,
         isLive: station.isLive,
+      });
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePlayRecording = (recording: Recording) => {
+    if (currentMosque?.id === recording._id) {
+      setIsPlaying(!isPlaying);
+    } else {
+      setCurrentMosque({
+        id: recording._id,
+        name: recording.showId?.title || "Recording",
+        location: recording.stationId?.name,
+        mountPoint: "recording",
+        streamUrl:
+          recording.url || `/api/v1/recordings/${recording._id}/stream`,
+        currentTrack: {
+          title: recording.showId?.title || "Untitled",
+          artist: recording.stationId?.name || "Unknown Station",
+        },
+        isLive: false,
       });
       setIsPlaying(true);
     }
@@ -144,6 +170,52 @@ export function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Recent Recordings Section */}
+        {recordings.length > 0 && (
+          <section className='mt-12'>
+            <div className='flex items-center justify-between mb-6'>
+              <h2 className='text-2xl font-bold font-heading'>
+                Recent Recordings
+              </h2>
+              {/* Optional: Add View All link here */}
+            </div>
+
+            {/* <Carousel className='w-full md:hidden'>
+              <CarouselContent>
+                {recordings.map((recording) => (
+                  <CarouselItem key={recording._id}>
+                    <RecordingCard
+                      recording={recording}
+                      isPlaying={
+                        currentMosque?.id === recording._id && isPlaying
+                      }
+                      onPlay={() => handlePlayRecording(recording)}
+                      onStop={() => setIsPlaying(false)}
+                      className='h-full'
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className='left-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
+              <CarouselNext className='right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
+            </Carousel> */}
+
+            {/* <div className='md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden'> */}
+            <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4'>
+              {recordings.map((recording) => (
+                <RecordingCard
+                  key={recording._id}
+                  recording={recording}
+                  isPlaying={currentMosque?.id === recording._id && isPlaying}
+                  onPlay={() => handlePlayRecording(recording)}
+                  onStop={() => setIsPlaying(false)}
+                  className='h-full'
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       {currentMosque && (
