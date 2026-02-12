@@ -90,7 +90,6 @@ export function MosqueDetailPage() {
         alert("Link copied to clipboard!");
       }
     } catch (err) {
-      // User cancelled share or clipboard failed — ignore AbortError
       if (err instanceof Error && err.name !== "AbortError") {
         await navigator.clipboard.writeText(shareUrl);
         alert("Link copied to clipboard!");
