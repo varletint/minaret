@@ -95,7 +95,9 @@ export function MosqueCard({
               {/* <span className='truncate capitalize'>
                 {currentTrack?.title}
               </span>{" "} */}
-              <span className='capitalize'>By {currentTrack?.artist}</span>
+              {currentTrack?.artist && (
+                <span className='capitalize'>By {currentTrack.artist}</span>
+              )}
               <br />
             </div>
           </div>
