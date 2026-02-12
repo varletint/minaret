@@ -1,4 +1,10 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  type MouseEvent,
+} from "react";
 import {
   Play,
   Pause,
@@ -48,6 +54,28 @@ export function AudioPlayer({
 
   const [error, setError] = useState<string | null>(null);
   const [bufferedSeconds, setBufferedSeconds] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  // Format seconds into mm:ss
+  const formatTime = (secs: number) => {
+    if (!isFinite(secs) || secs < 0) return "0:00";
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  // Seek when user clicks the progress bar
+  const handleSeek = (e: MouseEvent<HTMLDivElement>) => {
+    if (!progressBarRef.current || !audioRef.current || duration <= 0) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const ratio = Math.max(
+      0,
+      Math.min(1, (e.clientX - rect.left) / rect.width)
+    );
+    audioRef.current.currentTime = ratio * duration;
+  };
 
   // Retry function to attempt playback again
   const handleRetry = useCallback(() => {
@@ -143,12 +171,26 @@ export function AudioPlayer({
         setBufferedSeconds(audio.buffered.end(audio.buffered.length - 1));
       }
     };
+    const handleEnded = () => {
+      onPlayPause();
+    };
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => {
+      if (isFinite(audio.duration)) setDuration(audio.duration);
+    };
+    const handleDurationChange = () => {
+      if (isFinite(audio.duration)) setDuration(audio.duration);
+    };
 
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("error", handleError);
     audio.addEventListener("progress", handleProgress);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("durationchange", handleDurationChange);
 
     return () => {
       audio.removeEventListener("waiting", handleWaiting);
@@ -156,8 +198,12 @@ export function AudioPlayer({
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("progress", handleProgress);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("durationchange", handleDurationChange);
     };
-  }, [streamUrl, attemptAutoRetry, retryCount]);
+  }, [streamUrl, attemptAutoRetry, retryCount, onPlayPause]);
 
   useEffect(() => {
     if (!audioRef.current || !streamUrl) return;
@@ -216,6 +262,19 @@ export function AudioPlayer({
         "transform transition-transform duration-300 ease-out",
         className
       )}>
+      {/* Thin seekable progress bar at the top — recordings only */}
+      {!isLive && duration > 0 && (
+        <div
+          ref={progressBarRef}
+          className='h-0.5 w-full bg-muted/40 cursor-pointer group/progress'
+          onClick={handleSeek}>
+          <div
+            className='h-full bg-primary transition-all duration-150 ease-linear group-hover/progress:h-1.5'
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+      )}
+
       {/* Hidden audio element for Icecast stream */}
       {streamUrl && <audio ref={audioRef} src={streamUrl} preload='none' />}
 
@@ -321,6 +380,15 @@ export function AudioPlayer({
                   style={{ animationDelay: "600ms" }}
                 />
               </span>
+            </div>
+          )}
+
+          {/* Time Display — recordings only */}
+          {!isLive && duration > 0 && (
+            <div className='flex items-center gap-1 text-xs tabular-nums text-muted-foreground shrink-0'>
+              <span>{formatTime(currentTime)}</span>
+              <span>/</span>
+              <span>{formatTime(duration)}</span>
             </div>
           )}
 

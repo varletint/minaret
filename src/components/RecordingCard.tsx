@@ -1,4 +1,4 @@
-import { Play, Square, Calendar, Clock, Radio, User } from "lucide-react";
+import { Play, Calendar, Clock, Radio, User, Pause } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,14 +19,17 @@ export function RecordingCard({
   onStop,
   className,
 }: RecordingCardProps) {
-  const { showId, stationId, startTime, totalDurationSecs } = recording;
+  const { showId, stationId, totalDurationSecs } = recording;
 
-  // Format duration (e.g., 1h 30m or 45m)
-  const formatDuration = (seconds: number) => {
+  // Format duration (e.g., 1h 30m or 45m or < 1m)
+  const formatDuration = (seconds?: number) => {
+    if (!seconds || isNaN(seconds) || seconds <= 0) return "N/A";
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
     if (h > 0) return `${h}h ${m}m`;
-    return `${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
   };
 
   // Format date
@@ -70,17 +73,17 @@ export function RecordingCard({
           {isPlaying ? (
             <Button
               size='icon'
-              className='h-12 w-12 rounded-full shadow-xl bg-destructive hover:bg-destructive/90 text-white animate-in zoom-in-50 duration-200 border-2 border-background'
+              className='h-12 w-12 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground animate-in zoom-in-50 duration-200 border-2 border-background'
               onClick={(e) => {
                 e.stopPropagation();
                 onStop?.();
               }}>
-              <Square className='h-5 w-5 fill-current' />
+              <Pause className='h-5 w-5 fill-current' />
             </Button>
           ) : (
             <Button
               size='icon'
-              className='h-12 w-12 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-background'
+              className='h-12 w-12 rounded-full shadow-xl bg-background/90 text-foreground text-primary-foreground border-2 border-background'
               onClick={(e) => {
                 e.stopPropagation();
                 onPlay?.();
@@ -124,17 +127,19 @@ export function RecordingCard({
         </div>
       </CardContent>
 
-      <CardFooter className='p-4 pt-0 text-xs text-muted-foreground flex justify-between items-center border-t border-border/40 bg-muted/10 h-10 mt-auto'>
-        <h3
-          className='font-semibold text-sm leading-tight line-clamp-2 min-h-[em]'
-          title={showId?.title || "Untitled Recording"}>
-          {showId?.title || "Untitled Recording"}
-        </h3>
+      <CardFooter className='p-2 pt-0 text-xs text-muted-foreground flex justify-between items-center border-t border-border/40 bg-muted/10 h-10 mt-auto'>
         <div className=' flex flex-col gap-1'>
-          <div className='flex items-center gap-1.5'>
-            <Calendar className='h-3.5 w-3.5' />
-            <span>{formatDate(startTime)}</span>
+          <h3
+            className='font-semibold text-sm leading-tight line-clamp-2 min-h-[em]'
+            title={showId?.title || "Untitled Recording"}>
+            {showId?.title || "Untitled Recording"}
+          </h3>
+          <div className='flex items-center gap-1.5 text-xs'>
+            <Calendar className='h-3 w-3' />
+            <span>{formatDate(showId?.scheduledStart as string)}</span>
           </div>
+        </div>
+        <div className=' flex flex-col gap-1'>
           <div className='flex items-center gap-1.5'>
             <Clock className='h-3.5 w-3.5' />
             <span>{formatDuration(totalDurationSecs)}</span>

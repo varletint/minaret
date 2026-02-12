@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -73,6 +73,30 @@ export function MosqueDetailPage() {
     setShowPlayer(false);
     setIsPlaying(false);
   };
+
+  const handleShare = useCallback(async () => {
+    const shareUrl = window.location.href;
+    const shareData = {
+      title: station?.name || "Mosque",
+      text: `Listen to ${station?.name || "this mosque"} on Minaret Live`,
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link copied to clipboard!");
+      }
+    } catch (err) {
+      // User cancelled share or clipboard failed — ignore AbortError
+      if (err instanceof Error && err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link copied to clipboard!");
+      }
+    }
+  }, [station?.name]);
 
   if (isLoadingStation) {
     return (
@@ -172,7 +196,10 @@ export function MosqueDetailPage() {
                 </div>
 
                 <div className='flex gap-2 ml-auto'>
-                  <Button variant='outline' size='icon-sm'>
+                  <Button
+                    variant='outline'
+                    size='icon-sm'
+                    onClick={handleShare}>
                     <Share2 className='h-4 w-4' />
                   </Button>
                   <Button variant='outline' size='icon-sm'>
