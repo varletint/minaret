@@ -266,7 +266,7 @@ export function AudioPlayer({
       {!isLive && duration > 0 && (
         <div
           ref={progressBarRef}
-          className='h-0.5 w-full bg-muted/40 cursor-pointer group/progress'
+          className='h-1 w-full bg-muted/40 cursor-pointer group/progress'
           onClick={handleSeek}>
           <div
             className='h-full bg-primary transition-all duration-150 ease-linear group-hover/progress:h-1.5'
