@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+
 import {
   Disc,
   Trash2,
@@ -7,27 +9,48 @@ import {
   Clock,
   User,
   Radio,
+  Play,
+  Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyRecordings, useDeleteRecording } from "@/hooks/useRecordings";
 import type { Recording } from "@/types/recording";
 import { toast } from "sonner";
 import { formatTime } from "@/lib/time-utils";
+import { AudioPlayer } from "@/components/AudioPlayer";
 
 export function RecordingsPage() {
   const { data, isLoading, isError, error } = useMyRecordings();
   const deleteRecording = useDeleteRecording();
+  const [currentRecording, setCurrentRecording] = useState<Recording | null>(
+    null
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const recordings = data?.data?.recordings || [];
 
   const handleDelete = async (recordingId: string, recordingTitle: string) => {
     if (!confirm(`Delete "${recordingTitle}"? This cannot be undone.`)) return;
 
+    if (currentRecording?._id === recordingId) {
+      setIsPlaying(false);
+      setCurrentRecording(null);
+    }
+
     try {
       await deleteRecording.mutateAsync(recordingId);
       toast.success("Recording deleted");
     } catch (err) {
       toast.error((err as Error)?.message || "Failed to delete recording");
+    }
+  };
+
+  const handlePlay = (recording: Recording) => {
+    if (currentRecording?._id === recording._id) {
+      setIsPlaying(!isPlaying);
+    } else {
+      setCurrentRecording(recording);
+      setIsPlaying(true);
     }
   };
 
@@ -71,7 +94,6 @@ export function RecordingsPage() {
           </span>
         )}
       </motion.div>
-
       {isError && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -85,7 +107,6 @@ export function RecordingsPage() {
           </div>
         </motion.div>
       )}
-
       {!isError && recordings.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -100,7 +121,6 @@ export function RecordingsPage() {
           </p>
         </motion.div>
       )}
-
       {recordings.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -115,8 +135,17 @@ export function RecordingsPage() {
               transition={{ delay: 0.05 * index }}
               className='bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
               <div className='flex items-start gap-4'>
-                <div className='p-3 rounded-lg bg-primary/10'>
-                  <Disc className='h-5 w-5 text-primary' />
+                <div
+                  className='p-3 rounded-lg bg-primary/10 relative group cursor-pointer'
+                  onClick={() => handlePlay(recording)}>
+                  {currentRecording?._id === recording._id && isPlaying ? (
+                    <Pause className='h-5 w-5 text-primary' />
+                  ) : (
+                    <>
+                      <Disc className='h-5 w-5 text-primary group-hover:hidden' />
+                      <Play className='h-5 w-5 text-primary hidden group-hover:block ml-0.5' />
+                    </>
+                  )}
                 </div>
                 <div>
                   <h3 className='font-bold font-heading'>
@@ -181,6 +210,27 @@ export function RecordingsPage() {
           ))}
         </motion.div>
       )}
+      <div className='h-24' /> {/* Spacer for AudioPlayer */}
+      <AudioPlayer
+        mosqueName={currentRecording?.stationId?.name || "Recording"}
+        location='Broadcast Archive'
+        streamUrl={
+          currentRecording?.url ||
+          currentRecording?.chunks?.[0]?.publicUrl ||
+          ""
+        }
+        currentTrack={{
+          title: currentRecording?.showId?.title || "Untitled Recording",
+          artist: currentRecording?.showId?.hostName || "",
+        }}
+        isPlaying={isPlaying}
+        onPlayPause={() => setIsPlaying(!isPlaying)}
+        onClose={() => {
+          setIsPlaying(false);
+          setCurrentRecording(null);
+        }}
+        className={currentRecording ? "translate-y-0" : "translate-y-full"}
+      />
     </div>
   );
 }
