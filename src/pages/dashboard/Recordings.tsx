@@ -131,7 +131,7 @@ export function RecordingsPage() {
                   <div className='flex items-center gap-3 mt-2 text-sm text-muted-foreground'>
                     <span className='flex items-center gap-1'>
                       <Clock className='h-3.5 w-3.5' />
-                      {formatTime(recording.startTime)}
+                      {formatTime(recording.startedAt)}
                     </span>
                     {recording.totalDurationSecs > 0 && (
                       <span className='px-2 py-0.5 rounded bg-muted text-xs'>

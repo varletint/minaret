@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { PublicLayout, AuthLayout, DashboardLayout } from "@/layouts";
 import { HomePage } from "@/pages/Home";
 import {
@@ -138,6 +139,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme='dark' storageKey='minaret-theme'>
         <BrowserRouter>
+          <ScrollToTop />
           <AppRouter />
         </BrowserRouter>
         <Toaster
