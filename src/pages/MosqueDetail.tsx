@@ -12,6 +12,7 @@ import {
   Pause,
   Share2,
   Heart,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
@@ -255,6 +256,12 @@ export function MosqueDetailPage() {
                     </div>
                     <div className='flex-1'>
                       <p className='font-medium'>{item.title}</p>
+                      {item.hostName && (
+                        <p className='text-xs text-muted-foreground flex items-center gap-1'>
+                          <User className='h-3 w-3' />
+                          {item.hostName}
+                        </p>
+                      )}
                       <p className='text-sm text-muted-foreground'>
                         {formatTime(item.scheduledStart)} -{" "}
                         {formatTime(item.scheduledEnd)}

@@ -12,6 +12,7 @@ export interface Show {
   title: string;
   description: string;
   thumbnail?: string;
+  hostName?: string;
   stationId: string;
   station?: Station;
   scheduledStart: string;
@@ -28,6 +29,7 @@ export interface CreateShowInput {
   description: string;
   thumbnail?: string;
   stationId: string;
+  hostName: string;
   scheduledStart: string;
   scheduledEnd: string;
   isRecurring?: boolean;
@@ -38,6 +40,7 @@ export interface UpdateShowInput {
   title?: string;
   description?: string;
   thumbnail?: string;
+  hostName?: string;
   scheduledStart?: string;
   scheduledEnd?: string;
   isRecurring?: boolean;

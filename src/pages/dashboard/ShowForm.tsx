@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, ArrowLeft, Loader2, Save } from "lucide-react";
+import { Calendar, ArrowLeft, Loader2, Save, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyStation } from "@/hooks/useStations";
 import { useShow, useCreateShow, useUpdateShow } from "@/hooks/useShows";
@@ -44,6 +44,7 @@ export function ShowFormPage() {
       return {
         title: show.title || "",
         description: show.description || "",
+        hostName: show.hostName || "",
         scheduledStart: formatTimeForInput(show.scheduledStart),
         scheduledEnd: formatTimeForInput(show.scheduledEnd),
         isRecurring: show.isRecurring || false,
@@ -55,6 +56,7 @@ export function ShowFormPage() {
     return {
       title: "",
       description: "",
+      hostName: "",
       scheduledStart: "13:00",
       scheduledEnd: "14:00",
       isRecurring: false,
@@ -142,6 +144,7 @@ export function ShowFormPage() {
           data: {
             title: formData.title.trim(),
             description: formData.description.trim() || undefined,
+            hostName: formData.hostName.trim() || undefined,
             scheduledStart: timeToISO(formData.scheduledStart),
             scheduledEnd: timeToISO(formData.scheduledEnd),
             isRecurring: formData.isRecurring,
@@ -156,6 +159,7 @@ export function ShowFormPage() {
         await createShow.mutateAsync({
           title: formData.title.trim(),
           description: formData.description.trim() || "",
+          hostName: formData.hostName.trim() || "",
           stationId: station._id,
           scheduledStart: timeToISO(formData.scheduledStart),
           scheduledEnd: timeToISO(formData.scheduledEnd),
@@ -270,6 +274,24 @@ export function ShowFormPage() {
             placeholder='Describe this broadcast...'
             rows={3}
             className='w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all resize-none'
+          />
+        </div>
+
+        <div>
+          <label htmlFor='hostName' className='block text-sm font-medium mb-2'>
+            <span className='flex items-center gap-1.5'>
+              <User className='h-3.5 w-3.5' />
+              Host Name
+            </span>
+          </label>
+          <input
+            type='text'
+            id='hostName'
+            name='hostName'
+            value={formData.hostName}
+            onChange={handleChange}
+            placeholder='e.g., Imam Ahmed'
+            className='w-full h-11 px-4 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all'
           />
         </div>
 

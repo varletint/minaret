@@ -27,8 +27,16 @@ export const getPublicRecordings = async (
   return response.data;
 };
 
+/**
+ * Delete a recording by ID
+ */
+export const deleteRecording = async (id: string): Promise<void> => {
+  await api.delete(`/recordings/${id}`);
+};
+
 export const recordingService = {
   getPublicRecordings,
+  deleteRecording,
 };
 
 export default recordingService;

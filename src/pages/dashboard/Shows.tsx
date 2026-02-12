@@ -9,6 +9,7 @@ import {
   Loader2,
   AlertCircle,
   Radio,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyStation } from "@/hooks/useStations";
@@ -151,6 +152,12 @@ export function ShowsPage() {
                 </div>
                 <div>
                   <h3 className='font-bold font-heading'>{show.title}</h3>
+                  {show.hostName && (
+                    <p className='text-sm text-muted-foreground flex items-center gap-1'>
+                      <User className='h-3 w-3' />
+                      {show.hostName}
+                    </p>
+                  )}
                   {show.description && (
                     <p className='text-sm text-muted-foreground line-clamp-1'>
                       {show.description}
