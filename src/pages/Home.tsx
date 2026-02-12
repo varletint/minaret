@@ -137,9 +137,11 @@ export function HomePage() {
             Popular Mosques
           </h2>
           <Carousel className='w-full md:hidden'>
-            <CarouselContent>
+            <CarouselContent className='-ml-3'>
               {stations.map((station) => (
-                <CarouselItem key={station._id}>
+                <CarouselItem
+                  key={station._id}
+                  className='pl-3 basis-1/2 sm:basis-1/3 lg:basis-1/5'>
                   <MosqueCard
                     stationId={station.slug}
                     name={station.name}

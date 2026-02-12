@@ -22,7 +22,7 @@ export interface MosqueCardProps {
 export function MosqueCard({
   stationId,
   name,
-  location,
+  // location,
   listeners = 0,
   isLive = false,
   isPlaying = false,
@@ -40,7 +40,7 @@ export function MosqueCard({
           className
         )}>
         {/* Image / Gradient Background */}
-        <div className='relative h-32 w-full overflow-hidden'>
+        <div className='relative h-24 w-full overflow-hidden'>
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -53,14 +53,14 @@ export function MosqueCard({
 
           {/* Live Badge */}
           {isLive && (
-            <div className='absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-background/90 backdrop-blur-sm border border-primary/30'>
+            <div className='absolute -top-0 left-1 flex items-center gap-1.5 px-2 py-1 rounded-full bgg-background/90 backdrop-blur-sm borderr border-primary/30'>
               <span className='relative flex h-2 w-2'>
                 <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
                 <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
               </span>
-              <span className='text-[10px] font-bold text-primary uppercase'>
+              {/* <span className='text-[10px] font-bold text-primary uppercase'>
                 Live
-              </span>
+              </span> */}
             </div>
           )}
 
@@ -88,25 +88,25 @@ export function MosqueCard({
           </div>
         </div>
 
-        <CardContent className='p-4'>
-          <div className='mt-2 flex items-center justify-between text-sm text-muted-foreground'>
-            <div className='flex items-center gap-1.5'>
-              <h3 className=' font-semibold'>Title:</h3>
-              <span className='truncate capitalize'>
+        <CardContent className='px-2'>
+          <div className='flex items-center justify-between text-sm text-muted-foreground'>
+            <div className='flex items-center gap-1'>
+              {/* <h3 className=' font-semibold'>Title:</h3> */}
+              {/* <span className='truncate capitalize'>
                 {currentTrack?.title}
-              </span>{" "}
-              <span className='capitalize'>by {currentTrack?.artist}</span>
+              </span>{" "} */}
+              <span className='capitalize'>By {currentTrack?.artist}</span>
               <br />
             </div>
           </div>
-          <h3 className=' mt-1 font-heading font-semibold text-foreground truncate'>
+          <h3 className=' mt- font-heading font-semibold text-foreground truncate'>
             {name}
           </h3>
           {/* Location & Listeners */}
           <div className=' flex items-center justify-between text-sm text-muted-foreground'>
             <div className='flex items-center gap-1.5'>
               <MapPin className='h-3.5 w-3.5' />
-              <span className='truncate capitalize'>{location}</span> <br />
+              {/* <span className='truncate capitalize'>{location}</span> <br /> */}
             </div>
 
             {listeners > 0 && (
