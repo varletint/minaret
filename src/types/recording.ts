@@ -24,11 +24,11 @@ export interface RecordingChunk {
 
 export interface Recording {
   _id: string;
-  status: "ready" | "processing" | "failed"; 
+  status: "ready" | "processing" | "failed";
   stationId: RecordingStation;
-  showId?: RecordingShow; 
+  showId?: RecordingShow;
   mosqueId: string;
-  startTime: string;
+  startedAt: string;
   initialDurationSecs: number;
   totalDurationSecs: number;
   createdAt: string;
