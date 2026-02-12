@@ -28,6 +28,19 @@ export const getPublicRecordings = async (
 };
 
 /**
+ * Get recordings for the authenticated mosque
+ */
+export const getMyRecordings = async (
+  query: { limit?: number; skip?: number } = {}
+): Promise<PublicRecordingsResponse> => {
+  const { limit = 20, skip = 0 } = query;
+  const response = await api.get<PublicRecordingsResponse>("/recordings", {
+    params: { limit, skip },
+  });
+  return response.data;
+};
+
+/**
  * Delete a recording by ID
  */
 export const deleteRecording = async (id: string): Promise<void> => {
@@ -36,6 +49,7 @@ export const deleteRecording = async (id: string): Promise<void> => {
 
 export const recordingService = {
   getPublicRecordings,
+  getMyRecordings,
   deleteRecording,
 };
 

@@ -4,3 +4,4 @@ export { SettingsPage } from "./Settings";
 export { BroadcastPage } from "./Broadcast";
 export { ShowsPage } from "./Shows";
 export { ShowFormPage } from "./ShowForm";
+export { RecordingsPage } from "./Recordings";

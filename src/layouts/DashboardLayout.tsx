@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Radio,
   Calendar,
+  Disc,
   Settings,
   LogOut,
   Menu,
@@ -29,6 +30,11 @@ const navItems = [
     label: "Shows",
     path: "/dashboard/shows",
     icon: Calendar,
+  },
+  {
+    label: "Recordings",
+    path: "/dashboard/recordings",
+    icon: Disc,
   },
   {
     label: "Settings",

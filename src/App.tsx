@@ -18,6 +18,7 @@ import {
   BroadcastPage,
   ShowsPage,
   ShowFormPage,
+  RecordingsPage,
 } from "@/pages/dashboard";
 import { useAuth } from "@/hooks/useAuth";
 // import { usePageTracking } from "@/hooks/usePageTracking";
@@ -124,6 +125,7 @@ function AppRouter() {
         <Route path='/dashboard/shows' element={<ShowsPage />} />
         <Route path='/dashboard/shows/new' element={<ShowFormPage />} />
         <Route path='/dashboard/shows/:_id/edit' element={<ShowFormPage />} />
+        <Route path='/dashboard/recordings' element={<RecordingsPage />} />
       </Route>
 
       <Route path='*' element={<Navigate to='/' replace />} />
