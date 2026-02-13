@@ -266,7 +266,7 @@ export function AudioPlayer({
       {!isLive && duration > 0 && (
         <div
           ref={progressBarRef}
-          className='h-0.5 w-full bg-muted/40 cursor-pointer group/progress'
+          className='h-1 w-full bg-muted/40 cursor-pointer group/progress'
           onClick={handleSeek}>
           <div
             className='h-full bg-primary transition-all duration-150 ease-linear group-hover/progress:h-1.5'
@@ -303,7 +303,7 @@ export function AudioPlayer({
             )}
           </Button>
 
-          {/* Mosque Info */}
+          {/* Mosque Infor */}
           <div className='flex-1 min-w-0'>
             <div className='flex items-center gap-2'>
               <h4 className='font-heading font-semibold text-foreground truncate'>

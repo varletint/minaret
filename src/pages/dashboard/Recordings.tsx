@@ -13,7 +13,16 @@ import {
   Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useMyRecordings, useDeleteRecording } from "@/hooks/useRecordings";
+
 import type { Recording } from "@/types/recording";
 import { toast } from "sonner";
 import { formatTime } from "@/lib/time-utils";
@@ -26,20 +35,25 @@ export function RecordingsPage() {
     null
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const recordings = data?.data?.recordings || [];
 
-  const handleDelete = async (recordingId: string, recordingTitle: string) => {
-    if (!confirm(`Delete "${recordingTitle}"? This cannot be undone.`)) return;
+  const confirmDelete = async () => {
+    if (!deleteConfirmation) return;
 
-    if (currentRecording?._id === recordingId) {
+    if (currentRecording?._id === deleteConfirmation.id) {
       setIsPlaying(false);
       setCurrentRecording(null);
     }
 
     try {
-      await deleteRecording.mutateAsync(recordingId);
+      await deleteRecording.mutateAsync(deleteConfirmation.id);
       toast.success("Recording deleted");
+      setDeleteConfirmation(null);
     } catch (err) {
       toast.error((err as Error)?.message || "Failed to delete recording");
     }
@@ -192,10 +206,10 @@ export function RecordingsPage() {
                   variant='outline'
                   size='sm'
                   onClick={() =>
-                    handleDelete(
-                      recording._id,
-                      recording.showId?.title || "Untitled Recording"
-                    )
+                    setDeleteConfirmation({
+                      id: recording._id,
+                      title: recording.showId?.title || "Untitled Recording",
+                    })
                   }
                   disabled={deleteRecording.isPending}
                   className='text-destructive hover:text-destructive hover:bg-destructive/10'>
@@ -231,6 +245,36 @@ export function RecordingsPage() {
         }}
         className={currentRecording ? "translate-y-0" : "translate-y-full"}
       />
+      <Dialog
+        open={!!deleteConfirmation}
+        onOpenChange={(open) => !open && setDeleteConfirmation(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Recording</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{deleteConfirmation?.title}"?
+              This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant='outline'
+              onClick={() => setDeleteConfirmation(null)}
+              disabled={deleteRecording.isPending}>
+              Cancel
+            </Button>
+            <Button
+              variant='destructive'
+              onClick={confirmDelete}
+              disabled={deleteRecording.isPending}>
+              {deleteRecording.isPending && (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              )}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
