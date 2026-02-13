@@ -22,6 +22,9 @@ import {
   RecordingsPage,
 } from "@/pages/dashboard";
 import { useAuth } from "@/hooks/useAuth";
+import { HelmetProvider } from "react-helmet-async";
+import { SEO } from "@/components/SEO";
+
 // import { usePageTracking } from "@/hooks/usePageTracking";
 
 // Create a client
@@ -136,32 +139,35 @@ function AppRouter() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme='dark' storageKey='minaret-theme'>
-        <BrowserRouter>
-          <ScrollToTop />
-          <AppRouter />
-        </BrowserRouter>
-        <Toaster
-          position='top-right'
-          theme='system'
-          toastOptions={{
-            classNames: {
-              toast:
-                "bg-card/95 backdrop-blur-md border border-border shadow-lg",
-              error:
-                "!bg-destructive/10 !text-destructive backdrop-blur-md border !border-destructive/50",
-              success:
-                "!bg-primary/10 !text-primary backdrop-blur-md border !border-primary/50",
-              warning:
-                "!bg-accent/10 !text-accent backdrop-blur-md border !border-accent/50",
-              info: "!bg-[#3B82F6]/10 !text-[#3B82F6] backdrop-blur-md border !border-[#3B82F6]/50",
-              description: "!text-muted-foreground",
-            },
-          }}
-        />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme='dark' storageKey='minaret-theme'>
+          <BrowserRouter>
+            <SEO />
+            <ScrollToTop />
+            <AppRouter />
+          </BrowserRouter>
+          <Toaster
+            position='top-right'
+            theme='system'
+            toastOptions={{
+              classNames: {
+                toast:
+                  "bg-card/95 backdrop-blur-md border border-border shadow-lg",
+                error:
+                  "!bg-destructive/10 !text-destructive backdrop-blur-md border !border-destructive/50",
+                success:
+                  "!bg-primary/10 !text-primary backdrop-blur-md border !border-primary/50",
+                warning:
+                  "!bg-accent/10 !text-accent backdrop-blur-md border !border-accent/50",
+                info: "!bg-[#3B82F6]/10 !text-[#3B82F6] backdrop-blur-md border !border-[#3B82F6]/50",
+                description: "!text-muted-foreground",
+              },
+            }}
+          />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 
