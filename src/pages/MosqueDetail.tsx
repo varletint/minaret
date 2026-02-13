@@ -19,6 +19,7 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 import { useStation } from "@/hooks/useStations";
 import { useStationSchedule } from "@/hooks/useShows";
 import { formatTime } from "@/lib/time-utils";
+import { SEO } from "@/components/SEO";
 
 const formatRecurrenceDays = (daysOfWeek?: number[]): string => {
   if (!daysOfWeek || daysOfWeek.length === 0) return "";
@@ -134,6 +135,13 @@ export function MosqueDetailPage() {
 
   return (
     <>
+      <SEO
+        title={station.name}
+        description={
+          station.description ||
+          `Listen to live broadcasts from ${station.name} on Minaret Live.`
+        }
+      />
       <div className='container mx-auto px-4 py-8 pb-32 pt-16'>
         {/* Back Button */}
         <motion.div
