@@ -1,4 +1,4 @@
-import ogImage from "@/assets/minaret_live.jpg";
+const ogImage = "https://saamee.vercel.app/og-image.jpg";
 
 export const defaultSEOConfig = {
   title: "Minaret - Community Broadcasts",
