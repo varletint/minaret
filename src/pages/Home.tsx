@@ -15,6 +15,7 @@ import type { StationListItem } from "@/types/station";
 import { RecordingCard } from "@/components/RecordingCard";
 import { useRecordings } from "@/hooks/useRecordings";
 import type { Recording } from "@/types/recording";
+import { SEO } from "@/components/SEO";
 
 const features: FeatureCardProps[] = [
   {
@@ -105,6 +106,7 @@ export function HomePage() {
 
   return (
     <>
+      <SEO />
       <main className='container mx-auto px-4 py-8 pb-24 pt-16'>
         <h1 className='text-4xl font-bold font-heading'>
           Welcome to Minaret Live
@@ -158,7 +160,7 @@ export function HomePage() {
             <CarouselPrevious className='left-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
             <CarouselNext className='right-2 bg-background/80 backdrop-blur-sm shadow-lg border-muted-foreground/30 hover:bg-background' />
           </Carousel>
-          <div className='md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden'>
+          <div className='md:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 hidden'>
             {stations.map((station) => (
               <MosqueCard
                 key={station._id}
