@@ -19,8 +19,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Mosques", href: "/mosques" },
-  { name: "Prayer Times", href: "#prayer-times" },
-  { name: "Live Radio", href: "#live" },
+  // { name: "Prayer Times", href: "#prayer-times" },
+  // { name: "Live Radio", href: "#live" },
   { name: "Donate", href: "/donate" },
 ];
 
@@ -36,13 +36,22 @@ export function Navbar() {
   return (
     <header className='sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <div className='container mx-auto flex h-16 items-center justify-between px-4'>
-        <Link to='/' className='flex place-items-baseline gap-1'>
-          {/* <img src={appIcon} alt='Minaret Live' className='h-9 w-9' /> */}
-          <div className='flex items-center gap-1'>
-            <span className='text-2xl sm:text-xl align-text-bottom font-bold font-heading text-foreground text-nowrap'>
-              Minaret Live
-            </span>
-          </div>
+        <Link to='/' className='flex place-items-center '>
+          {/* Logo for Light Mode */}
+          <img
+            src='/logo-light.png'
+            alt='Minaret Live'
+            className='h-10 w-auto block dark:hidden'
+          />
+          {/* Logo for Dark Mode */}
+          <img
+            src='/logo-dark.png'
+            alt='Minaret Live'
+            className='h-10 w-auto hidden dark:block'
+          />
+          <span className='text-xl mt-2 sm:text-xl align-text-bottom font- font-heading text-foreground text-nowrap'>
+            Minaret Live
+          </span>
         </Link>
 
         {/* Desktop Nav */}
