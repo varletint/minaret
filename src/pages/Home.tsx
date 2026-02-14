@@ -15,7 +15,6 @@ import type { StationListItem } from "@/types/station";
 import { RecordingCard } from "@/components/RecordingCard";
 import { useRecordings } from "@/hooks/useRecordings";
 import type { Recording } from "@/types/recording";
-import { SEO } from "@/components/SEO";
 
 const features: FeatureCardProps[] = [
   {
@@ -106,7 +105,6 @@ export function HomePage() {
 
   return (
     <>
-      <SEO />
       <main className='container mx-auto px-4 py-8 pb-24 pt-16'>
         <h1 className='text-4xl font-bold font-heading'>
           Welcome to Minaret Live
