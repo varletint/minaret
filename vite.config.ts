@@ -17,7 +17,7 @@ export default defineConfig({
         description:
           "Listen to live mosque radio broadcasts from around the world",
         theme_color: "#ffffff",
-        background_color: "#059669",
+        background_color: "#ffffff",
         display: "standalone",
         start_url: "/",
         icons: [
