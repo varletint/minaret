@@ -27,12 +27,14 @@ export function SEO({
     ? rawMetaImage
     : `${window.location.origin}${rawMetaImage}`;
 
-  const metaUrl = url || defaultSEOConfig.openGraph.url;
+  const metaUrl = url || window.location.href;
 
   return (
     <Helmet>
+      {/* Basic Metadata */}
       <title>{metaTitle}</title>
       <meta name='description' content={metaDescription} />
+      <link rel='canonical' href={metaUrl} />
 
       {/* Open Graph */}
       <meta property='og:url' content={metaUrl} />
@@ -40,9 +42,12 @@ export function SEO({
       <meta property='og:title' content={metaTitle} />
       <meta property='og:description' content={metaDescription} />
       <meta property='og:image' content={metaImage} />
-      <meta property='og:card' content='summary_large_image' />
-      <meta property='og:image:width' content='1200' />
-      <meta property='og:image:height' content='630' />
+      <meta
+        property='og:site_name'
+        content={defaultSEOConfig.openGraph.siteName}
+      />
+      <meta property='og:locale' content={defaultSEOConfig.openGraph.locale} />
+
       {/* Twitter */}
       <meta name='twitter:card' content='summary_large_image' />
       <meta name='twitter:title' content={metaTitle} />

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useStations } from "@/hooks/useStations";
 import { usePlayerStore } from "@/stores/playerStore";
 import type { DisplayStation } from "@/types/station";
+import { SEO } from "@/components/SEO";
 
 const mockStations: DisplayStation[] = [
   {
@@ -124,6 +125,10 @@ export function StationsPage() {
 
   return (
     <>
+      <SEO
+        title='Discover Mosques'
+        description='Find and listen to live broadcasts from mosques around the world. view prayer times, and connect with your local community.'
+      />
       {/* <DonationBanner /> */}
       <div className='container mx-auto px-4 py-8 pt-16'>
         {/* Header */}
