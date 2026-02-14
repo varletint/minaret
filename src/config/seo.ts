@@ -23,5 +23,13 @@ export const defaultSEOConfig = {
     handle: "@minaretapp",
     site: "@minaretapp",
     cardType: "summary_large_image",
+    images: [
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Minaret Live Broadcasts",
+      },
+    ],
   },
 };
