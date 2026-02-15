@@ -65,16 +65,24 @@ export function MosqueCard({
           )}
 
           {/* Play Button Overlay */}
-          <div className='absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/30'>
+          <div
+            className={cn(
+              "absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300",
+              isLive ? "group-hover:bg-black/30" : "cursor-default"
+            )}>
             <Button
               size='icon'
+              disabled={!isLive}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onPlay?.();
               }}
               className={cn(
-                "h-12 w-12 rounded-full opacity-100 transition-all duration-300 group-hover:opacity-100",
+                "h-12 w-12 rounded-full transition-all duration-300",
+                isLive
+                  ? "opacity-100 group-hover:opacity-100"
+                  : "opacity-0 cursor-not-allowed hidden",
                 isPlaying
                   ? "bg-primary text-primary-foreground"
                   : "bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground"
