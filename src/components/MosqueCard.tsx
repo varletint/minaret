@@ -82,7 +82,7 @@ export function MosqueCard({
                 "h-12 w-12 rounded-full transition-all duration-300",
                 isLive
                   ? "opacity-100 group-hover:opacity-100"
-                  : "opacity-0 cursor-not-allowed hidden",
+                  : "opacity-50 cursor-not-allowed hidden",
                 isPlaying
                   ? "bg-primary text-primary-foreground"
                   : "bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground"
@@ -99,10 +99,6 @@ export function MosqueCard({
         <CardContent className='px-2'>
           <div className='flex items-center justify-between text-sm text-muted-foreground'>
             <div className='flex items-center gap-1'>
-              {/* <h3 className=' font-semibold'>Title:</h3> */}
-              {/* <span className='truncate capitalize'>
-                {currentTrack?.title}
-              </span>{" "} */}
               {currentTrack?.artist && (
                 <span className='capitalize'>By {currentTrack.artist}</span>
               )}
