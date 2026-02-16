@@ -83,7 +83,7 @@ export function RecordingCard({
           ) : (
             <Button
               size='icon'
-              className='h-12 w-12 rounded-full shadow-xl bg-background/90 text-foreground text-primary-foreground border-2 border-background'
+              className='h-12 w-12 rounded-full shadow-xl bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground border-2 border-background'
               onClick={(e) => {
                 e.stopPropagation();
                 onPlay?.();
