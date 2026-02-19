@@ -41,7 +41,7 @@ export const useDeleteRecording = () => {
   return useMutation({
     mutationFn: (id: string) => recordingService.deleteRecording(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recordingKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: recordingKeys.all });
     },
   });
 };
