@@ -53,7 +53,7 @@ export const useCreateShow = () => {
     mutationFn: (data: CreateShowInput) => showService.createShow(data),
     onSuccess: (response) => {
       const show = response.data.show;
-      queryClient.invalidateQueries({ queryKey: showKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: showKeys.all() });
       queryClient.invalidateQueries({
         queryKey: showKeys.byStation(show.stationId),
       });
