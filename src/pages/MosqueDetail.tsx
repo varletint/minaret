@@ -98,6 +98,11 @@ export function MosqueDetailPage() {
     if (currentMosque?.id === recording._id) {
       setIsPlaying(!isPlaying);
     } else {
+      const recordingChunks =
+        recording.chunks
+          ?.filter((c) => c.publicUrl)
+          .map((c) => ({ url: c.publicUrl, duration: c.durationSecs })) || [];
+
       setCurrentMosque({
         id: recording._id,
         name: recording.showId?.title || "Recording",
@@ -112,6 +117,8 @@ export function MosqueDetailPage() {
           artist: recording.stationId?.name || "Unknown Station",
         },
         isLive: false,
+        recordingChunks,
+        currentChunkIndex: 0,
       });
       setIsPlaying(true);
     }
@@ -396,6 +403,7 @@ export function MosqueDetailPage() {
           streamUrl={currentMosque.streamUrl}
           currentTrack={currentMosque.currentTrack}
           onPlayPause={() => setIsPlaying(!isPlaying)}
+          onEnded={() => usePlayerStore.getState().playNextChunk()}
           onClose={handleClosePlayer}
         />
       )}

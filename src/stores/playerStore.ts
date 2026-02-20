@@ -10,6 +10,8 @@ export interface Mosque {
   streamUrl?: string;
   currentTrack?: CurrentTrack;
   isLive?: boolean;
+  recordingChunks?: { url: string; duration?: number }[];
+  currentChunkIndex?: number;
 }
 
 interface PlayerState {
@@ -20,11 +22,12 @@ interface PlayerState {
   setIsPlaying: (playing: boolean) => void;
   setVolume: (volume: number) => void;
   togglePlay: () => void;
+  playNextChunk: () => void;
 }
 
 export const usePlayerStore = create<PlayerState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentMosque: null,
       isPlaying: false,
       volume: 0.8,
@@ -33,6 +36,29 @@ export const usePlayerStore = create<PlayerState>()(
       setIsPlaying: (playing) => set({ isPlaying: playing }),
       setVolume: (volume) => set({ volume }),
       togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
+      playNextChunk: () => {
+        const state = get();
+        if (
+          state.currentMosque &&
+          state.currentMosque.recordingChunks &&
+          state.currentMosque.currentChunkIndex !== undefined
+        ) {
+          const nextIndex = state.currentMosque.currentChunkIndex + 1;
+          if (nextIndex < state.currentMosque.recordingChunks.length) {
+            set({
+              currentMosque: {
+                ...state.currentMosque,
+                currentChunkIndex: nextIndex,
+                streamUrl: state.currentMosque.recordingChunks[nextIndex].url,
+              },
+            });
+          } else {
+            set({ isPlaying: false });
+          }
+        } else {
+          set({ isPlaying: false });
+        }
+      },
     }),
     {
       name: "player-storage",
