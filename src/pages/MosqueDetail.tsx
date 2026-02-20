@@ -362,7 +362,7 @@ export function MosqueDetailPage() {
                 <Loader2 className='h-6 w-6 animate-spin text-emerald-500' />
               </div>
             ) : recordings.length > 0 ? (
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+              <div className='grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4 gap-1.5'>
                 {recordings.map((recording) => (
                   <RecordingCard
                     key={recording._id}
