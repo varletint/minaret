@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -18,6 +18,10 @@ import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { useStation } from "@/hooks/useStations";
 import { useStationSchedule } from "@/hooks/useShows";
+import { usePlayerStore } from "@/stores/playerStore";
+import { useRecordings } from "@/hooks/useRecordings";
+import { RecordingCard } from "@/components/RecordingCard";
+import type { Recording } from "@/types/recording";
 import { formatTime } from "@/lib/time-utils";
 import { SEO } from "@/components/SEO";
 
@@ -48,8 +52,8 @@ const formatRecurrenceDays = (daysOfWeek?: number[]): string => {
 
 export function MosqueDetailPage() {
   const { id: stationId } = useParams<{ id: string }>();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
+  const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
+    usePlayerStore();
 
   const {
     data: stationData,
@@ -64,15 +68,57 @@ export function MosqueDetailPage() {
     (show) => show.title !== "Live Stream"
   );
 
+  const { data: recordingsData, isLoading: isLoadingRecordings } =
+    useRecordings({ stationId: station?._id || "", limit: 10 }, !!station?._id);
+  const recordings = recordingsData?.data?.recordings || [];
+
   const handlePlayPause = () => {
-    if (!showPlayer) {
-      setShowPlayer(true);
+    if (!station) return;
+
+    if (currentMosque?.id === station._id) {
+      setIsPlaying(!isPlaying);
+    } else {
+      setCurrentMosque({
+        id: station._id,
+        name: station.name,
+        location:
+          typeof station.mosqueId === "object" && station.mosqueId?.location
+            ? station.mosqueId.location
+            : station.description || "Location unknown",
+        mountPoint: station.name,
+        streamUrl: station.streamUrl,
+        currentTrack: station.currentTrack,
+        isLive: station.isLive,
+      });
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
+  };
+
+  const handlePlayRecording = (recording: Recording) => {
+    if (currentMosque?.id === recording._id) {
+      setIsPlaying(!isPlaying);
+    } else {
+      setCurrentMosque({
+        id: recording._id,
+        name: recording.showId?.title || "Recording",
+        location: recording.stationId?.name,
+        mountPoint: "recording",
+        streamUrl:
+          recording.chunks?.[0]?.publicUrl ||
+          recording.url ||
+          `/api/v1/recordings/${recording._id}/stream`,
+        currentTrack: {
+          title: recording.showId?.title || "Untitled",
+          artist: recording.stationId?.name || "Unknown Station",
+        },
+        isLive: false,
+      });
+      setIsPlaying(true);
+    }
   };
 
   const handleClosePlayer = () => {
-    setShowPlayer(false);
+    setCurrentMosque(null);
     setIsPlaying(false);
   };
 
@@ -219,7 +265,7 @@ export function MosqueDetailPage() {
                     onClick={handlePlayPause}
                     disabled={!station.isLive}
                     className='bg-primary hover:from-emerald-600 hover:to-teal-700'>
-                    {isPlaying ? (
+                    {currentMosque?.id === station._id && isPlaying ? (
                       <>
                         <Pause className='h-4 w-4 mr-2' />
                         Pause
@@ -298,18 +344,58 @@ export function MosqueDetailPage() {
             </div>
           )}
         </motion.div>
+
+        {/* Recent Recordings Section */}
+        {station?._id && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className='mt-12'>
+            <h2 className='text-xl font-bold font-heading mb-4 flex items-center gap-2'>
+              <Play className='h-5 w-5 text-emerald-500' />
+              Recent Recordings
+            </h2>
+
+            {isLoadingRecordings ? (
+              <div className='flex items-center justify-center py-8'>
+                <Loader2 className='h-6 w-6 animate-spin text-emerald-500' />
+              </div>
+            ) : recordings.length > 0 ? (
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+                {recordings.map((recording) => (
+                  <RecordingCard
+                    key={recording._id}
+                    recording={recording}
+                    isPlaying={currentMosque?.id === recording._id && isPlaying}
+                    onPlay={() => handlePlayRecording(recording)}
+                    onStop={() => setIsPlaying(false)}
+                    className='h-full'
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className='bg-card border border-border rounded-xl p-8 text-center'>
+                <Play className='h-12 w-12 text-muted-foreground mx-auto mb-3' />
+                <p className='text-muted-foreground'>
+                  No recordings available yet
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
 
       {/* Audio Player */}
-      {showPlayer && (
+      {currentMosque && (
         <AudioPlayer
-          mosqueName={station.name}
-          location={location}
-          streamUrl={station.streamUrl}
-          currentTrack={station.currentTrack}
-          isLive={station.isLive}
+          mosqueName={currentMosque.name}
+          location={currentMosque.location}
+          isLive={currentMosque.isLive}
           isPlaying={isPlaying}
-          onPlayPause={handlePlayPause}
+          streamUrl={currentMosque.streamUrl}
+          currentTrack={currentMosque.currentTrack}
+          onPlayPause={() => setIsPlaying(!isPlaying)}
           onClose={handleClosePlayer}
         />
       )}

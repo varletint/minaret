@@ -17,11 +17,15 @@ export const recordingKeys = {
     [...recordingKeys.myLists(), query] as const,
 };
 
-export const useRecordings = (query: PublicRecordingsQuery = {}) => {
+export const useRecordings = (
+  query: PublicRecordingsQuery = {},
+  enabled = true
+) => {
   return useQuery({
     queryKey: recordingKeys.list(query),
     queryFn: () => recordingService.getPublicRecordings(query),
     placeholderData: keepPreviousData,
+    enabled,
   });
 };
 
