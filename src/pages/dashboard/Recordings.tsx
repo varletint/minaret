@@ -35,6 +35,7 @@ export function RecordingsPage() {
     null
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
     id: string;
     title: string;
@@ -48,6 +49,7 @@ export function RecordingsPage() {
     if (currentRecording?._id === deleteConfirmation.id) {
       setIsPlaying(false);
       setCurrentRecording(null);
+      setCurrentChunkIndex(0);
     }
 
     try {
@@ -64,6 +66,7 @@ export function RecordingsPage() {
       setIsPlaying(!isPlaying);
     } else {
       setCurrentRecording(recording);
+      setCurrentChunkIndex(0);
       setIsPlaying(true);
     }
   };
@@ -229,8 +232,8 @@ export function RecordingsPage() {
         mosqueName={currentRecording?.stationId?.name || "Recording"}
         location='Broadcast Archive'
         streamUrl={
+          currentRecording?.chunks?.[currentChunkIndex]?.publicUrl ||
           currentRecording?.url ||
-          currentRecording?.chunks?.[0]?.publicUrl ||
           ""
         }
         currentTrack={{
@@ -239,9 +242,20 @@ export function RecordingsPage() {
         }}
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
+        onEnded={() => {
+          if (
+            currentRecording?.chunks &&
+            currentChunkIndex < currentRecording.chunks.length - 1
+          ) {
+            setCurrentChunkIndex((prev) => prev + 1);
+          } else {
+            setIsPlaying(false);
+          }
+        }}
         onClose={() => {
           setIsPlaying(false);
           setCurrentRecording(null);
+          setCurrentChunkIndex(0);
         }}
         className={currentRecording ? "translate-y-0" : "translate-y-full"}
       />

@@ -30,6 +30,7 @@ export interface AudioPlayerProps {
   isPlaying: boolean;
   isLive?: boolean;
   onPlayPause: () => void;
+  onEnded?: () => void;
   onClose: () => void;
   className?: string;
 }
@@ -42,6 +43,7 @@ export function AudioPlayer({
   isPlaying,
   isLive = false,
   onPlayPause,
+  onEnded,
   onClose,
   className,
 }: AudioPlayerProps) {
@@ -172,7 +174,11 @@ export function AudioPlayer({
       }
     };
     const handleEnded = () => {
-      onPlayPause();
+      if (onEnded) {
+        onEnded();
+      } else {
+        onPlayPause();
+      }
     };
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => {
@@ -203,7 +209,7 @@ export function AudioPlayer({
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("durationchange", handleDurationChange);
     };
-  }, [streamUrl, attemptAutoRetry, retryCount, onPlayPause]);
+  }, [streamUrl, attemptAutoRetry, retryCount, onPlayPause, onEnded]);
 
   useEffect(() => {
     if (!audioRef.current || !streamUrl) return;

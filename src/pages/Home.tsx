@@ -18,11 +18,6 @@ import type { Recording } from "@/types/recording";
 import { SEO } from "@/components/SEO";
 const features: FeatureCardProps[] = [
   {
-    image: "/sponsor.jpg",
-    sponsorText:
-      "This program is sponsored by N.Adams Herbal and Islamic Medicine. Total Wellness is Possible!",
-  },
-  {
     title: "Live Broadcasts",
     description:
       "Listen to live lectures, prayers and sermons from mosques around the world",
@@ -80,6 +75,11 @@ export function HomePage() {
     if (currentMosque?.id === recording._id) {
       setIsPlaying(!isPlaying);
     } else {
+      const recordingChunks =
+        recording.chunks
+          ?.filter((c) => c.publicUrl)
+          .map((c) => ({ url: c.publicUrl, duration: c.durationSecs })) || [];
+
       setCurrentMosque({
         id: recording._id,
         name: recording.showId?.title || "Recording",
@@ -94,6 +94,8 @@ export function HomePage() {
           artist: recording.stationId?.name || "Unknown Station",
         },
         isLive: false,
+        recordingChunks,
+        currentChunkIndex: 0,
       });
       setIsPlaying(true);
     }
@@ -117,7 +119,31 @@ export function HomePage() {
         </h1>
         <p className='mt-4 text-muted-foreground'>Your mosque community hub</p>
 
-        <div className='mt-8 px-0'>
+        {/* Sponsor Banner */}
+        <div className='mt-8 w-full bg-linear-to-r from-emerald-900/10 via-teal-900/5 to-transparent rounded-2xl overflow-hidden shadow-sm border border-emerald-500/20 flex flex-col sm:flex-row items-center relative group'>
+          <div className='w-full sm:w-1/3 md:w-1/4 max-w-[280px] shrink-0 bg-white p-2'>
+            <img
+              src='/sponsor.jpg'
+              alt='N.Adams Herbal and Islamic Medicine'
+              className='w-full h-auto object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]'
+            />
+          </div>
+          <div className='p-6 md:p-8 flex-1 text-center sm:text-left relative z-10'>
+            <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-xs rounded-full mb-3 uppercase tracking-wider'>
+              Official Sponsor
+            </span>
+            <h3 className='text-xl md:text-2xl font-bold mb-2'>
+              Total Wellness is Possible!
+            </h3>
+            <p className='text-muted-foreground text-sm md:text-base max-w-2xl'>
+              This program is proudly sponsored by{" "}
+              <strong>N.Adams Herbal and Islamic Medicine</strong>. Discover our
+              holistic treatments designed for your total wellness.
+            </p>
+          </div>
+        </div>
+
+        <div className='mt-12 px-0'>
           <Carousel
             opts={{
               align: "start",
@@ -239,6 +265,7 @@ export function HomePage() {
           streamUrl={currentMosque.streamUrl}
           currentTrack={currentMosque.currentTrack}
           onPlayPause={handlePlayPause}
+          onEnded={() => usePlayerStore.getState().playNextChunk()}
           onClose={handleClose}
         />
       )}
