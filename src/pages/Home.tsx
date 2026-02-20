@@ -16,8 +16,12 @@ import { RecordingCard } from "@/components/RecordingCard";
 import { useRecordings } from "@/hooks/useRecordings";
 import type { Recording } from "@/types/recording";
 import { SEO } from "@/components/SEO";
-
 const features: FeatureCardProps[] = [
+  {
+    image: "/sponsor.jpg",
+    sponsorText:
+      "This program is sponsored by N.Adams Herbal and Islamic Medicine. Total Wellness is Possible!",
+  },
   {
     title: "Live Broadcasts",
     description:
