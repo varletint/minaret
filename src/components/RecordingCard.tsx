@@ -115,7 +115,7 @@ export function RecordingCard({
               </Button>
             </div>
           ) : (
-            <div className='z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/20 backdrop-blur-sm absolute inset-0'>
+            <div className='z-10 flex items-center justify-center opacity-100 group-hover:opacity-100 transition-opacity bg-background/20 backdrop-blur-sm absolute inset-0'>
               <Button
                 size='icon'
                 className='h-12 w-12 rounded-full shadow-xl bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground border-2 border-background'
