@@ -82,7 +82,7 @@ export function HomePage() {
 
       setCurrentMosque({
         id: recording._id,
-        name: recording.showId?.title || "Recording",
+        name: recording.title || recording.showId?.title || "Recording",
         location: recording.stationId?.name,
         mountPoint: "recording",
         streamUrl:
@@ -90,7 +90,7 @@ export function HomePage() {
           recording.url ||
           `/api/v1/recordings/${recording._id}/stream`,
         currentTrack: {
-          title: recording.showId?.title || "Untitled",
+          title: recording.title || recording.showId?.title || "Untitled",
           artist: recording.stationId?.name || "Unknown Station",
         },
         isLive: false,

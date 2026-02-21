@@ -166,12 +166,14 @@ export function RecordingsPage() {
                 </div>
                 <div>
                   <h3 className='font-bold font-heading'>
-                    {recording.showId?.title || "Untitled Recording"}
+                    {recording.title ||
+                      recording.showId?.title ||
+                      "Untitled Recording"}
                   </h3>
-                  {recording.showId?.hostName && (
+                  {(recording.hostName || recording.showId?.hostName) && (
                     <p className='text-sm text-muted-foreground flex items-center gap-1'>
                       <User className='h-3 w-3' />
-                      {recording.showId.hostName}
+                      {recording.hostName || recording.showId?.hostName}
                     </p>
                   )}
                   <div className='flex items-center gap-3 mt-2 text-sm text-muted-foreground'>
@@ -211,7 +213,10 @@ export function RecordingsPage() {
                   onClick={() =>
                     setDeleteConfirmation({
                       id: recording._id,
-                      title: recording.showId?.title || "Untitled Recording",
+                      title:
+                        recording.title ||
+                        recording.showId?.title ||
+                        "Untitled Recording",
                     })
                   }
                   disabled={deleteRecording.isPending}
@@ -237,8 +242,14 @@ export function RecordingsPage() {
           ""
         }
         currentTrack={{
-          title: currentRecording?.showId?.title || "Untitled Recording",
-          artist: currentRecording?.showId?.hostName || "",
+          title:
+            currentRecording?.title ||
+            currentRecording?.showId?.title ||
+            "Untitled Recording",
+          artist:
+            currentRecording?.hostName ||
+            currentRecording?.showId?.hostName ||
+            "",
         }}
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
