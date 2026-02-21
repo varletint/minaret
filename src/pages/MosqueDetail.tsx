@@ -369,7 +369,7 @@ export function MosqueDetailPage() {
                 <Loader2 className='h-6 w-6 animate-spin text-emerald-500' />
               </div>
             ) : recordings.length > 0 ? (
-              <div className='grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4 gap-1.5'>
+              <div className='flex flex-col gap-2'>
                 {recordings.map((recording) => (
                   <RecordingCard
                     key={recording._id}
@@ -377,7 +377,7 @@ export function MosqueDetailPage() {
                     isPlaying={currentMosque?.id === recording._id && isPlaying}
                     onPlay={() => handlePlayRecording(recording)}
                     onStop={() => setIsPlaying(false)}
-                    className='h-full'
+                    variant='list'
                   />
                 ))}
               </div>

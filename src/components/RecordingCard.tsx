@@ -10,6 +10,7 @@ export interface RecordingCardProps {
   onPlay?: () => void;
   onStop?: () => void;
   className?: string;
+  variant?: "grid" | "list";
 }
 
 export function RecordingCard({
@@ -18,6 +19,7 @@ export function RecordingCard({
   onPlay,
   onStop,
   className,
+  variant = "grid",
 }: RecordingCardProps) {
   const { showId, stationId, totalDurationSecs } = recording;
 
@@ -44,6 +46,110 @@ export function RecordingCard({
       year: "numeric",
     }).format(date);
   };
+
+  const getRelativeTime = (dateString: string) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60)
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24)
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 14)
+      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+
+    return formatDate(dateString);
+  };
+
+  if (variant === "list") {
+    return (
+      <div
+        className={cn(
+          "group flex items-center gap-4 cursor-pointer hover:bg-muted/10 p-2 sm:p-3 rounded-2xl transition-all border border-transparent hover:border-border",
+          isPlaying && "bg-muted/30 border-border",
+          className
+        )}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (isPlaying) {
+            onStop?.();
+          } else {
+            onPlay?.();
+          }
+        }}>
+        <div className='relative h-20 w-24 sm:h-24 sm:w-24 md:h-[100px] md:w-[100px] shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center'>
+          <div className='absolute inset-0 opacity-20 pointer-events-none'>
+            <svg
+              className='w-full h-full'
+              viewBox='0 0 100 100'
+              preserveAspectRatio='none'>
+              <path d='M0 100 L0 0 L100 0 L100 100 Z' fill='none' />
+              <path
+                d='M0 100 Q 50 0 100 100'
+                fill='currentColor'
+                className='text-primary/20'
+              />
+            </svg>
+          </div>
+
+          <div className='absolute bottom-0 left-0 right-0 h-1 bg-yellow-500/80' />
+
+          {isPlaying ? (
+            <div className='z-10 flex items-center justify-center'>
+              <Button
+                size='icon'
+                className='h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground animate-in zoom-in-50 duration-200 border-2 border-background'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onStop?.();
+                }}>
+                <Pause className='h-5 w-5 sm:h-6 sm:w-6 fill-current' />
+              </Button>
+            </div>
+          ) : (
+            <div className='z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/20 backdrop-blur-sm absolute inset-0'>
+              <Button
+                size='icon'
+                className='h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-xl bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground border-2 border-background'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPlay?.();
+                }}>
+                <Play className='h-5 w-5 sm:h-6 sm:w-6 ml-0.5 fill-current' />
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className='flex-1 min-w-0 py-1 flex flex-col justify-center'>
+          <h3
+            className='font-bold text-base md:text-lg leading-snug mb-1 line-clamp-2 text-foreground/90'
+            title={recording.title || showId?.title || "Untitled Recording"}>
+            {recording.title || showId?.title || "Untitled Recording"}
+          </h3>
+          <div className='flex flex-col text-sm text-muted-foreground/80 mt-1 gap-0.5'>
+            <span>
+              {getRelativeTime(recording.startedAt || recording.createdAt)}
+            </span>
+            <span className='truncate'>
+              {recording.hostName ||
+                showId?.hostName ||
+                stationId?.name ||
+                "Unknown Author"}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Card
