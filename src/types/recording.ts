@@ -27,6 +27,8 @@ export interface Recording {
   status: "ready" | "processing" | "failed";
   stationId: RecordingStation;
   showId?: RecordingShow;
+  title?: string;
+  hostName?: string;
   mosqueId: string;
   startedAt: string;
   initialDurationSecs: number;

@@ -106,8 +106,8 @@ export function RecordingCard({
         <div>
           <h3
             className='font-semibold text-sm leading-tight line-clamp-2 min-h-[em]'
-            title={showId?.title || "Untitled Recording"}>
-            {showId?.title || "Untitled Recording"}
+            title={recording.title || showId?.title || "Untitled Recording"}>
+            {recording.title || showId?.title || "Untitled Recording"}
           </h3>
 
           <div className='space-y-1'>
@@ -117,10 +117,12 @@ export function RecordingCard({
                 {stationId?.name || "Unknown Station"}
               </span>
             </div>
-            {showId?.hostName && (
+            {(recording.hostName || showId?.hostName) && (
               <div className='flex items-center gap-2 text-muted-foreground text-sm'>
                 <User className='h-3.5 w-3.5 shrink-0' />
-                <span className='truncate'>{showId.hostName}</span>
+                <span className='truncate'>
+                  {recording.hostName || showId?.hostName}
+                </span>
               </div>
             )}
           </div>
@@ -131,12 +133,17 @@ export function RecordingCard({
         <div className=' flex flex-col gap-1'>
           <h3
             className='font-semibold text-sm leading-tight line-clamp-2 min-h-[em]'
-            title={showId?.title || "Untitled Recording"}>
-            {showId?.title || "Untitled Recording"}
+            title={recording.title || showId?.title || "Untitled Recording"}>
+            {recording.title || showId?.title || "Untitled Recording"}
           </h3>
           <div className='flex items-center gap-1.5 text-xs'>
             <Calendar className='h-3 w-3' />
-            <span>{formatDate(showId?.scheduledStart as string)}</span>
+            <span>
+              {formatDate(
+                (recording.createdAt as string) ||
+                  (showId?.scheduledStart as string)
+              )}
+            </span>
           </div>
         </div>
         <div className=' flex flex-col gap-1'>
