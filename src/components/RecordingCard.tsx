@@ -103,7 +103,7 @@ export function RecordingCard({
           <div className='absolute bottom-0 left-0 right-0 h-1 bg-yellow-500/80' />
 
           {isPlaying ? (
-            <div className='z-10 flex items-center justify-center'>
+            <div className='z-10 flex items-center justify-center absolute inset-0 bg-background/20 backdrop-blur-sm'>
               <Button
                 size='icon'
                 className='h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground animate-in zoom-in-50 duration-200 border-2 border-background'
@@ -115,10 +115,10 @@ export function RecordingCard({
               </Button>
             </div>
           ) : (
-            <div className='z-10 flex items-center justify-center opacity-100 group-hover:opacity-100 transition-opacity bg-background/20 backdrop-blur-sm absolute inset-0'>
+            <div className='z-10 flex items-center justify-center absolute inset-0 bg-background/10 group-hover:bg-background/20 transition-colors'>
               <Button
                 size='icon'
-                className='h-12 w-12 rounded-full shadow-xl bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground border-2 border-background'
+                className='h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-xl bg-background/90 text-foreground hover:bg-primary hover:text-primary-foreground border-2 border-background transition-transform group-hover:scale-105'
                 onClick={(e) => {
                   e.stopPropagation();
                   onPlay?.();
