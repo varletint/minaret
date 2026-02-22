@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -5,6 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
 import { FeatureCard, type FeatureCardProps } from "@/components/FeatureCard";
 import { MosqueCard } from "@/components/MosqueCard";
 import { AudioPlayer } from "@/components/AudioPlayer";
@@ -214,7 +216,14 @@ export function HomePage() {
               <h2 className='text-2xl font-bold font-heading'>
                 Recent Recordings
               </h2>
-              {/* Optional: Add View All link here */}
+              <Link to='/recordings'>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='text-primary hover:text-primary/80'>
+                  View All
+                </Button>
+              </Link>
             </div>
 
             <Carousel className='w-full md:hidden'>
