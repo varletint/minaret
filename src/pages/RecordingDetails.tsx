@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useRecordings } from "@/hooks/useRecordings";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import {
   Play,
   ArrowLeft,
@@ -11,6 +13,7 @@ import {
   User,
   Pause,
   Download,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePlayerStore } from "@/stores/playerStore";
@@ -33,6 +36,42 @@ export function RecordingDetailsPage() {
 
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
+
+  const [downloadingChunkId, setDownloadingChunkId] = useState<number | null>(
+    null
+  );
+
+  const handleDownload = async (
+    url: string,
+    filename: string,
+    chunkIndex: number
+  ) => {
+    if (!url) return;
+    try {
+      setDownloadingChunkId(chunkIndex);
+      toast.info("Starting download...");
+
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      toast.success("Download complete");
+    } catch (error) {
+      console.error("Download error:", error);
+      toast.error("Failed to download recording part");
+    } finally {
+      setDownloadingChunkId(null);
+    }
+  };
 
   if (isLoading && !recording) {
     return (
@@ -252,16 +291,22 @@ export function RecordingDetailsPage() {
                         <Button
                           variant='ghost'
                           size='icon'
-                          asChild
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(
+                              chunk.publicUrl,
+                              chunk.filename || `recording-part-${idx + 1}.mp3`,
+                              idx
+                            );
+                          }}
+                          disabled={downloadingChunkId === idx}
                           title='Download Part'
                           className='opacity-100 group-hover:opacity-100 transition-opacity'>
-                          <a
-                            href={chunk.publicUrl}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            download>
+                          {downloadingChunkId === idx ? (
+                            <Loader2 className='h-4 w-4 text-primary animate-spin' />
+                          ) : (
                             <Download className='h-4 w-4 text-muted-foreground hover:text-primary' />
-                          </a>
+                          )}
                         </Button>
                       )}
                     </div>
