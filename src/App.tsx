@@ -11,6 +11,7 @@ import {
   StationsPage,
   MosqueDetailPage,
   PublicRecordingsPage,
+  RecordingDetailsPage,
   DonatePage,
 } from "@/pages";
 import {
@@ -94,6 +95,7 @@ function AppRouter() {
         <Route path='/mosques' element={<StationsPage />} />
         <Route path='/mosques/:id' element={<MosqueDetailPage />} />
         <Route path='/recordings' element={<PublicRecordingsPage />} />
+        <Route path='/recordings/:id' element={<RecordingDetailsPage />} />
         <Route path='/donate' element={<DonatePage />} />
       </Route>
 
