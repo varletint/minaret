@@ -67,7 +67,18 @@ export function RecordingDetailsPage() {
       toast.success("Download complete");
     } catch (error) {
       console.error("Download error:", error);
-      toast.error("Failed to download recording part");
+      toast.error(
+        "Opening in new tab (direct download blocked by browser security)"
+      );
+
+      const fallbackLink = document.createElement("a");
+      fallbackLink.href = url;
+      fallbackLink.download = filename;
+      fallbackLink.target = "_blank";
+      fallbackLink.rel = "noopener noreferrer";
+      document.body.appendChild(fallbackLink);
+      fallbackLink.click();
+      document.body.removeChild(fallbackLink);
     } finally {
       setDownloadingChunkId(null);
     }
@@ -293,11 +304,28 @@ export function RecordingDetailsPage() {
                           size='icon'
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDownload(
-                              chunk.publicUrl,
-                              chunk.filename || `recording-part-${idx + 1}.mp3`,
-                              idx
-                            );
+
+                            const baseTitle =
+                              recording.title ||
+                              recording.showId?.title ||
+                              "recording";
+                            const hostStr =
+                              recording.hostName || recording.showId?.hostName
+                                ? `-${
+                                    recording.hostName ||
+                                    recording.showId?.hostName
+                                  }`
+                                : "";
+                            const cleanName = `${baseTitle}${hostStr}`
+                              .replace(/[^a-z0-9]/gi, "-")
+                              .toLowerCase()
+                              .replace(/-+/g, "-")
+                              .replace(/^-|-$/g, "");
+                            const finalFilename =
+                              chunk.filename ||
+                              `${cleanName}-part-${idx + 1}.mp3`;
+
+                            handleDownload(chunk.publicUrl, finalFilename, idx);
                           }}
                           disabled={downloadingChunkId === idx}
                           title='Download Part'
