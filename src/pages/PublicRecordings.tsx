@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Loader2, Play } from "lucide-react";
 import { RecordingCard } from "@/components/RecordingCard";
@@ -10,6 +11,7 @@ import { SEO } from "@/components/SEO";
 
 export function PublicRecordingsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
 
@@ -166,6 +168,11 @@ export function PublicRecordingsPage() {
                 isPlaying={currentMosque?.id === recording._id && isPlaying}
                 onPlay={() => handlePlayRecording(recording)}
                 onStop={() => setIsPlaying(false)}
+                onClick={() =>
+                  navigate(`/recordings/${recording._id}`, {
+                    state: { recording },
+                  })
+                }
                 variant='list'
               />
             </motion.div>

@@ -9,6 +9,7 @@ export interface RecordingCardProps {
   isPlaying?: boolean;
   onPlay?: () => void;
   onStop?: () => void;
+  onClick?: () => void;
   className?: string;
   variant?: "grid" | "list";
 }
@@ -18,6 +19,7 @@ export function RecordingCard({
   isPlaying = false,
   onPlay,
   onStop,
+  onClick,
   className,
   variant = "grid",
 }: RecordingCardProps) {
@@ -78,11 +80,15 @@ export function RecordingCard({
           className
         )}
         onClick={(e) => {
-          e.stopPropagation();
-          if (isPlaying) {
-            onStop?.();
+          if (onClick) {
+            onClick();
           } else {
-            onPlay?.();
+            e.stopPropagation();
+            if (isPlaying) {
+              onStop?.();
+            } else {
+              onPlay?.();
+            }
           }
         }}>
         <div className='relative h-20 w-24 sm:h-24 sm:w-24 md:h-[100px] md:w-[100px] shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center'>
@@ -153,8 +159,10 @@ export function RecordingCard({
 
   return (
     <Card
+      onClick={onClick}
       className={cn(
         "overflow-hidden group hover:shadow-md transition-all flex flex-col h-full",
+        onClick && "cursor-pointer",
         className
       )}>
       {/* Aspect Ratio Media/Placeholder Area */}
