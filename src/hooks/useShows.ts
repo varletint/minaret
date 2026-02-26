@@ -73,7 +73,7 @@ export const useUpdateShow = () => {
     onSuccess: (response) => {
       const show = response.data.show;
       queryClient.setQueryData(showKeys.detail(show._id), response);
-      queryClient.invalidateQueries({ queryKey: showKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: showKeys.all });
       queryClient.invalidateQueries({
         queryKey: showKeys.byStation(show.stationId),
       });
