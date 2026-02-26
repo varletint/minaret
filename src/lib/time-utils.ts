@@ -111,3 +111,31 @@ export function formatDuration(seconds?: number): string {
   if (m > 0) return `${m}m ${s}s`;
   return `${s}s`;
 }
+
+/**
+ * Get a relative time string (e.g., "5 minutes ago", "3 hours ago")
+ * Falls back to formatted date after 14 days
+ * @param dateInput - ISO datetime string
+ * @returns Relative time string or formatted date
+ */
+export function getRelativeTime(dateInput: string): string {
+  if (!dateInput) return "N/A";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "N/A";
+
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return "Just now";
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60)
+    return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24)
+    return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 14)
+    return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+
+  return formatDate(dateInput);
+}

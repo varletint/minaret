@@ -2,6 +2,7 @@ import { Play, Calendar, Clock, Radio, User, Pause } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDuration, formatDate, getRelativeTime } from "@/lib/time-utils";
 import type { Recording } from "@/types/recording";
 
 export interface RecordingCardProps {
@@ -24,52 +25,6 @@ export function RecordingCard({
   variant = "grid",
 }: RecordingCardProps) {
   const { showId, stationId, totalDurationSecs } = recording;
-
-  // Format duration (e.g., 1h 30m or 45m or < 1m)
-  const formatDuration = (seconds?: number) => {
-    if (!seconds || isNaN(seconds) || seconds <= 0) return "N/A";
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = Math.floor(seconds % 60);
-    if (h > 0) return `${h}h ${m}m`;
-    if (m > 0) return `${m}m ${s}s`;
-    return `${s}s`;
-  };
-
-  // Format date
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "N/A";
-
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
-  };
-
-  const getRelativeTime = (dateString: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "N/A";
-
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return "Just now";
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60)
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24)
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 14)
-      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-
-    return formatDate(dateString);
-  };
 
   if (variant === "list") {
     return (
