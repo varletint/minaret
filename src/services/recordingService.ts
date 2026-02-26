@@ -2,6 +2,7 @@ import api from "./api";
 import type {
   PublicRecordingsQuery,
   PublicRecordingsResponse,
+  SingleRecordingResponse,
 } from "@/types/recording";
 
 /**
@@ -41,6 +42,16 @@ export const getMyRecordings = async (
 };
 
 /**
+ * Get a single recording by ID
+ */
+export const getRecordingById = async (
+  id: string
+): Promise<SingleRecordingResponse> => {
+  const response = await api.get<SingleRecordingResponse>(`/recordings/${id}`);
+  return response.data;
+};
+
+/**
  * Delete a recording by ID
  */
 export const deleteRecording = async (id: string): Promise<void> => {
@@ -50,6 +61,7 @@ export const deleteRecording = async (id: string): Promise<void> => {
 export const recordingService = {
   getPublicRecordings,
   getMyRecordings,
+  getRecordingById,
   deleteRecording,
 };
 

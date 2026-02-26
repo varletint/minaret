@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { formatDuration, formatFullDateTime } from "@/lib/time-utils";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { useRecordings } from "@/hooks/useRecordings";
+import { useRecording } from "@/hooks/useRecordings";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -26,13 +26,7 @@ export function RecordingDetailsPage() {
   const location = useLocation();
   const stateRecording = location.state?.recording as Recording | undefined;
 
-  const { data: listData, isLoading } = useRecordings(
-    { limit: 50 },
-    !stateRecording
-  );
-
-  const recording =
-    stateRecording || listData?.data?.recordings?.find((r) => r._id === id);
+  const { data: recording, isLoading } = useRecording(id, stateRecording);
 
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
