@@ -77,3 +77,37 @@ export function formatDateTime(dateTimeInput: string): string {
 
   return `${formatDate(date)} at ${formatTime(dateTimeInput)}`;
 }
+
+/**
+ * Format a datetime with long month name and time
+ * @param dateInput - ISO datetime string
+ * @returns Formatted datetime string (e.g., "February 8, 2026, 2:30 PM")
+ */
+export function formatFullDateTime(dateInput: string): string {
+  if (!dateInput) return "N/A";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "N/A";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  }).format(date);
+}
+
+/**
+ * Format a duration in seconds to a human-readable string
+ * @param seconds - Duration in seconds
+ * @returns Formatted duration string (e.g., "1h 30m", "5m 10s", "45s", or "N/A")
+ */
+export function formatDuration(seconds?: number): string {
+  if (!seconds || isNaN(seconds) || seconds <= 0) return "N/A";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
