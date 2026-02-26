@@ -77,3 +77,65 @@ export function formatDateTime(dateTimeInput: string): string {
 
   return `${formatDate(date)} at ${formatTime(dateTimeInput)}`;
 }
+
+/**
+ * Format a datetime with long month name and time
+ * @param dateInput - ISO datetime string
+ * @returns Formatted datetime string (e.g., "February 8, 2026, 2:30 PM")
+ */
+export function formatFullDateTime(dateInput: string): string {
+  if (!dateInput) return "N/A";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "N/A";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  }).format(date);
+}
+
+/**
+ * Format a duration in seconds to a human-readable string
+ * @param seconds - Duration in seconds
+ * @returns Formatted duration string (e.g., "1h 30m", "5m 10s", "45s", or "N/A")
+ */
+export function formatDuration(seconds?: number): string {
+  if (!seconds || isNaN(seconds) || seconds <= 0) return "N/A";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+/**
+ * Get a relative time string (e.g., "5 minutes ago", "3 hours ago")
+ * Falls back to formatted date after 14 days
+ * @param dateInput - ISO datetime string
+ * @returns Relative time string or formatted date
+ */
+export function getRelativeTime(dateInput: string): string {
+  if (!dateInput) return "N/A";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "N/A";
+
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return "Just now";
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60)
+    return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24)
+    return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 14)
+    return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+
+  return formatDate(dateInput);
+}

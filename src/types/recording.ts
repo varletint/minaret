@@ -54,3 +54,10 @@ export interface PublicRecordingsResponse {
     recordings: Recording[];
   };
 }
+
+export interface SingleRecordingResponse {
+  status: string;
+  data: {
+    recording: Recording;
+  };
+}

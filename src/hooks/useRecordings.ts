@@ -5,7 +5,7 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { recordingService } from "@/services/recordingService";
-import type { PublicRecordingsQuery } from "@/types/recording";
+import type { PublicRecordingsQuery, Recording } from "@/types/recording";
 
 export const recordingKeys = {
   all: ["recordings"] as const,
@@ -15,6 +15,8 @@ export const recordingKeys = {
   myLists: () => [...recordingKeys.all, "my"] as const,
   myList: (query: { limit?: number; skip?: number }) =>
     [...recordingKeys.myLists(), query] as const,
+  details: () => [...recordingKeys.all, "detail"] as const,
+  detail: (id: string) => [...recordingKeys.details(), id] as const,
 };
 
 export const useRecordings = (
@@ -47,6 +49,19 @@ export const useDeleteRecording = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recordingKeys.all });
     },
+  });
+};
+
+export const useRecording = (
+  id: string | undefined,
+  initialData?: Recording
+) => {
+  return useQuery({
+    queryKey: recordingKeys.detail(id!),
+    queryFn: () =>
+      recordingService.getRecordingById(id!).then((res) => res.data.recording),
+    enabled: !!id,
+    initialData,
   });
 };
 

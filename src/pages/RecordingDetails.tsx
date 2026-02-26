@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { formatDuration, formatFullDateTime } from "@/lib/time-utils";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { useRecordings } from "@/hooks/useRecordings";
+import { useRecording } from "@/hooks/useRecordings";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -25,14 +26,7 @@ export function RecordingDetailsPage() {
   const location = useLocation();
   const stateRecording = location.state?.recording as Recording | undefined;
 
-  // Fallback to fetch from list if accessed directly
-  const { data: listData, isLoading } = useRecordings(
-    { limit: 50 },
-    !stateRecording
-  );
-
-  const recording =
-    stateRecording || listData?.data?.recordings?.find((r) => r._id === id);
+  const { data: recording, isLoading } = useRecording(id, stateRecording);
 
   const { currentMosque, isPlaying, setCurrentMosque, setIsPlaying } =
     usePlayerStore();
@@ -135,30 +129,6 @@ export function RecordingDetailsPage() {
     }
   };
 
-  const formatDuration = (seconds?: number) => {
-    if (!seconds || isNaN(seconds) || seconds <= 0) return "N/A";
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = Math.floor(seconds % 60);
-    if (h > 0) return `${h}h ${m}m`;
-    if (m > 0) return `${m}m ${s}s`;
-    return `${s}s`;
-  };
-
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "N/A";
-
-    return new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    }).format(date);
-  };
-
   return (
     <>
       <SEO
@@ -248,7 +218,7 @@ export function RecordingDetailsPage() {
                 </span>
                 <div className='flex items-center gap-2 text-sm font-medium'>
                   <Calendar className='h-4 w-4 text-primary/70' />
-                  {formatDate(
+                  {formatFullDateTime(
                     (recording.startedAt || recording.createdAt) as string
                   )}
                 </div>
