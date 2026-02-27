@@ -36,7 +36,7 @@ export interface Recording {
   createdAt: string;
   updatedAt: string;
   chunks?: RecordingChunk[];
-  url?: string; // Keeping for backward compatibility or convenience if backend adds it
+  url?: string;
 }
 
 export interface PublicRecordingsQuery {
