@@ -1,9 +1,4 @@
 /**
- * Unified time formatting utility
- * Handles both ISO datetime strings and simple time strings (HH:MM)
- */
-
-/**
  * Format a time string or ISO datetime to 12-hour format with AM/PM
  * @param timeInput - Either an ISO datetime string (e.g., "2026-02-08T14:30:00.000Z") or simple time (e.g., "14:30")
  * @returns Formatted time string in 12-hour format (e.g., "2:30 PM")
@@ -14,7 +9,6 @@ export function formatTime(timeInput: string | undefined | null): string {
   if (timeInput.includes("T") || timeInput.includes("Z")) {
     const date = new Date(timeInput);
 
-    // Check if valid date
     if (isNaN(date.getTime())) {
       return timeInput; // Return original if invalid
     }
