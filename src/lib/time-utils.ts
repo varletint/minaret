@@ -10,7 +10,7 @@ export function formatTime(timeInput: string | undefined | null): string {
     const date = new Date(timeInput);
 
     if (isNaN(date.getTime())) {
-      return timeInput; // Return original if invalid
+      return timeInput;
     }
 
     return date.toLocaleTimeString("en-US", {
