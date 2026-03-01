@@ -179,7 +179,7 @@ export function HomePage() {
                   <MosqueCard
                     stationId={station.slug}
                     name={station.name}
-                    location={station.mosqueId.location || "Earth"}
+                    // location={station.mosqueId.location || "Earth"}
                     listeners={station.stats.totalListeners}
                     isLive={station.isLive}
                     currentTrack={station.currentTrack}
@@ -198,7 +198,7 @@ export function HomePage() {
                 key={station._id}
                 stationId={station.slug}
                 name={station.name}
-                location={station.mosqueId.location || "Earth"}
+                // location={station.mosqueId.location || "Earth"}
                 listeners={station.stats.totalListeners}
                 isLive={station.isLive}
                 currentTrack={station.currentTrack}

@@ -8,7 +8,7 @@ import type { CurrentTrack } from "@/types/station";
 export interface MosqueCardProps {
   stationId: string;
   name: string;
-  location: string;
+  // location: string;
   listeners?: number;
   isLive?: boolean;
   isPlaying?: boolean;
