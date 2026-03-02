@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { Play, Calendar, Clock, Radio, User, Pause, Download, Loader2 } from "lucide-react";
+// import { useState } from "react";
+import {
+  Play,
+  Calendar,
+  Clock,
+  Radio,
+  User,
+  Pause,
+  // Download,
+  // Loader2,
+} from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDuration, formatDate, getRelativeTime } from "@/lib/time-utils";
-import { downloadFile } from "@/lib/download-utils";
+// import { downloadFile } from "@/lib/download-utils";
 import type { Recording } from "@/types/recording";
 
 export interface RecordingCardProps {
@@ -27,33 +36,33 @@ export function RecordingCard({
   variant = "grid",
 }: RecordingCardProps) {
   const { showId, stationId, totalDurationSecs } = recording;
-  const [isDownloading, setIsDownloading] = useState(false);
+  // const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownload = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const firstChunk = recording.chunks?.find((c) => c.publicUrl);
-    const url = firstChunk?.publicUrl || recording.url;
-    if (!url) return;
+  // const handleDownload = async (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   const firstChunk = recording.chunks?.find((c) => c.publicUrl);
+  //   const url = firstChunk?.publicUrl || recording.url;
+  //   if (!url) return;
 
-    const baseTitle = recording.title || showId?.title || "recording";
-    const hostStr =
-      recording.hostName || showId?.hostName
-        ? `-${recording.hostName || showId?.hostName}`
-        : "";
-    const cleanName = `${baseTitle}${hostStr}`
-      .replace(/[^a-z0-9]/gi, "-")
-      .toLowerCase()
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-    const filename = firstChunk?.filename || `${cleanName}.mp3`;
+  //   const baseTitle = recording.title || showId?.title || "recording";
+  //   const hostStr =
+  //     recording.hostName || showId?.hostName
+  //       ? `-${recording.hostName || showId?.hostName}`
+  //       : "";
+  //   const cleanName = `${baseTitle}${hostStr}`
+  //     .replace(/[^a-z0-9]/gi, "-")
+  //     .toLowerCase()
+  //     .replace(/-+/g, "-")
+  //     .replace(/^-|-$/g, "");
+  //   const filename = firstChunk?.filename || `${cleanName}.mp3`;
 
-    await downloadFile({
-      url,
-      filename,
-      onStart: () => setIsDownloading(true),
-      onSettled: () => setIsDownloading(false),
-    });
-  };
+  //   await downloadFile({
+  //     url,
+  //     filename,
+  //     onStart: () => setIsDownloading(true),
+  //     onSettled: () => setIsDownloading(false),
+  //   });
+  // };
 
   if (variant === "list") {
     return (
@@ -138,11 +147,11 @@ export function RecordingCard({
           </div>
         </div>
 
-        <Button
+        {/* <Button
           variant='ghost'
           size='icon'
-          onClick={handleDownload}
-          disabled={isDownloading}
+          // onClick={handleDownload}
+          // disabled={isDownloading}
           title='Download'
           className='shrink-0 ml-auto'>
           {isDownloading ? (
@@ -150,7 +159,7 @@ export function RecordingCard({
           ) : (
             <Download className='h-4 w-4 text-muted-foreground hover:text-primary' />
           )}
-        </Button>
+        </Button> */}
       </div>
     );
   }
@@ -263,10 +272,10 @@ export function RecordingCard({
             <Clock className='h-3.5 w-3.5' />
             <span>{formatDuration(totalDurationSecs)}</span>
           </div>
-          <Button
+          {/* <Button
             variant='ghost'
             size='icon'
-            onClick={handleDownload}
+            // onClick={handleDownload}
             disabled={isDownloading}
             title='Download'
             className='h-6 w-6'>
@@ -275,7 +284,7 @@ export function RecordingCard({
             ) : (
               <Download className='h-3 w-3 text-muted-foreground hover:text-primary' />
             )}
-          </Button>
+          </Button> */}
         </div>
       </CardFooter>
     </Card>
