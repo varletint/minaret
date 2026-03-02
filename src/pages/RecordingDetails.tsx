@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { formatDuration, formatFullDateTime } from "@/lib/time-utils";
+import { downloadFile } from "@/lib/download-utils";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useRecording } from "@/hooks/useRecordings";
 import { SEO } from "@/components/SEO";
@@ -40,42 +41,12 @@ export function RecordingDetailsPage() {
     filename: string,
     chunkIndex: number
   ) => {
-    if (!url) return;
-    try {
-      setDownloadingChunkId(chunkIndex);
-      toast.info("Starting download...");
-
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-
-      toast.success("Download complete");
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error(
-        "Opening in new tab (direct download blocked by browser security)"
-      );
-
-      const fallbackLink = document.createElement("a");
-      fallbackLink.href = url;
-      fallbackLink.download = filename;
-      fallbackLink.target = "_blank";
-      fallbackLink.rel = "noopener noreferrer";
-      document.body.appendChild(fallbackLink);
-      fallbackLink.click();
-      document.body.removeChild(fallbackLink);
-    } finally {
-      setDownloadingChunkId(null);
-    }
+    await downloadFile({
+      url,
+      filename,
+      onStart: () => setDownloadingChunkId(chunkIndex),
+      onSettled: () => setDownloadingChunkId(null),
+    });
   };
 
   if (isLoading && !recording) {
