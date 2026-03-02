@@ -5,7 +5,6 @@ import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useRecording } from "@/hooks/useRecordings";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import {
   Play,
   ArrowLeft,
