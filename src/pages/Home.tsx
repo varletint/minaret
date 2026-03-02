@@ -232,15 +232,19 @@ export function HomePage() {
                   <CarouselItem
                     key={recording._id}
                     className='pl-2 basis-1/2 sm:basis-1/3 lg:basis-1/5'>
-                    <RecordingCard
-                      recording={recording}
-                      isPlaying={
-                        currentMosque?.id === recording._id && isPlaying
-                      }
-                      onPlay={() => handlePlayRecording(recording)}
-                      onStop={() => setIsPlaying(false)}
-                      className='h-full'
-                    />
+                    <Link
+                      to={`/recordings/${recording._id}`}
+                      className='block h-full'>
+                      <RecordingCard
+                        recording={recording}
+                        isPlaying={
+                          currentMosque?.id === recording._id && isPlaying
+                        }
+                        onPlay={() => handlePlayRecording(recording)}
+                        onStop={() => setIsPlaying(false)}
+                        className='h-full'
+                      />
+                    </Link>
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -251,14 +255,18 @@ export function HomePage() {
             {/* <div className='md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden'> */}
             <div className='md:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 hidden'>
               {recordings.map((recording) => (
-                <RecordingCard
+                <Link
+                  to={`/recordings/${recording._id}`}
                   key={recording._id}
-                  recording={recording}
-                  isPlaying={currentMosque?.id === recording._id && isPlaying}
-                  onPlay={() => handlePlayRecording(recording)}
-                  onStop={() => setIsPlaying(false)}
-                  className='h-full'
-                />
+                  className='block h-full'>
+                  <RecordingCard
+                    recording={recording}
+                    isPlaying={currentMosque?.id === recording._id && isPlaying}
+                    onPlay={() => handlePlayRecording(recording)}
+                    onStop={() => setIsPlaying(false)}
+                    className='h-full'
+                  />
+                </Link>
               ))}
             </div>
           </section>
