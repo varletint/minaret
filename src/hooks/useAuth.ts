@@ -9,7 +9,6 @@ import type {
   ApiError,
 } from "@/types/auth";
 
-// Query keys - more granular for targeted invalidation
 export const authKeys = {
   all: ["auth"] as const,
   user: () => [...authKeys.all, "user"] as const,
