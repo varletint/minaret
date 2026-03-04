@@ -29,7 +29,6 @@ export const useUser = () => {
       }
     },
     staleTime: 5 * 60 * 1000,
-    // gcTime: 0,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -45,13 +44,6 @@ export const useLogin = () => {
     onSuccess: (data) => {
       setAccessToken(data.data.accessToken);
 
-      // queryClient.setQueryData(authKeys.user(), data.data.mosque);
-
-      // queryClient.invalidateQueries({ queryKey: authKeys.session() });
-      // queryClient.invalidateQueries({ queryKey: authKeys.permissions() });
-      // queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-      // queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-      // 2. Update user in cache IMMEDIATELY
       queryClient.setQueryData(authKeys.user(), data.data.mosque);
     },
     onError: () => {
