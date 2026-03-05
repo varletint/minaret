@@ -50,7 +50,7 @@ export function Navbar() {
             alt='Minaret Live'
             className='h-7 w-auto hidden dark:block'
           />
-          <span className='text-sm mt-2 sm:text-xl align-text-bottom font- font-heading text-foreground text-nowrap'>
+          <span className='text-sm tracking-wide mt-2 sm:text-xl align-text-bottom font- font-heading text-foreground text-nowrap'>
             Minaret Live
           </span>
         </Link>
@@ -61,7 +61,7 @@ export function Navbar() {
             <Link
               key={link.name}
               to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary text-nowrap ${
+              className={`text-sm  font-medium transition-colors hover:text-primary text-nowrap ${
                 pathname === link.href
                   ? "text-foreground"
                   : "text-muted-foreground"
@@ -223,7 +223,7 @@ export function Navbar() {
                           <Link
                             to={link.href}
                             onClick={() => setIsOpen(false)}
-                            className={`block text-xs  font-medium py-1 px-3 rounded transition-all duration-200 hover:bg-primary/10 hover:text-primary 
+                            className={`block text-xs tracking-wide  font-medium py-1 px-3 rounded transition-all duration-200 hover:bg-primary/10 hover:text-primary 
                               `}>
                             {link.name}
                           </Link>
