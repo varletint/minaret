@@ -22,6 +22,7 @@ const navLinks = [
   // { name: "Prayer Times", href: "#prayer-times" },
   // { name: "Live Radio", href: "#live" },
   { name: "Donate", href: "/donate" },
+  { name: "Get started", href: "/register" },
 ];
 
 export function Navbar() {
@@ -35,21 +36,21 @@ export function Navbar() {
 
   return (
     <header className='sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-      <div className='container mx-auto flex h-16 items-center justify-between px-4'>
+      <div className='container mx-auto flex h-12 items-center justify-between px-4'>
         <Link to='/' className='flex place-items-center '>
           {/* Logo for Light Mode */}
           <img
             src='/logo-light.png'
             alt='Minaret Live'
-            className='h-10 w-auto block dark:hidden'
+            className='h-8 w-auto block dark:hidden'
           />
           {/* Logo for Dark Mode */}
           <img
             src='/logo-dark.png'
             alt='Minaret Live'
-            className='h-10 w-auto hidden dark:block'
+            className='h-7 w-auto hidden dark:block'
           />
-          <span className='text-xl mt-2 sm:text-xl align-text-bottom font- font-heading text-foreground text-nowrap'>
+          <span className='text-sm mt-2 sm:text-xl align-text-bottom font- font-heading text-foreground text-nowrap'>
             Minaret Live
           </span>
         </Link>
@@ -77,7 +78,6 @@ export function Navbar() {
             <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
             <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
           </span>
-          {/* <span className='text-xs font-semibold text-primary'>LIVE</span> */}
           {/* </div> */}
 
           <ModeToggle />
@@ -194,24 +194,24 @@ export function Navbar() {
                         },
                       },
                     }}
-                    className='flex flex-col gap-6 px-4 bg-background'>
+                    className='flex flex-col gap-1.5 px-1.5 bg-background'>
                     {/* Mobile Live Badge */}
                     <motion.div
                       variants={{
                         open: { x: 0, opacity: 1 },
                         closed: { x: 20, opacity: 0 },
                       }}
-                      className='flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 w-fit'>
+                      className='flex items-center gap-2 px-3 py-2 w-fit'>
                       <span className='relative flex h-2 w-2'>
                         <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
                         <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
                       </span>
-                      <span className='text-sm font-semibold text-primary'>
+                      {/* <span className='text-xs font-semibold text-primary'>
                         LIVE NOW
-                      </span>
+                      </span> */}
                     </motion.div>
 
-                    <nav className='flex flex-col gap-1'>
+                    <nav className='flex flex-col gap'>
                       {navLinks.map((link, index) => (
                         <motion.div
                           key={link.name}
@@ -223,11 +223,8 @@ export function Navbar() {
                           <Link
                             to={link.href}
                             onClick={() => setIsOpen(false)}
-                            className={`block text-base font-medium py-2 px-3 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary ${
-                              pathname === link.href
-                                ? "bg-primary/5 text-primary"
-                                : "text-foreground"
-                            }`}>
+                            className={`block text-xs  font-medium py-1 px-3 rounded transition-all duration-200 hover:bg-primary/10 hover:text-primary 
+                              `}>
                             {link.name}
                           </Link>
                         </motion.div>
@@ -239,7 +236,7 @@ export function Navbar() {
                         open: { x: 0, opacity: 1 },
                         closed: { x: 20, opacity: 0 },
                       }}
-                      className='flex flex-col gap-2 mt-4'>
+                      className='flex flex-col gap-2 mt'>
                       {user ? (
                         <>
                           <div className='flex items-center gap-3 px-3 py-2 mb-2'>
@@ -280,24 +277,10 @@ export function Navbar() {
                           </Button>
                         </>
                       ) : (
-                        <>
-                          {/* <Button
-                            variant='outline'
-                            asChild
-                            className='w-full'
-                            onClick={() => setIsOpen(false)}>
-                            <Link to='/login'>Login</Link>
-                          </Button> */}
-                          <Button
-                            asChild
-                            className='w-full'
-                            onClick={() => setIsOpen(false)}>
-                            <Link to='/register'>Get Started</Link>
-                          </Button>
-                        </>
+                        <></>
                       )}
                     </motion.div>
-                    <motion.div
+                    {/* <motion.div
                       variants={{
                         open: { x: 0, opacity: 1 },
                         closed: { x: 20, opacity: 0 },
@@ -305,7 +288,7 @@ export function Navbar() {
                       <Button className='w-full bg-accent text-white hover:bg-accent/90 font-semibold'>
                         Want to sponsor a program?
                       </Button>
-                    </motion.div>
+                    </motion.div> */}
                   </motion.div>
                 </motion.div>
               </>
