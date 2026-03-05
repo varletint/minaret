@@ -53,7 +53,7 @@ export function RegisterPage() {
         email: data.email,
         password: data.password,
       });
-      toast.success("Welcome to Minaret Live! 🕌");
+      toast.success("Welcome to Minaret Live!");
       navigate("/dashboard");
     } catch {
       toast.error(getAuthErrorMessage(registerError) || "Registration failed");

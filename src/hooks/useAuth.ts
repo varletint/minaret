@@ -29,7 +29,6 @@ export const useUser = () => {
       }
     },
     staleTime: 5 * 60 * 1000,
-    // gcTime: 0,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

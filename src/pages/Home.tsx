@@ -116,10 +116,10 @@ export function HomePage() {
     <>
       <SEO />
       <main className='container mx-auto px-4 py-8 pb-24 pt-16'>
-        <h1 className='text-4xl font-bold font-heading'>
+        <h1 className='text-2xl tracking-wider md:text-4xl font-bold font-heading'>
           Welcome to Minaret Live
         </h1>
-        <p className='mt-4 text-muted-foreground'>Your mosque community hub</p>
+        <p className='mt-1 text-muted-foreground'>Your mosque community hub</p>
 
         {/* Sponsor Banner */}
         <div className='mt-8 w-full bg-linear-to-r from-emerald-900/10 via-teal-900/5 to-transparent rounded-2xl overflow-hidden shadow-sm border border-emerald-500/20 flex flex-col sm:flex-row items-center relative group'>
