@@ -40,7 +40,7 @@ const queryClient = new QueryClient({
 });
 
 /**
- * Protected route wrapper - redirects to login if not authenticated
+ * Protected route wrapper
  */
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -61,7 +61,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Guest route wrapper - redirects to dashboard if already authenticated
+ * Guest route wrapper
  */
 function GuestRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -89,7 +89,7 @@ function AppRouter() {
 
   return (
     <Routes>
-      {/* Public routes with footer */}
+      {/* Public routes */}
       <Route element={<PublicLayout />}>
         <Route path='/' element={<HomePage />} />
         <Route path='/mosques' element={<StationsPage />} />
@@ -99,7 +99,7 @@ function AppRouter() {
         <Route path='/donate' element={<DonatePage />} />
       </Route>
 
-      {/* Auth routes - centered, no footer */}
+      {/* Auth routes */}
       <Route element={<AuthLayout />}>
         <Route
           path='/login'
@@ -119,7 +119,7 @@ function AppRouter() {
         />
       </Route>
 
-      {/* Dashboard routes - protected */}
+      {/* Dashboard routes */}
       <Route
         element={
           <ProtectedRoute>
