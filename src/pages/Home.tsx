@@ -44,7 +44,11 @@ export function HomePage() {
   const recordings = recordingsData?.data?.recordings || [];
 
   const liveStations = stations.filter((s) => s.isLive);
-  const featuredStation = liveStations[0] || stations[0];
+
+  // Time-based greeting
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   const handlePlay = (station: StationListItem) => {
     if (currentMosque?.id === station._id) {
@@ -102,15 +106,19 @@ export function HomePage() {
     setIsPlaying(false);
   };
 
-  const isFeaturedPlaying =
-    featuredStation && currentMosque?.id === featuredStation._id && isPlaying;
-
   return (
     <>
       <SEO />
       <main className='min-h-screen pb-28 pt-16'>
-        {/* ─── Quick Nav Pills ─── */}
+        {/* ─── Greeting + Quick Nav Pills ─── */}
         <div className='container mx-auto px-4 pt-6'>
+          <h1 className='text-2xl md:text-3xl font-bold font-heading mb-1'>
+            {greeting}
+          </h1>
+          <p className='text-sm text-muted-foreground mb-4'>
+            Your mosque community hub
+          </p>
+
           <div className='flex gap-2 overflow-x-auto hide-scrollbar pb-2'>
             {quickLinks.map((link) => (
               <Link key={link.label} to={link.to}>
@@ -126,150 +134,6 @@ export function HomePage() {
             ))}
           </div>
         </div>
-
-        {/* ─── Hero: Featured / Now Playing ─── */}
-        {featuredStation && (
-          <section className='container mx-auto px-4 mt-6'>
-            <div
-              className='relative overflow-hidden rounded-2xl'
-              style={{
-                background:
-                  "linear-gradient(135deg, #065f46 0%, #064e3b 30%, #1a1512 70%, #292524 100%)",
-                backgroundSize: "200% 200%",
-                animation: "shimmer 8s ease infinite",
-              }}>
-              {/* Decorative pattern */}
-              <div className='absolute inset-0 opacity-[0.04]'>
-                <svg className='w-full h-full' viewBox='0 0 400 200'>
-                  <defs>
-                    <pattern
-                      id='heroPattern'
-                      x='0'
-                      y='0'
-                      width='40'
-                      height='40'
-                      patternUnits='userSpaceOnUse'>
-                      <circle cx='20' cy='20' r='1.5' fill='white' />
-                    </pattern>
-                  </defs>
-                  <rect width='400' height='200' fill='url(#heroPattern)' />
-                </svg>
-              </div>
-
-              <div className='relative z-10 flex flex-col md:flex-row items-center gap-6 p-6 md:p-10'>
-                {/* Album art placeholder */}
-                <div className='relative w-36 h-36 md:w-48 md:h-48 rounded-2xl overflow-hidden shadow-2xl shrink-0 bg-gradient-to-br from-emerald-400/30 via-emerald-600/20 to-teal-900/40 flex items-center justify-center border border-white/10'>
-                  {/* Animated audio bars */}
-                  <div className='flex items-end gap-[3px] h-16'>
-                    {[0, 0.2, 0.5, 0.8, 0.3, 0.6, 0.1, 0.9, 0.4, 0.7].map(
-                      (delay, i) => (
-                        <div
-                          key={i}
-                          className='w-[3px] rounded-full bg-emerald-400/80'
-                          style={{
-                            animation: `audioBar 1.2s ease-in-out ${delay}s infinite`,
-                            animationPlayState: isFeaturedPlaying
-                              ? "running"
-                              : "paused",
-                            height: "40%",
-                          }}
-                        />
-                      )
-                    )}
-                  </div>
-
-                  {/* Play button overlay */}
-                  <button
-                    onClick={() => handlePlay(featuredStation)}
-                    disabled={!featuredStation.isLive}
-                    className='absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/20 transition-all group/play'>
-                    <div
-                      className={`h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
-                        isFeaturedPlaying
-                          ? "bg-white text-emerald-700 scale-100"
-                          : "bg-white/90 text-emerald-700 opacity-0 group-hover/play:opacity-100 scale-90 group-hover/play:scale-100"
-                      }`}>
-                      {isFeaturedPlaying ? (
-                        <Pause className='h-6 w-6' fill='currentColor' />
-                      ) : (
-                        <Play className='h-6 w-6 ml-0.5' fill='currentColor' />
-                      )}
-                    </div>
-                  </button>
-                </div>
-
-                {/* Station info */}
-                <div className='flex-1 min-w-0 text-center md:text-left'>
-                  <div className='flex items-center gap-2 justify-center md:justify-start mb-2'>
-                    {featuredStation.isLive ? (
-                      <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/20 border border-red-500/30 text-[11px] font-bold text-red-400 uppercase tracking-wider'>
-                        <span className='relative flex h-2 w-2'>
-                          <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75' />
-                          <span className='relative inline-flex rounded-full h-2 w-2 bg-red-400' />
-                        </span>
-                        Live
-                      </span>
-                    ) : (
-                      <span className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-[11px] font-bold text-white/60 uppercase tracking-wider'>
-                        Offline
-                      </span>
-                    )}
-                    {featuredStation.stats.totalListeners > 0 && (
-                      <span className='inline-flex items-center gap-1 text-[11px] text-white/50'>
-                        <Users className='h-3 w-3' />
-                        {featuredStation.stats.totalListeners} listening
-                      </span>
-                    )}
-                  </div>
-
-                  <h1 className='text-2xl md:text-4xl font-bold font-heading text-white mb-1 truncate'>
-                    {featuredStation.name}
-                  </h1>
-
-                  {featuredStation.currentTrack?.title && (
-                    <p className='text-sm md:text-base text-white/60 truncate mb-4'>
-                      <span className='text-white/40'>Now playing:</span>{" "}
-                      <span className='text-white/80 capitalize'>
-                        {featuredStation.currentTrack.title}
-                        {featuredStation.currentTrack.artist &&
-                          ` — ${featuredStation.currentTrack.artist}`}
-                      </span>
-                    </p>
-                  )}
-
-                  <div className='flex items-center gap-3 justify-center md:justify-start mt-4'>
-                    <Button
-                      onClick={() => handlePlay(featuredStation)}
-                      disabled={!featuredStation.isLive}
-                      className='h-11 px-8 rounded-full bg-white text-emerald-800 hover:bg-white/90 font-semibold text-sm shadow-lg disabled:opacity-40'>
-                      {isFeaturedPlaying ? (
-                        <>
-                          <Pause className='h-4 w-4 mr-2' fill='currentColor' />{" "}
-                          Pause
-                        </>
-                      ) : (
-                        <>
-                          <Play
-                            className='h-4 w-4 mr-2 ml-0.5'
-                            fill='currentColor'
-                          />{" "}
-                          Listen Live
-                        </>
-                      )}
-                    </Button>
-                    <Link to={`/mosques/${featuredStation.slug}`}>
-                      <Button
-                        variant='ghost'
-                        className='h-11 px-6 rounded-full text-white/70 hover:text-white hover:bg-white/10 font-medium text-sm border border-white/10'>
-                        View Station
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* ─── Sponsor Banner (compact) ─── */}
         <section className='container mx-auto px-4 mt-8'>
